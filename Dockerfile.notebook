@@ -4,7 +4,7 @@ ARG UV_INDEX=https://pypi.org/simple
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync 
+RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim
 
 USER $NB_USER
 
