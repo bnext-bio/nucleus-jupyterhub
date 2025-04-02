@@ -12,6 +12,7 @@ echo "NB_USER: $NB_USER"
 echo "NB_UID: $NB_UID"
 echo "NB_GID: $NB_GID"
 echo "NB_UMASK: $NB_UMASK"
+echo "UV_INDEX: $UV_INDEX"
 
 # Bring down and update our baseline home directory
 if [ ! -d ${REPO} ]; then
