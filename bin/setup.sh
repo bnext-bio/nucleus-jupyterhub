@@ -40,4 +40,10 @@ if [ ! -L ${HOME}/work/.lsp_symlink ]; then
     ln -s / ${HOME}/work/.lsp_symlink
 fi
 
+# Create curvenote symlink
+echo Linking curvenote config
+if [ ! -L ${HOME}/.curvenote ]; then
+    ln -s ~/work/.curvenote ~/.curvenote
+fi
+
 echo Nucleus environment setup

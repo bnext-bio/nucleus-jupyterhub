@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "IosevkaTerm Nerd Font";
+    font-family: "IosevkaTermNF";
     src:
       local("IosevkaTerm Nerd Font"),
-      url("IosevkaTermNerdFont-Regular.ttf") format("truetype")
+      url("IosevkaTermNerdFont-Regular.woff") format("woff");
   }
