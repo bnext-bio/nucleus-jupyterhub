@@ -19,6 +19,9 @@ c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
 # Spawn containers from this image
 c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
 
+# Set timeout high since we might be doing a lot of warmup on the server
+c.DockerSpawner.start_timeout = 300
+
 # Connect containers to this Docker network
 network_name = os.environ["DOCKER_NETWORK_NAME"]
 c.DockerSpawner.use_internal_ip = True
