@@ -2,7 +2,7 @@ FROM quay.io/jupyter/minimal-notebook:latest
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim
+RUN apt-get -y update && apt-get -y install gcc g++ rsync 
 
 USER $NB_USER
 
@@ -14,13 +14,14 @@ RUN mamba install -y -c conda-forge caddy
 
 # UV
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
 # RUN mamba install -y python=3.12
 # Install everything via conda/mamba, including conda-based compilers
 # RUN mamba install -y -c conda-forge nb_conda_kernels jlab-enhanced-cell-toolbar "elyra[all]" && \
     #mamba create -y -n py310 python=3.10 ipykernel numpy pandas && \
     #mamba create -y -n py312 python=3.12 ipykernel numpy pandas
 
-# ADD . /opt/repo
+ADD . /opt/repo
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
 # RUN ~/.local/bin/uv pip install --system -e /opt/nucleus-envs/nucleus-env
