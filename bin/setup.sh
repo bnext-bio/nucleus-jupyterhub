@@ -26,7 +26,7 @@ cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 # Install our key packages
 ~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env
 
-Bring down the curvenote template
+# Bring down the curvenote template
 if [ -d ${DEVNOTE_PATH} ]; then 
     cd ${DEVNOTE_PATH}
     git pull --ff-only 
