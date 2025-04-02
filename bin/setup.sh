@@ -30,7 +30,7 @@ mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
 # Install our key packages
-~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env
+~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress -v
 
 # Bring down the curvenote template
 if [ -d ${DEVNOTE_PATH} ]; then 
