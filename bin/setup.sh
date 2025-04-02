@@ -7,10 +7,6 @@ JUPYTER_SETTINGS=/opt/conda/share/jupyter/lab/settings
 DEVNOTE_PATH=/home/jovyan/work/devnotes/template
 
 echo "Setting up environment"
-whoami
-ls -alh /opt
-ls -alh /opt/repo
-ls -alhR /home/jovyan
 
 # Bring down and update our baseline home directory
 if [ ! -d ${REPO} ]; then
@@ -20,7 +16,7 @@ cd ${REPO}
 git remote set-url origin ${GIT_REMOTE} # Fix up remote if image was built from a repo with an SSH origin.
 git pull
 
-#rsync -av ${REPO}/home-overlay/ ${HOME}
+rsync -a ${REPO}/home-overlay/ ${HOME}
 
 # Update our jupyter configuration
 cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
