@@ -28,7 +28,10 @@ if "NB_USER" in os.environ:
         "group-add": "users"
     }
 
-c.DockerSpawner.env_keep.append("UV_INDEX", "NB_UMASK")
+c.DockerSpawner.env_keep.extend([
+    "UV_INDEX",
+    "NB_UMASK"
+])
 
 # Connect containers to this Docker network
 network_name = os.environ["DOCKER_NETWORK_NAME"]
