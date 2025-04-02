@@ -1,6 +1,6 @@
 FROM quay.io/jupyter/minimal-notebook:latest
 
-ARG UV_INDEX
+ARG UV_INDEX=https://pypi.org/simple
 
 USER root
 
