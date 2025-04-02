@@ -12,9 +12,9 @@ echo "Setting up environment"
 if [ ! -d ${REPO} ]; then
     git clone --depth=1 https://github.com/bnext-bio/jupyterhub-deploy-docker.git ${REPO} &>/dev/null
 fi
-git pull ${REPO}
+cd ${REPO} && git pull
 
-rsync -av ${REPO}/home-overlay/ ${HOME}
+#rsync -av ${REPO}/home-overlay/ ${HOME}
 
 # Update our jupyter configuration
 cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
