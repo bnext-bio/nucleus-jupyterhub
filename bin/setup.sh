@@ -7,12 +7,16 @@ JUPYTER_SETTINGS=/opt/conda/share/jupyter/lab/settings
 DEVNOTE_PATH=/home/jovyan/work/devnotes/template
 
 echo "Setting up environment"
+ls -alh /opt
+ls -alh /opt/repo
 
 # Bring down and update our baseline home directory
 if [ ! -d ${REPO} ]; then
     git clone --depth=1 ${GIT_REMOTE} ${REPO}
 fi
-cd ${REPO} && git pull
+cd ${REPO}
+git remote set-url origin ${GIT_REMOTE} # Fix up remote if image was built from a repo with an SSH origin.
+git pull
 
 #rsync -av ${REPO}/home-overlay/ ${HOME}
 
@@ -33,6 +37,9 @@ cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 # fi
 
 # Create LSP symlink
+echo Creating symlink
 if [ ! -L ${HOME}/work/.lsp_symlink ]; then
     ln -s / ${HOME}/work/.lsp_symlink
 fi
+
+echo Nucleus environment setup
