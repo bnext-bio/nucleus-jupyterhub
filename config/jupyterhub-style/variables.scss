@@ -1,0 +1,11 @@
+$border-radius-large: 5px;
+
+$jupyter-orange: #006837;
+$jupyter-red: #006837;
+
+// accessible alternative to red/green
+// from 5-class RdYlBu via colorbrewer.org
+// eliminate distinction between 'primary' and 'success'
+$primary: #2c7bb6;
+$success: $primary;
+$danger: #C1272D;

@@ -9,4 +9,6 @@ RUN python3 -m pip install --no-cache-dir \
     dockerspawner \
     jupyterhub-nativeauthenticator
 
+ADD ./config/jupyterhub-style/variables.scss /usr/local/share/jupyterhub/static/scss/variables.scss
+
 CMD ["jupyterhub", "-f", "/srv/jupyterhub/jupyterhub_config.py"]
