@@ -39,7 +39,7 @@ c.DockerSpawner.volumes = {
 }
 
 # Run our post-setup script
-c.DockerSpawner.post_start_cmd = "/opt/nucleus-envs/setup.sh"
+c.DockerSpawner.post_start_cmd = "/opt/repo/bin/setup.sh"
 
 # Remove containers once they are stopped
 c.DockerSpawner.remove = True
