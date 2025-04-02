@@ -26,13 +26,14 @@ cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 # Install our key packages
 ~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env
 
-# Bring down the curvenote template
-# if [ -d ${DEVNOTE_PATH} ]; then 
-#     cd ${DEVNOTE_PATH}
-#     git pull --ff-only 
-# else
-#     git clone --depth=1 https://github.com/antonrmolina/devnote-template.git ${DEVNOTE_PATH}
-# fi
+Bring down the curvenote template
+if [ -d ${DEVNOTE_PATH} ]; then 
+    cd ${DEVNOTE_PATH}
+    git pull --ff-only 
+else
+    git clone --depth=1 https://github.com/antonrmolina/devnote-template.git ${DEVNOTE_PATH}
+fi
+rm -rf ${DEVNOTE_PATH}/.git # Un-repoify it so it can be copied and modified easily.
 
 # Create LSP symlink
 echo Creating symlink
@@ -45,5 +46,6 @@ echo Linking curvenote config
 if [ ! -L ${HOME}/.curvenote ]; then
     ln -s ~/work/.curvenote ~/.curvenote
 fi
+
 
 echo Nucleus environment setup
