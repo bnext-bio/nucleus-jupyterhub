@@ -23,7 +23,7 @@ c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
 c.DockerSpawner.start_timeout = 300
 
 if "NB_USER" in os.environ:
-    c.DockerSpawner.extra_create_kwargs = {
+    c.DockerSpawner.extra_host_config = {
         "user": os.environ["NB_USER"],
         "group_add": "users"
     }
