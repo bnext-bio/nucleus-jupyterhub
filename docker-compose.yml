@@ -33,6 +33,7 @@ services:
       # Notebook directory inside user image
       DOCKER_NOTEBOOK_DIR: /home/jovyan/work
       DATA_DIRECTORY: ${DATA_DIRECTORY}
+      UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jupyterhub.rule=Host(`workshop.int.bnext.bio`)"
@@ -47,8 +48,6 @@ services:
       dockerfile: Dockerfile.notebook
     image: jupyter-workshop:latest
     container_name: singleuser-build
-    environment:
-      UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
     networks:
       - jupyterhub-network
     # We don't actually run this container, just build the image
