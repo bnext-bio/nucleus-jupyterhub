@@ -21,7 +21,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
     #mamba create -y -n py310 python=3.10 ipykernel numpy pandas && \
     #mamba create -y -n py312 python=3.12 ipykernel numpy pandas
 
-ADD . /opt/repo
+ADD bin/setup.sh /usr/local/bin/before-notebook.d/setup.sh
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
 # RUN ~/.local/bin/uv pip install --system -e /opt/nucleus-envs/nucleus-env
