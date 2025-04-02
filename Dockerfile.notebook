@@ -4,7 +4,7 @@ ARG UV_INDEX=https://pypi.org/simple
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim
+RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza
 
 USER $NB_USER
 
@@ -28,3 +28,5 @@ ADD --chown=$NB_USER:users . /opt/repo/
 USER $NB_USER
 
 RUN ~/.local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX
+RUN git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
+RUN zsh -c "source ~/.antidote/antidote.zsh && antidote load"
