@@ -45,8 +45,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.notebook
-      args:
-        UV_INDEX: ${UV_INDEX}
     image: jupyter-workshop:latest
     container_name: singleuser-build
     environment:
