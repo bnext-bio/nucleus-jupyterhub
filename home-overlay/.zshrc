@@ -4,6 +4,10 @@
 bindkey -e
 export HOSTNAME=$(hostname)
 
+if [[ -v NB_UMASK ]]; then
+  umask $NB_UMASK
+fi
+
 ZSH_TAB_TITLE_PREFIX="$USER@$HOST "
 
 # === Environment ===
