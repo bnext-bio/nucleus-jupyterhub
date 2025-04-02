@@ -10,8 +10,8 @@ c = get_config()  # noqa: F821
 # avoid having to rebuild the JupyterHub container every time we change a
 # configuration parameter.
 
-c.Application.log_level = "DEBUG"
-c.JupyterHub.log_level = "DEBUG"
+# c.Application.log_level = "DEBUG"
+# c.JupyterHub.log_level = "DEBUG"
 
 # Spawn single-user servers as Docker containers
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"

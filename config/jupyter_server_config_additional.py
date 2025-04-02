@@ -1,6 +1,6 @@
 
 # Additional configuration for the nucleus jupyter environment
-c.Application.log_level = "DEBUG"
+# c.Application.log_level = "DEBUG"
 
 c.LabApp.custom_css = True
 
