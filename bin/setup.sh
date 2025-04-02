@@ -10,7 +10,7 @@ echo "Setting up environment"
 
 # Bring down and update our baseline home directory
 if [ ! -d ${REPO} ]; then
-    git clone --depth=1 https://github.com/bnext-bio/jupyterhub-deploy-docker.git ${REPO} &>/dev/null
+    git clone --depth=1 ${GIT_REMOTE} ${REPO}
 fi
 cd ${REPO} && git pull
 
