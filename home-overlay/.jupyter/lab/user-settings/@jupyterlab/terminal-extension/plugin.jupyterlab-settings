@@ -1,5 +1,5 @@
 {
-    "fontFamily": "\"IosevkaTerm Nerd Font\"",
+    "fontFamily": "\"IosevkaTerm Nerd Font\", monospace",
     "fontSize": 14,
     "lineHeight": 1,
     "theme": "dark",

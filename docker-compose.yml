@@ -57,11 +57,19 @@ services:
   proxpi:
     restart: unless-stopped
     image: epicwink/proxpi:latest
+    environment:
+      PROXPI_BINARY_FILE_MIME_TYPE: 1
+      PROXPI_INDEX_TTL: 86400
+      PROXPI_CACHE_DIR: /mnt/cache
+      PROXPI_DOWNLOAD_TIMEOUT: 0.1
+    volumes:
+      - pycache:/mnt/cache
     networks:
       - jupyterhub-network
 
 volumes:
   jupyterhub-data:
+  pycache:
 
 networks:
   jupyterhub-network:
