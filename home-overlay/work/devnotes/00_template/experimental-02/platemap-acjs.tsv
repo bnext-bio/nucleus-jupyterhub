@@ -1,0 +1,11 @@
+Well	Sample #	Type	Name	Folinic	MTHFS BE	NEB ribosome	NEB factor mix****	bnext tRNA	SMS-03-06	bnext p-mix-03-03	NEB Solution A	NEB solution B	RNAse Inhibitor	DNA (deGFP)	H2O	MTHFS	0.2 mM 5,10-methenyl-THF	Total Volume
+D2	1	No Folinic	no folinic acid	No	No	1.8		1	4	1.3			0.4	0.5	1	0		10
+D4	2	No Folinic	no folinic + 5,10-methenyl-THF	No	No	1.8		1	4	1.3			0.4	0.5	0	0	1	10
+D6	3	No Folinic	5,10-methenyl-THF	No	No	1.8		1	4	1.3			0.4	0.5	1	0		10
+D8	4	Folinic	folinic	Yes	No	1.8		1	4	1.3			0.4	0.5	1	0		10
+D10	5	Folinic	folinic + BE MTHFS (1 uL)	Yes	Yes	1.8		1	4	1.3			0.4	0.5	0	1		10
+D12	6	Folinic	folinic + BE MTHFS (1.61 uL)	Yes	Yes	1.8		1	4	1.3			0.4	0.5	0	1.61		10.61
+D14	7	Folinic	folinic + MTHFS (0.5 uL)	Yes	No	1.8		1	4	1.3			0.4	0.5	0.5	0.5		10
+D16	8	Control	NEB ribosome control	No	No	1.8	1.2				4		0.4	0.5	2.1			10
+D18	9	Control	Positive	No	No						4	3	0.4	0.5	2.1			10
+D20	10	Control	Negative	No	No						4	3	0	0	3			10

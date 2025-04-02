@@ -1,0 +1,51 @@
+version: 1
+project:
+  # Update this to match `nucleus-devnote-core-<folder>` the folder should be `???`
+  id: nucleus-devnote-core-02_emitter_cell
+  # Ensure your title is the same as in your `main.md`
+  title: IV-HSL Emitter Cell
+  subtitle: 
+  description: IV-HSL Emitter Cell
+  # Authors should have affiliations, emails and ORCIDs if available
+  authors:
+    - name: Yen-Yu Hsu
+      email: yenyu@bnext.bio
+      affiliations:
+        - b.next
+  keywords:
+    - Archetypal Cell
+  # Add the abbreviations that you use in your paper here
+  abbreviations:
+    MyST: Markedly Structured Text
+    CDK: cell development kit
+  # Add specs here for any additional content you want to cross reference
+  references:
+    devnotes: https://devnotes.bnext.bio
+  # Set an initial publisation date for the note
+  date: 2024-07-10
+  # Reference a specific thumbnail if you are not happy with the automatically selected one
+  #thumbnail: thumbnail.png
+  # A create a banner image for your publication, use this is a placeholder as a guide (webp or png)
+  banner: banner.webp
+  # Add any supporting files to the toc, but ensure that your main manuscript is first is the list
+  toc:
+    - file: main.md
+  # The rest of the information shouldn't be modified
+  github: https://github.com/bnext-bio/nucleus-developer-notes
+  license: CC-BY-4.0
+  open_access: true
+  venue: Nucleus
+  subject: Developer Note
+  plugins:
+    - lorem.mjs
+  # compute configuration, see: https://curvenote.com/docs/publish/live-compute#configuration-via-frontmatter
+  jupyter: true
+  exports:
+    - format: meca
+  # requirements:
+  #   - environment.yml
+  resources:
+    - data/**/*
+site:
+  template: article-theme
+  nav: []

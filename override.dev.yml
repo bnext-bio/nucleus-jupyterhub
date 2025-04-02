@@ -1,0 +1,4 @@
+services:
+  hub:
+    ports:
+     - 8000:8000

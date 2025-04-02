@@ -1,0 +1,63 @@
+version: 1
+project:
+  # Update this to match `nucleus-devnote-core-<folder>` the folder should be `???`
+  id: nucleus-devnote-core-00_myst_template
+  # Ensure your title is the same as in your `main.md`
+  title: Cell development kit - kinetic analysis toolkit
+  subtitle: An interactive tool to analyze data generated from fluorescent platereaders 
+  description: An interactive tool to analyze data generated from fluorescent platereaders
+  # Authors should have affiliations, emails and ORCIDs if available
+  authors:
+    - name: Sam Cell
+      email: build@bnext.bio
+      orcid: 0000-0000-0000-0001
+      affiliations:
+        - b.next
+      corresponding: true
+  keywords:
+    - cytosols
+    - analysis standards
+    - tutorials
+  # Add the abbreviations that you use in your paper here
+  abbreviations:
+    MyST: Markedly Structured Text
+    CDK: cell development kit
+  # Add specs here for any additional content you want to cross reference
+  references:
+    devnotes: https://devnotes.bnext.bio
+  # Set an initial publisation date for the note
+  date: 2024-07-10
+  # Reference a specific thumbnail if you are not happy with the automatically selected one
+  #thumbnail: thumbnail.png
+  # A create a banner image for your publication, use this is a placeholder as a guide (webp or png)
+  banner: banner.webp
+  # Add any supporting files to the toc, but ensure that your main manuscript is first is the list
+  toc:
+    - file: main.md
+    - file: supplementary.ipynb
+    - file: widget_sns_fig1.ipynb
+    - file: widget_sns_fig2.ipynb
+    - file: widget_sns_fig3.ipynb
+    - file: widget_sns_fig4.ipynb
+    - file: table1.ipynb
+  # The rest of the information shouldn't be modified
+  github: https://github.com/bnext-bio/nucleus-developer-notes
+  license: CC-BY-4.0
+  open_access: true
+  venue: Nucleus
+  subject: Developer Note
+  plugins:
+    - lorem.mjs
+  # compute configuration, see: https://curvenote.com/docs/publish/live-compute#configuration-via-frontmatter
+  jupyter: true
+  exports:
+    - format: meca
+  requirements:
+    - environment.yml
+  resources:
+    - src/**/*
+    - tests/**/*
+    - figures/**/*
+site:
+  template: article-theme
+  nav: []
