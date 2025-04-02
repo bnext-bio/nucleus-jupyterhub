@@ -27,7 +27,7 @@ if "NB_USER" in os.environ:
         "user": os.environ["NB_USER"]
     }
     c.DockerSpawner.extra_host_config = {
-        "group_add": "users"
+        "group_add": ["users"]
     }
 
 c.DockerSpawner.env_keep.extend([
