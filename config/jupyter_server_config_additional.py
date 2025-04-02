@@ -17,7 +17,7 @@ c.ServerProxy.servers = {
         "command": ["/bin/bash", "/opt/repo/bin/curvenote-launch.sh", "{port}"],
         "absolute_url": False,
         "environment": {
-            "BASE_URL_PREFIX": "{base_url}/proxy/{port}"
+            "BASE_URL_PREFIX": "{base_url}/curvenote-start"
         },
         "launcher_entry": {
             "enabled": True,
