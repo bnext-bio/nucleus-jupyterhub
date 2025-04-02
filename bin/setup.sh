@@ -7,9 +7,10 @@ JUPYTER_SETTINGS=/opt/conda/share/jupyter/lab/settings
 DEVNOTE_PATH=/home/jovyan/work/devnotes/template
 
 echo "Setting up environment"
+whoami
 ls -alh /opt
 ls -alh /opt/repo
-ls -alhR /home/joyvan
+ls -alhR /home/jovyan
 
 # Bring down and update our baseline home directory
 if [ ! -d ${REPO} ]; then
