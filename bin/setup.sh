@@ -9,6 +9,7 @@ DEVNOTE_PATH=/home/jovyan/work/devnotes/template
 echo "Setting up environment"
 ls -alh /opt
 ls -alh /opt/repo
+ls -alhR /home/joyvan
 
 # Bring down and update our baseline home directory
 if [ ! -d ${REPO} ]; then

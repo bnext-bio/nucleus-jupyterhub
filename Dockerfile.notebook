@@ -1,5 +1,7 @@
 FROM quay.io/jupyter/minimal-notebook:latest
 
+ARG UV_INDEX
+
 USER root
 
 RUN apt-get -y update && apt-get -y install gcc g++ rsync 
@@ -24,4 +26,4 @@ ADD --chown=$NB_USER:users . /opt/repo/
 
 USER $NB_USER
 
-RUN ~/.local/bin/uv pip install --system -e /opt/repo/nucleus-env
+RUN ~/.local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX

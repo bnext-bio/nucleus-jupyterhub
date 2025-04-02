@@ -45,12 +45,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.notebook
+      args:
+        UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
     image: jupyter-workshop:latest
     container_name: singleuser-build
+    environment:
+      UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
     networks:
       - jupyterhub-network
     # We don't actually run this container, just build the image
     entrypoint: /bin/true
+
+# PyPI intermediate cache to speed startup
+  proxpi:
+    restart: unless-stopped
+    image: epicwink/proxpi:latest
+    networks:
+      - jupyterhub-network
 
 volumes:
   jupyterhub-data:

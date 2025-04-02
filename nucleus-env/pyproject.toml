@@ -46,10 +46,10 @@ dependencies = [
     "jupyterlab-link-share>=0.3.0",
     "jupyterlab-lsp>=5.1.0",
     "jupyter-server-proxy>=4.4.0",
-    "zarr>=2.18.5",
     "vizarr>=0.1.1",
     "scikit-image>=0.25.2",
     "fsspec>=2025.3.2",
+    "zarr>=2.18.5",
 ]
 
 [build-system]
