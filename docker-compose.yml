@@ -50,10 +50,10 @@ services:
       dockerfile: Dockerfile.notebook
     image: jupyter-workshop:latest
     container_name: singleuser-build
-    environment:
-      UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
-      NB_USER: ${NB_USER}
-      NB_UMASK: ${NB_UMASK:-022}
+    # environment:
+    #   UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
+    #   NB_USER: ${NB_USER}
+    #   NB_UMASK: ${NB_UMASK:-022}
     networks:
       - jupyterhub-network
     # We don't actually run this container, just build the image
