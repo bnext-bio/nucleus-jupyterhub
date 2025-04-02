@@ -20,7 +20,6 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
     #mamba create -y -n py310 python=3.10 ipykernel numpy pandas && \
     #mamba create -y -n py312 python=3.12 ipykernel numpy pandas
 
-# RUN /opt/conda/envs/py310/bin/pip install git+https://github.com/fuad00/dataprep.git@develop
 ADD . /opt/repo
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
