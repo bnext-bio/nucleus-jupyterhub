@@ -17,12 +17,12 @@ git pull ${REPO}
 rsync -av ${REPO}/home-overlay/ ${HOME}
 
 # Update our jupyter configuration
-cat ${REPO}/envs/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
+cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
 mkdir -p ${JUPYTER_SETTINGS}
-cp ${REPO}/envs/overrides.json ${JUPYTER_SETTINGS}/overrides.json
+cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
 # Install our key packages
-~/.local/bin/uv pip install --system -e ${REPO}/envs/nucleus-env
+~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env
 
 # Bring down the curvenote template
 # if [ -d ${DEVNOTE_PATH} ]; then 
@@ -33,4 +33,6 @@ cp ${REPO}/envs/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 # fi
 
 # Create LSP symlink
-ln -s / ${HOME}/work/.lsp_symlink
+if [ ! -L ${HOME}/work/.lsp_symlink ]; then
+    ln -s / ${HOME}/work/.lsp_symlink
+fi
