@@ -22,7 +22,13 @@ c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
 # Set timeout high since we might be doing a lot of warmup on the server
 c.DockerSpawner.start_timeout = 300
 
-c.DockerSpawner.env_keep.append("UV_INDEX")
+if "NB_USER" in os.environ:
+    c.DockerSpawner.extra_create_kwargs = {
+        "user": os.environ["NB_USER"],
+        "group-add": "users"
+    }
+
+c.DockerSpawner.env_keep.append("UV_INDEX", "NB_UMASK")
 
 # Connect containers to this Docker network
 network_name = os.environ["DOCKER_NETWORK_NAME"]

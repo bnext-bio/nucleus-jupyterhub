@@ -23,6 +23,8 @@ USER root
 ADD bin/setup.sh /usr/local/bin/before-notebook.d/setup.sh
 ADD --chown=$NB_USER:users . /opt/repo/
 
+RUN chsh -s /bin/zsh jovyan
+
 USER $NB_USER
 
 RUN rsync -av /opt/repo/home-overlay/ /home/$NB_USER/

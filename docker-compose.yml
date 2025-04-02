@@ -34,6 +34,8 @@ services:
       DOCKER_NOTEBOOK_DIR: /home/jovyan/work
       DATA_DIRECTORY: ${DATA_DIRECTORY}
       UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
+      NB_USER: ${NB_USER}
+      NB_UMASK: ${NB_UMASK:-022}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jupyterhub.rule=Host(`workshop.int.bnext.bio`)"
