@@ -69,12 +69,12 @@ admin = os.environ.get("JUPYTERHUB_ADMIN")
 if admin:
     c.Authenticator.admin_users = [admin]
 
-# Permissions for sharing / RTC
-c.JupyterHub.load_roles = [
-    {
-        "name": "user",
-        "scopes": ["self", "shares!user", "read:users:name", "read:groups:name", "access:servers"],
-    },
-]
+# # Permissions for sharing / RTC
+# c.JupyterHub.load_roles = [
+#     {
+#         "name": "user",
+#         "scopes": ["self", "shares!user", "read:users:name", "read:groups:name", "access:servers"],
+#     },
+# ]
 
-c.DockerSpawner.oauth_client_allowed_scopes = ["access:servers!server", "shares!server"]
+# c.DockerSpawner.oauth_client_allowed_scopes = ["access:servers!server", "shares!server"]
