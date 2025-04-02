@@ -25,7 +25,7 @@ c.DockerSpawner.start_timeout = 300
 if "NB_USER" in os.environ:
     c.DockerSpawner.extra_create_kwargs = {
         "user": os.environ["NB_USER"],
-        "group-add": "users"
+        "group_add": "users"
     }
 
 c.DockerSpawner.env_keep.extend([
