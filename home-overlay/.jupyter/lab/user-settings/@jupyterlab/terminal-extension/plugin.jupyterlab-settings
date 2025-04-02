@@ -2,7 +2,7 @@
     "fontFamily": "\"IosevkaTerm Nerd Font\"",
     "fontSize": 14,
     "lineHeight": 1,
-    "theme": "inherit",
+    "theme": "dark",
     "screenReaderMode": false,
     "scrollback": 1000,
     "shutdownOnClose": false,
