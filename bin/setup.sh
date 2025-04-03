@@ -53,5 +53,7 @@ if [ ! -L ${HOME}/.curvenote ]; then
     ln -s ~/work/.curvenote ~/.curvenote
 fi
 
+# Run final shared setup commands
+${HOME}/work/shared/.setup/setup.sh
 
 echo Nucleus environment setup
