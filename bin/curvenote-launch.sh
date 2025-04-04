@@ -10,5 +10,5 @@ echo "BASE_URL_PREFIX: ${BASE_URL_PREFIX}" | tee -a ~/work/.log/curvenote.log
 
 cd ~/work/devnotes/
 mkdir -p $HTML_DIR
-caddy file-server --listen :$1 --browse --root $HTML_DIR | tee -a ~/work/.log/curvenote.log &
+caddy file-server --listen :$1 --browse --root $HTML_DIR/ | tee -a ~/work/.log/curvenote.log &
 nodemon -w ~/work/devnotes/ -i _build/ -i .html/ --ext md,yml,json,ipynb,html -x $CURVENOTE_BUILD | tee -a ~/work/.log/curvenote.log &
