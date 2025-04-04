@@ -21,7 +21,8 @@ c.ServerProxy.servers = {
         },
         "launcher_entry": {
             "enabled": True,
-            "title": "Curvenote Preview"
+            "title": "Curvenote Preview",
+            "category": "Nucleus"
         }
     }
 }
