@@ -50,6 +50,7 @@ dependencies = [
     "scikit-image>=0.25.2",
     "fsspec>=2025.3.2",
     "zarr>=2.18.5",
+    "jupyter-app-launcher>=0.3.2",
 ]
 
 [build-system]
