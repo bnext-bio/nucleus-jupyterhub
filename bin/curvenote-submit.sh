@@ -6,4 +6,4 @@ set -exo pipefail
 
 cd ~/work/devnotes
 cd `ls -d ./*/ | ~/.fzf/bin/fzf`
-curvenote submit bnext-devnotes --collection nucleus-contrib $1
+curvenote submit bnext-devnotes --yes --collection nucleus-contrib $1
