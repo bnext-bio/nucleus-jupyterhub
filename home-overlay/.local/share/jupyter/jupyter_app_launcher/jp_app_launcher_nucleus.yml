@@ -1,23 +1,23 @@
 - title: Devnote Draft Submit
   description: Submits a devnote draft to Nucleus Community developer notes
   type: terminal
-  source: 'curvenote submit bnext-devnotes --collection nucleus-contrib --draft'
+  source: '/opt/repo/bin/curvenote-submit.sh --draft'
   cwd: './'
   args:
     reuse: false
-  catalog: Notebook
+  catalog: Nucleus
 - title: Devnote Publish
   description: Submits a devnote for publication to Nucleus Community developer notes
   type: terminal
-  source: 'curvenote submit bnext-devnotes --collection nucleus-contrib'
+  source: '/opt/repo/bin/curvenote-submit.sh'
   cwd: './'
   args:
     reuse: false
-  catalog: Notebook
+  catalog: Nucleus
 - title: Nucleus Documentation
   description: Visit the main Nucleus website.
   source: https://nucleus.bnext.bio//
   type: url
-  catalog: Notebook
+  catalog: Nucleus
   args:
       sandbox: [ 'allow-same-origin', 'allow-scripts', 'allow-downloads', 'allow-modals', 'allow-popups']
