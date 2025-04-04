@@ -35,11 +35,14 @@ cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 # Bring down the curvenote template
 if [ -d ${DEVNOTE_PATH} ]; then 
     cd ${DEVNOTE_PATH}
-    git pull --ff-only 
+    if [ -d .git.disable ]; then
+        mv .git.disable .git
+        git pull --ff-only
+    fi
 else
     git clone --depth=1 https://github.com/antonrmolina/devnote-template.git ${DEVNOTE_PATH}
 fi
-rm -rf ${DEVNOTE_PATH}/.git # Un-repoify it so it can be copied and modified easily.
+mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
 
 # Create LSP symlink
 echo Creating symlink
