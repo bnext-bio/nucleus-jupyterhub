@@ -1,0 +1,5 @@
+- title: Dashboard example
+  description: Example of opening a notebook in dashboard mode without Voila
+  source: ../../samples/sample.ipynb
+  cwd: ../../samples
+  type: notebook-grid
