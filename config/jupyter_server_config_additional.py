@@ -19,6 +19,7 @@ c.ServerProxy.servers = {
         "environment": {
             "BASE_URL_PREFIX": "{base_url}/curvenote-start"
         },
+        "timeout": 120,
         "launcher_entry": {
             "enabled": True,
             "title": "Curvenote Preview",
