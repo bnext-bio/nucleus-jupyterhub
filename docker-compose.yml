@@ -73,6 +73,16 @@ services:
     networks:
       - jupyterhub-network
 
+  # Cloudflare tunnel for remote access
+  tunnel:
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - jupyterhub-network
+
 volumes:
   jupyterhub-data:
   pycache:
