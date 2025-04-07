@@ -32,7 +32,7 @@ services:
       DOCKER_NOTEBOOK_IMAGE: jupyter-workshop:latest
       # Notebook directory inside user image
       DOCKER_NOTEBOOK_DIR: /home/jovyan/work
-      DATA_DIRECTORY: ${DATA_DIRECTORY}
+      DATA_DIRECTORY: ${DATA_DIRECTORY:-jupyterhub-shared-data}
       UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
       NB_USER: ${NB_USER}
       NB_UMASK: ${NB_UMASK:-022}
@@ -85,6 +85,7 @@ services:
 
 volumes:
   jupyterhub-data:
+  jupyterhub-shared-data:
   pycache:
 
 networks:
