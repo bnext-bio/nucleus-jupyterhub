@@ -87,7 +87,7 @@ c.NativeAuthenticator.ask_email_on_signup = True
 # Allowed admins
 admin = os.environ.get("JUPYTERHUB_ADMIN")
 if admin:
-    c.Authenticator.admin_users = [admin]
+    c.Authenticator.admin_users = ["admin", "acjs", "molina"]
 
 # Permissions for sharing / RTC
 c.JupyterHub.load_roles = [
