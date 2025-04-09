@@ -1,5 +1,13 @@
 #!/bin/bash
 
+DEVNOTE_PATH=~/work/devnotes
+
+if grep tokens ~/.curvenote/settings.json; then
+    rm -f ~/work/devnotes/index.html
+else
+    cp /opt/repo/share/set-token.html ${DEVNOTE_PATH}/index.html
+fi
+
 for devnote_dir in `ls -1d ~/work/devnotes/*/`; do
     name=`basename $devnote_dir`
    
