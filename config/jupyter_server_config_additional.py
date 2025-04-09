@@ -27,3 +27,6 @@ c.ServerProxy.servers = {
         }
     }
 }
+
+# Set default terminal shell
+c.NotebookApp.terminado_settings = { "shell_command": ["/bin/zsh"] }
