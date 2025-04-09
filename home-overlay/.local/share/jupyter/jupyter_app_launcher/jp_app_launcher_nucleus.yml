@@ -5,7 +5,7 @@
   cwd: './'
   args:
     reuse: false
-  catalog: Notebook
+  catalog: Nucleus
 - title: Devnote Publish
   description: Submits a devnote for publication to Nucleus Community developer notes
   type: terminal
@@ -13,7 +13,7 @@
   cwd: './'
   args:
     reuse: false
-  catalog: Notebook
+  catalog: Nucleus
 - title: Nucleus Documentation
   description: Visit the main Nucleus website.
   source: https://nucleus.bnext.bio//
