@@ -16,4 +16,4 @@ mkdir -p $HTML_DIR
 /bin/bash -c "${CURVENOTE_BUILD}" | tee -a ${LOG_FILE}
 
 caddy file-server --listen :$1 --browse --root $HTML_DIR/ | tee -a ${LOG_FILE} &
-nodemon -w ~/work/devnotes/ -i _build/ -i .html/ --ext md,yml,json,ipynb,html -x $CURVENOTE_BUILD | tee -a ${LOG_FILE} &
+nodemon -w ~/work/devnotes/ -w ~/.curvenote -i _build/ -i .html/ --ext md,yml,json,ipynb,html -x $CURVENOTE_BUILD | tee -a ${LOG_FILE} &
