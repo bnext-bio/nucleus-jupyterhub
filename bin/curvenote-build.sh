@@ -3,9 +3,9 @@
 DEVNOTE_HTML_PATH=~/work/devnotes/.html
 
 if grep tokens ~/.curvenote/settings.json; then
-    rm -f ~/work/devnotes/index.html
+    rm -f ${DEVNOTE_HTML_PATH}/index.html
 else
-    cp /opt/repo/share/set-token.html ${DEVNOTE_PATH}/index.html
+    cp /opt/repo/share/set-token.html ${DEVNOTE_HTML_PATH}/index.html
     exit
 fi
 
