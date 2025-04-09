@@ -23,8 +23,10 @@ c.ServerProxy.servers = {
         "launcher_entry": {
             "enabled": True,
             "title": "Curvenote Preview",
-            "category": "Nucleus"
-        }
+            "category": "Nucleus",
+            "icon_path": "/opt/repo/share/curvenote-logo.svg"
+        },
+        "new_browser_tab": False
     }
 }
 
