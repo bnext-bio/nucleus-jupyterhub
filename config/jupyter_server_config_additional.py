@@ -10,7 +10,9 @@ c.JupyterLabTemplates.include_default = False
 c.JupyterLabTemplates.include_core_paths = True
 c.JupyterLabTemplates.template_label = "Template"
 
+# File config
 c.ContentsManager.allow_hidden = True
+c.FileContentsManager.always_delete_dir = True
 
 c.ServerProxy.servers = {
     "curvenote-start": {
