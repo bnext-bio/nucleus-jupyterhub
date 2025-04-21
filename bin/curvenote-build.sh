@@ -10,11 +10,11 @@ else
 fi
 
 for link in `ls -1 ${DEVNOTE_HTML_PATH}`; do
-    link_name = `basename ${link}`
+    link_name="`basename ${link}`"
     if [ ! -d ~/work/devnotes/${link_name} ]; then
         # Delete links to devnotes that have been removed.
         echo "Deleting removed devnote: ${link_name}"
-        rm ${link}
+        rm ${DEVNOTE_HTML_PATH}/${link}
     fi
 done
 
