@@ -5,6 +5,9 @@
 import os
 import nativeauthenticator
 
+from jupyterhub.orm import User, Group
+from jupyterhub.app import JupyterHub
+
 c = get_config()  # noqa: F821
 
 # We rely on environment variables to configure JupyterHub so that we
@@ -100,3 +103,104 @@ c.JupyterHub.load_roles = [
 ]
 
 c.DockerSpawner.oauth_client_allowed_scopes = ["access:servers!server", "shares!server"]
+
+
+# Collaboration group setup
+# Experimentally vibe-coded based on https://jupyterhub.readthedocs.io/en/latest/tutorial/collaboration-users.html
+
+def create_collaboration_users():
+    """
+    Create collaboration users for all groups with collaboration=True property
+    """
+    app = JupyterHub.instance()
+    db = app.db
+    
+    # Setup for our collaborative users group
+    collab_group_name = "collaborative"
+    collab_group = db.query(Group).filter_by(name=collab_group_name).first()
+    if not collab_group:
+        app.log.info(f"Creating collaborative group '{collab_group_name}'")
+        collab_group = Group(name=collab_group_name)
+        db.add(collab_group)
+        db.commit()
+    
+    # Get all groups from the database
+    all_groups = db.query(Group).all()
+    
+    # Initialize roles list if not already present
+    if not hasattr(c.JupyterHub, 'load_roles'):
+        c.JupyterHub.load_roles = []
+    
+    for group in all_groups:
+        # Check if this group has the collaboration property set to True
+        # Since Group doesn't have a 'collaboration' property by default,
+        # we'll check a custom data attribute that needs to be set elsewhere
+        # (e.g., via an admin API extension or custom database modification)
+        
+        # Option 1: Check if the group has a data property
+        has_collab_flag = False
+        
+        # If you've extended the Group model with a 'properties' or 'data' field:
+        if hasattr(group, 'properties') and isinstance(group.properties, dict) and group.data.get('collaboration') == True:
+            has_collab_flag = True
+        
+        # Option 2: Check based on naming convention (e.g., groups prefixed with "collab-")
+        # if group.name.startswith("collab-"):
+        #     has_collab_flag = True
+            
+        # Option 3: Check against a predefined list of collaboration groups
+        # collab_group_names = ["group1", "group2", "group3"]
+        # if group.name in collab_group_names:
+        #     has_collab_flag = True
+        
+        if has_collab_flag:
+            # Create collaboration user for this group if it doesn't exist already
+            collab_username = f"{group.name}-collab"
+            collab_user = db.query(User).filter_by(name=collab_username).first()
+            
+            if not collab_user:
+                app.log.info(f"Creating collaboration user '{collab_username}' for group '{group.name}'")
+                collab_user = app.authenticator.add_user(collab_username)
+                
+                # Add to the collaborative group
+                collab_user.groups.append(collab_group)
+                db.commit()
+            
+            # Get the members of the group
+            members = [user.name for user in group.users]
+            app.log.info(f"Group '{group.name}' has members: {members}")
+            
+            # Create the role for access to the collab user's server
+            role_name = f"collab-access-{group.name}"
+            
+            # Check if the role already exists in load_roles
+            role_exists = any(role.get('name') == role_name for role in c.JupyterHub.load_roles)
+            
+            if not role_exists:
+                app.log.info(f"Creating collaboration role '{role_name}'")
+                c.JupyterHub.load_roles.append({
+                    "name": role_name,
+                    "scopes": [
+                        f"access:servers!user={collab_username}",
+                        f"admin:servers!user={collab_username}",
+                        "admin-ui",
+                        f"list:users!user={collab_username}",
+                    ],
+                    "groups": [group.name],
+                })
+        
+c.JupyterHub.init_spawners_hook = create_collaboration_users
+
+# Enable real-time collaboration for collaborative users
+def pre_spawn_hook(spawner):
+    user = spawner.user
+    group_names = {group.name for group in user.groups}
+    
+    if "collaborative" in group_names:
+        spawner.log.info(f"Enabling collaborative mode for user {user.name}")
+        spawner.args.append("--LabApp.collaborative=True")
+        
+        # Additional collaboration-specific configurations can be added here
+        # For example, mounting shared data directories, etc.
+
+c.Spawner.pre_spawn_hook = pre_spawn_hook
