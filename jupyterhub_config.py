@@ -115,6 +115,8 @@ def create_collaboration_users():
     app = JupyterHub.instance()
     db = app.db
     
+    app.log.info("Running pre-spawn collaboration hook.")
+
     # Setup for our collaborative users group
     collab_group_name = "collaborative"
     collab_group = db.query(Group).filter_by(name=collab_group_name).first()
@@ -160,10 +162,12 @@ def create_collaboration_users():
             
             if not collab_user:
                 app.log.info(f"Creating collaboration user '{collab_username}' for group '{group.name}'")
-                collab_user = app.authenticator.add_user(collab_username)
+                collab_user = User(name=collab_username)
                 
                 # Add to the collaborative group
                 collab_user.groups.append(collab_group)
+                
+                db.add(collab_user)
                 db.commit()
             
             # Get the members of the group
@@ -191,7 +195,7 @@ def create_collaboration_users():
         
         
 # Enable real-time collaboration for collaborative users
-def pre_spawn_hook(spawner):
+def pre_spawn_hook(spawner):    
     create_collaboration_users()
     
     user = spawner.user
