@@ -143,7 +143,7 @@ def create_collaboration_users():
         has_collab_flag = False
         
         # If you've extended the Group model with a 'properties' or 'data' field:
-        if hasattr(group, 'properties') and isinstance(group.properties, dict) and group.properties.get('collaboration').lower() == "true":
+        if hasattr(group, 'properties') and isinstance(group.properties, dict) and "collaboration" in group.properties and group.properties["collaboration"].lower() == "true":
             has_collab_flag = True
         
         # Option 2: Check based on naming convention (e.g., groups prefixed with "collab-")
