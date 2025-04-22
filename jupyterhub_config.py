@@ -189,10 +189,11 @@ def create_collaboration_users():
                     "groups": [group.name],
                 })
         
-c.JupyterHub.init_spawners_hook = create_collaboration_users
-
+        
 # Enable real-time collaboration for collaborative users
 def pre_spawn_hook(spawner):
+    create_collaboration_users()
+    
     user = spawner.user
     group_names = {group.name for group in user.groups}
     
