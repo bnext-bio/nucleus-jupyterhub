@@ -77,7 +77,7 @@ c.Authenticator.allow_all = True
 
 # Authenticate users with Native Authenticator
 c.JupyterHub.authenticator_class = "nativeauthenticator.NativeAuthenticator"
-c.JupyterHub.template_paths.append(f"{os.path.dirname(nativeauthenticator.__file__)}/templates/")
+c.JupyterHub.template_paths = [f"{os.path.dirname(nativeauthenticator.__file__)}/templates/"]
 
 # Allow anyone to sign-up without approval
 c.NativeAuthenticator.open_signup = False
