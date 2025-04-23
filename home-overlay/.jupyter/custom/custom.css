@@ -4,3 +4,10 @@
       local("IosevkaTerm Nerd Font"),
       url("IosevkaTermNerdFont-Regular.woff") format("woff");
   }
+
+@font-face {
+  font-family: "MesloLGSNF-Regular";
+  src:
+    local("Meslo Nerd Font"),
+    url("MesloLGS-NF-Regular.woff2") format("woff");
+}
