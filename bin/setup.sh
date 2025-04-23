@@ -29,6 +29,19 @@ cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyt
 mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
+# Drop in launcher configuration for the collaboration groups we're a part of
+for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq '.groups | join(" ")'`; do
+    echo """
+- title: ${group}
+  description: Open the real-time collaboration server for ${group}
+  source: /hub/spawn/${group}-collab
+  type: url
+  catalog: Collaboration
+  args:
+      createNewWindow: true
+""" > ~/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
+done
+
 # Install our key packages
 ~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress -v
 
