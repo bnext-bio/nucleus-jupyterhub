@@ -16,7 +16,7 @@
   catalog: Nucleus
 - title: Nucleus Documentation
   description: Visit the main Nucleus website.
-  source: https://nucleus.bnext.bio//
+  source: https://nucleus.bnext.bio/
   type: url
   catalog: Nucleus
   args:
