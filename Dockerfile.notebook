@@ -2,7 +2,7 @@ FROM quay.io/jupyter/minimal-notebook:latest
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza caddy
+RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza caddy jq
 
 USER $NB_USER
 
