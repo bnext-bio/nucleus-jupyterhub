@@ -47,11 +47,10 @@ TOPBAR_TAG="👤 ${JUPYTERHUB_USER}"
 if [[ $JUPYTERHUB_USER =~ "-collab$" ]]; then
     TOPBAR_TAG="🌎 ${JUPYTERHUB_USER:--collab}"
 fi
-echo """
-{
-    "text": "${TOPBAR_TAG}",
-    "editable": false
-}""" > /tmp/topbar.json #> ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/plugin.jupyterlab-settings
+echo """{
+    \"text\": \"${TOPBAR_TAG}\",
+    \"editable\": false
+}""" > ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/plugin.jupyterlab-settings
 
 # Install our key packages
 echo "Installing environment packages"
