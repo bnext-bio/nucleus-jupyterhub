@@ -6,8 +6,37 @@
   }
 
 @font-face {
-  font-family: "MesloLGSNF-Regular";
+  font-family: "MesloLGSNF";
   src:
     local("Meslo Nerd Font"),
     url("MesloLGS-NF-Regular.woff2") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "MesloLGSNF";
+  src:
+    local("Meslo Nerd Font"),
+    url("MesloLGS-NF-Bold.woff2") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "MesloLGSNF";
+  src:
+    local("Meslo Nerd Font"),
+    url("MesloLGS-NF-Italic.woff2") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "MesloLGSNF";
+  src:
+    local("Meslo Nerd Font"),
+    url("MesloLGS-NF-Bold-Italic.woff2") format("woff");
+  font-weight: bold;
+  font-style: italic;
 }
