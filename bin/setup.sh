@@ -39,7 +39,7 @@ for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_A
   catalog: Collaboration
   args:
       createNewWindow: true
-""" > ~/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
+""" > ~/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
 done
 
 # Install our key packages
