@@ -40,6 +40,19 @@ for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_A
 """ > ${HOME}/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
 done
 
+# Add topbar text to indicate the user
+echo "Adding topbar configuration"
+mkdir -p ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/
+TOPBAR_TAG="👤 ${JUPYTERHUB_USER}"
+if [[ $JUPYTERHUB_USER =~ "-collab$" ]]; then
+    TOPBAR_TAG="🌎 ${JUPYTERHUB_USER:--collab}"
+fi
+echo """
+{
+    "text": "${TOPBAR_TAG}",
+    "editable": false
+}""" > ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/plugin.jupyterlab-settings
+
 # Install our key packages
 echo "Installing environment packages"
 ~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress
