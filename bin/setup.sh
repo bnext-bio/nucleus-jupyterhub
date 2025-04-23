@@ -43,12 +43,12 @@ for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_A
   catalog: Collaboration
   args:
       createNewWindow: true
-""" > ~/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
+""" > ${HOME}/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
 done
 
 # Install our key packages
 echo "Installing environment packages"
-~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress -v
+~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress
 
 # Bring down the curvenote template
 echo "Updating curvenote template"
@@ -72,7 +72,7 @@ fi
 # Create curvenote symlink
 echo Linking curvenote config
 if [ ! -L ${HOME}/.curvenote ]; then
-    ln -s ~/work/.curvenote ~/.curvenote
+    ln -s ${HOME}/work/.curvenote ~/.curvenote
 fi
 
 # Run final shared setup commands
