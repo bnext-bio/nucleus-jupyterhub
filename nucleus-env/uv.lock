@@ -1262,6 +1262,18 @@ wheels = [
 ]
 
 [[package]]
+name = "jupyterlab-topbar-text"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jupyterlab" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5a/a5/388a726973bc1dfc505c10295e5abf966d033c07e80f04562d156e101b37/jupyterlab_topbar_text-1.1.0.tar.gz", hash = "sha256:c243d4fa6e4766b24666688565d3059bc3d073e0a113442f369c360a6d7fdd54", size = 13864 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f0/24/6996d2ca1c4d5172cedb755fcae63a387a81d561bc05d5b2c7d3a2f3275f/jupyterlab_topbar_text-1.1.0-py3-none-any.whl", hash = "sha256:446b1dcd5d40510a8a1323c494d8dc213880458c52f7b803121893bc93d6fb95", size = 16843 },
+]
+
+[[package]]
 name = "jupyterlab-widgets"
 version = "3.0.14"
 source = { registry = "https://pypi.org/simple" }
@@ -1696,6 +1708,7 @@ dependencies = [
     { name = "jupyterlab-link-share" },
     { name = "jupyterlab-lsp" },
     { name = "jupyterlab-templates" },
+    { name = "jupyterlab-topbar-text" },
     { name = "nucleus-cdk" },
     { name = "numpy" },
     { name = "pandas" },
@@ -1721,6 +1734,7 @@ requires-dist = [
     { name = "jupyterlab-link-share", specifier = ">=0.3.0" },
     { name = "jupyterlab-lsp", specifier = ">=5.1.0" },
     { name = "jupyterlab-templates", specifier = ">=0.5.2" },
+    { name = "jupyterlab-topbar-text", specifier = ">=1.1.0" },
     { name = "nucleus-cdk", specifier = ">=0.3.0a1" },
     { name = "numpy", specifier = ">=1.26.4" },
     { name = "pandas", specifier = ">=2.2.3" },
