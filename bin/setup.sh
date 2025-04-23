@@ -30,11 +30,11 @@ echo "Creating collaboration launchers for user groups"
 for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq -r '.groups | join("\n")'`; do
     echo "Creating launcher for group: ${group}"
     echo """
-- title: ${group}
+- title: Collab: ${group}
   description: Open the real-time collaboration server for ${group}
   source: /hub/spawn/${group}-collab
   type: url
-  catalog: Collaboration
+  catalog: Nucleus
   args:
       createNewWindow: true
 """ > ${HOME}/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
