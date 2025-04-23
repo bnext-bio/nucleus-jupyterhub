@@ -44,8 +44,8 @@ done
 echo "Adding topbar configuration"
 mkdir -p ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/
 TOPBAR_TAG="👤 ${JUPYTERHUB_USER}"
-if [[ $JUPYTERHUB_USER =~ "-collab$" ]]; then
-    TOPBAR_TAG="🌎 ${JUPYTERHUB_USER:--collab}"
+if [[ $JUPYTERHUB_USER =~ "-collab" ]]; then
+    TOPBAR_TAG="🌎 ${JUPYTERHUB_USER%-collab}"
 fi
 echo """{
     \"text\": \"${TOPBAR_TAG}\",
