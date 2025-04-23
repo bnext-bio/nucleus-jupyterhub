@@ -2,7 +2,6 @@
 
 HOME=/home/jovyan
 GIT_REMOTE="https://github.com/bnext-bio/nucleus-jupyterhub.git"
-REPO=/opt/repo
 JUPYTER_SETTINGS=/opt/conda/share/jupyter/lab/settings
 DEVNOTE_PATH=/home/jovyan/work/devnotes/template
 
@@ -14,15 +13,10 @@ echo "NB_GID: $NB_GID"
 echo "NB_UMASK: $NB_UMASK"
 echo "UV_INDEX: $UV_INDEX"
 
+cd ${REPO}
+
 # Bring down and update our baseline home directory
 echo "Updating home directory overlay."
-if [ ! -d ${REPO} ]; then
-    git clone --depth=1 ${GIT_REMOTE} ${REPO}
-fi
-cd ${REPO}
-git remote set-url origin ${GIT_REMOTE} # Fix up remote if image was built from a repo with an SSH origin.
-git pull
-
 rsync -a ${REPO}/home-overlay/ ${HOME}
 
 # Update our jupyter configuration
