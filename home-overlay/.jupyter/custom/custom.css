@@ -2,7 +2,7 @@
     font-family: "IosevkaTermNF";
     src:
       local("IosevkaTerm Nerd Font"),
-      url("IosevkaTermNerdFont-Regular.woff") format("woff");
+      url("IosevkaTermNerdFont-Regular.woff2") format("woff");
   }
 
 @font-face {

@@ -1,5 +1,5 @@
 {
-    "fontFamily": "monospace",
+    "fontFamily": "IosevkaTermNF, MesloLGSNF, monospace",
     "fontSize": 14,
     "lineHeight": 1,
     "theme": "dark",
