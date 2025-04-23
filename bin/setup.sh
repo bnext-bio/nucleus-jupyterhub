@@ -33,7 +33,7 @@ cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
 # Drop in launcher configuration for the collaboration groups we're a part of
 echo "Creating collaboration launchers for user groups"
-for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq '.groups | join(" ")'`; do
+for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq -r '.groups | join("\n")'`; do
     echo "Creating launcher for group: ${group}"
     echo """
 - title: ${group}
