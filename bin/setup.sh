@@ -15,6 +15,7 @@ echo "NB_UMASK: $NB_UMASK"
 echo "UV_INDEX: $UV_INDEX"
 
 # Bring down and update our baseline home directory
+echo "Updating home directory overlay."
 if [ ! -d ${REPO} ]; then
     git clone --depth=1 ${GIT_REMOTE} ${REPO}
 fi
@@ -25,12 +26,15 @@ git pull
 rsync -a ${REPO}/home-overlay/ ${HOME}
 
 # Update our jupyter configuration
+echo "Updating jupyter configuration"
 cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
 mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
 # Drop in launcher configuration for the collaboration groups we're a part of
+echo "Creating collaboration launchers for user groups"
 for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq '.groups | join(" ")'`; do
+    echo "Creating launcher for group: ${group}"
     echo """
 - title: ${group}
   description: Open the real-time collaboration server for ${group}
@@ -43,9 +47,11 @@ for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_A
 done
 
 # Install our key packages
+echo "Installing environment packages"
 ~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress -v
 
 # Bring down the curvenote template
+echo "Updating curvenote template"
 if [ -d ${DEVNOTE_PATH} ]; then 
     cd ${DEVNOTE_PATH}
     if [ -d .git.disable ]; then
