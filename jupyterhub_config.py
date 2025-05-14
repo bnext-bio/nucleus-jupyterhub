@@ -55,6 +55,7 @@ c.DockerSpawner.notebook_dir = notebook_dir
 # notebook directory in the container
 c.DockerSpawner.volumes = {
     "jupyterhub-user-{username}": notebook_dir,
+    os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), "hub-setup"): "/home/jovyan/hub-setup"
 }
 
 # Run our post-setup script

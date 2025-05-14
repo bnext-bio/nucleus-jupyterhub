@@ -87,8 +87,8 @@ fi
 
 # Run final shared setup commands
 echo Running final setup
-if [ -f ${HOME}/work/shared/.setup/setup.sh ]; then
-    ${HOME}/work/shared/.setup/setup.sh
+if [ -f ${HOME}/hub-setup/setup.sh ]; then
+    ${HOME}/hub-setup/setup.sh
 fi
 
 echo Nucleus environment setup
