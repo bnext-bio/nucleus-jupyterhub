@@ -55,7 +55,6 @@ c.DockerSpawner.notebook_dir = notebook_dir
 # notebook directory in the container
 c.DockerSpawner.volumes = {
     "jupyterhub-user-{username}": notebook_dir,
-    os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"): "/home/jovyan/work/shared"
 }
 
 # Run our post-setup script
@@ -207,5 +206,12 @@ def pre_spawn_hook(spawner):
         
         # Additional collaboration-specific configurations can be added here
         # For example, mounting shared data directories, etc.
+        
+    # Connect the user to a shared data directory for every group they're a member of.
+    # TODO: Only do this for specifically-tagged or collaborative groups
+    for group in group_names:
+        host_dir = os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), group)
+        os.makedirs(host_dir, exist_ok=True)
+        spawner.volumes[host_dir] = "/home/jovyan/work/shared"
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
