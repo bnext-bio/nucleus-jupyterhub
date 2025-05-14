@@ -212,6 +212,6 @@ def pre_spawn_hook(spawner):
     for group in group_names:
         host_dir = os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), group)
         os.makedirs(host_dir, exist_ok=True)
-        spawner.volumes[host_dir] = "/home/jovyan/work/shared"
+        spawner.volumes[host_dir] = f"/home/jovyan/work/shared/{group}"
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
