@@ -33,7 +33,7 @@ if [[ ! $JUPYTERHUB_USER =~ "-collab" ]]; then
         echo """
 - title: \"Collab: ${group}\"
   description: Open the real-time collaboration server for ${group}
-  source: /hub/spawn/${group}-collab
+  source: /user/${group}-collab
   type: url
   catalog: Nucleus
   args:
