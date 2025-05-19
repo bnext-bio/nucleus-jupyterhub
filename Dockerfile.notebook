@@ -10,7 +10,7 @@ USER $NB_USER
 RUN mamba install -y -c conda-forge 'nodejs>=22,<23'
 RUN npm install -g curvenote
 RUN npm install -g nodemon
-RUN npm install -g unified-language-server
+RUN npm install -g --save-dev unified-language-server
 #RUN mamba install -y -c conda-forge caddy
 
 # UV
