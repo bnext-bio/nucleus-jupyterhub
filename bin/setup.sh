@@ -25,6 +25,12 @@ cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyt
 mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
+# Install LSP into node roots using npm
+mkdir -p /opt/noderoots
+cd /opt/noderoots
+npm install --save-dev unified-language-server
+cd ${REPO}
+
 # Drop in launcher configuration for the collaboration groups we're a part of
 echo "Creating collaboration launchers for user groups"
 if [[ ! $JUPYTERHUB_USER =~ "-collab" ]]; then

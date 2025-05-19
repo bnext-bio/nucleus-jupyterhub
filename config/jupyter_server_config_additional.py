@@ -2,6 +2,9 @@
 # Additional configuration for the nucleus jupyter environment
 # c.Application.log_level = "DEBUG"
 
+# Extra node roots so we can install the language server
+c.LanguageServerManager.extra_node_roots = ["/opt/noderoots"]
+
 c.LabApp.custom_css = True
 
 c.JupyterLabTemplates.allowed_extensions = ["*.ipynb"]
