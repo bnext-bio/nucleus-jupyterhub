@@ -221,6 +221,14 @@ def pre_spawn_hook(spawner):
         
     # Connect the user to a shared data directory for every group they're a member of.
     # TODO: Only do this for specifically-tagged or collaborative groups
+    
+    spawner.log.info(f"Group info for {user.name}: {user}")
+    for group in user.groups:
+        # Test if we can access group properties in here
+        spawner.log.info(f"Group: {group}")
+        spawner.log.info(f"  attrs: {group.__dict__.keys()}")
+        spawner.log.info(f"  properties: {group.properties}")
+        
     for group in group_names:
         host_dir = os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), group)
         os.makedirs(host_dir, exist_ok=True)
