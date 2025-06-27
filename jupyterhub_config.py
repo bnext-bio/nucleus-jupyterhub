@@ -113,32 +113,32 @@ def create_collaboration_users():
     Create collaboration users for all groups with collaboration=True property
     """
     app = JupyterHub.instance()
-    # db = app.db
+    db = app.db
     
     app.log.info("Running pre-spawn collaboration hook.")
 
     # Setup for our collaborative users group
-    # collab_group_name = "collaborative"
+    collab_group_name = "collaborative"
     c.JupyterHub.load_groups = {
         # collaborative accounts get added to this group
         # so it's easy to see which accounts are collaboration accounts
         "collaborative": {"users": []},
     }
-    # collab_group = db.query(Group).filter_by(name=collab_group_name).first()
-    # if not collab_group:
-    #     app.log.info(f"Creating collaborative group '{collab_group_name}'")
-    #     collab_group = Group(name=collab_group_name)
-    #     db.add(collab_group)
-    #     db.commit()
+    collab_group = db.query(Group).filter_by(name=collab_group_name).first()
+    if not collab_group:
+        app.log.info(f"Creating collaborative group '{collab_group_name}'")
+        collab_group = Group(name=collab_group_name)
+        db.add(collab_group)
+        db.commit()
     
     # Get all groups from the database
-    # all_groups = db.query(Group).all()
+    all_groups = db.query(Group).all()
     
     # # Initialize roles list if not already present
-    # if not hasattr(c.JupyterHub, 'load_roles'):
-    #     c.JupyterHub.load_roles = []
+    if not hasattr(c.JupyterHub, 'load_roles'):
+        c.JupyterHub.load_roles = []
     
-    for group in ["pure-dev-workshop", "nucleus-pure-workshop"]:
+    for group in all_groups:
         # Check if this group has the collaboration property set to True
         # Since Group doesn't have a 'collaboration' property by default,
         # we'll check a custom data attribute that needs to be set elsewhere
@@ -148,8 +148,8 @@ def create_collaboration_users():
         has_collab_flag = False
         
         # If you've extended the Group model with a 'properties' or 'data' field:
-        # if hasattr(group, 'properties') and isinstance(group.properties, dict) and "collaboration" in group.properties and group.properties["collaboration"].lower() == "true":
-        has_collab_flag = True
+        if hasattr(group, 'properties') and isinstance(group.properties, dict) and "collaboration" in group.properties and group.properties["collaboration"].lower() == "true":
+            has_collab_flag = True
         
         # Option 2: Check based on naming convention (e.g., groups prefixed with "collab-")
         # if group.name.startswith("collab-"):
@@ -163,7 +163,7 @@ def create_collaboration_users():
         if has_collab_flag:
             # Create collaboration user for this group if it doesn't exist already
             collab_username = f"{group.name}-collab"
-            # collab_user = db.query(User).filter_by(name=collab_username).first()
+            collab_user = db.query(User).filter_by(name=collab_username).first()
             
             if not collab_user:
                 app.log.info(f"Creating collaboration user '{collab_username}' for group '{group.name}'")
@@ -172,8 +172,8 @@ def create_collaboration_users():
                 # Add to the collaborative group
                 collab_user.groups.append(collab_group)
                 
-                # db.add(collab_user)
-                # db.commit()
+                db.add(collab_user)
+                db.commit()
             
             # Get the members of the group
             members = [user.name for user in group.users]
@@ -207,6 +207,7 @@ def create_collaboration_users():
 
 # create_collaboration_users()
         
+        
 # Enable real-time collaboration for collaborative users
 def pre_spawn_hook(spawner):    
     user = spawner.user
@@ -220,19 +221,23 @@ def pre_spawn_hook(spawner):
         # For example, mounting shared data directories, etc.
         
     # Connect the user to a shared data directory for every group they're a member of.
-    # TODO: Only do this for specifically-tagged or collaborative groups
     
-    spawner.log.info(f"Group info for {user.name}: {user}")
-    for group in user.groups:
-        # Test if we can access group properties in here
-        spawner.log.info(f"Group: {group}")
-        spawner.log.info(f"  attrs: {group.__dict__.keys()}")
-        spawner.log.info(f"  properties: {group.properties}")
+    # spawner.log.info(f"Group info for {user.name}: {user}")
+    # for group in user.groups:
+    #     # Test if we can access group properties in here
+    #     spawner.log.info(f"Group: {group}")
+    #     spawner.log.info(f"  attrs: {group.__dict__.keys()}")
+    #     spawner.log.info(f"  properties: {group.properties}")
         
-    for group in group_names:
-        host_dir = os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), group)
-        os.makedirs(host_dir, exist_ok=True)
-        spawner.volumes[host_dir] = f"/home/jovyan/work/shared/{group}"
+    for group in user.groups:
+        if hasattr(group, 'properties') and isinstance(group.properties, dict):
+            if "collaboration" in group.properties and group.properties["collaboration"].lower() == "true":
+                host_dir = os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), group.name)
+                os.makedirs(host_dir, exist_ok=True)
+                spawner.volumes[host_dir] = f"/home/jovyan/work/shared/{group}"
+                
+            if group.name == "bnext":
+                spawner.volumes["/data/bnext"] = "/home/jovyan/work/bnext"
 
 c.Spawner.pre_spawn_hook = pre_spawn_hook
 
