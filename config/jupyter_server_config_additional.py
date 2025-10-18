@@ -22,7 +22,7 @@ c.ServerProxy.servers = {
         "command": ["/bin/bash", "/opt/repo/bin/curvenote-launch.sh", "{port}"],
         "absolute_url": False,
         "environment": {
-            "BASE_URL_PREFIX": "{base_url}/curvenote-start"
+            "BASE_URL_PREFIX": "{base_url}curvenote-start"
         },
         "timeout": 120,
         "launcher_entry": {
