@@ -24,7 +24,7 @@ for devnote_dir in `ls -1d ~/work/devnotes/*/`; do
     export BASE_URL=${BASE_URL_PREFIX}/$name/
     
     cd $devnote_dir
-    curvenote build --html
+    HOST=127.0.0.1 curvenote build --html
     
     if [ ! -L ~/work/devnotes/.html/$name ]; then
         if [ -d $devnote_dir/_build/html ]; then
