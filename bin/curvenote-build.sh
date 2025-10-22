@@ -21,7 +21,7 @@ done
 for devnote_dir in `ls -1d ~/work/devnotes/*/`; do
     name=`basename $devnote_dir`
    
-    export BASE_URL=${BASE_URL_PREFIX}/$name/
+    export BASE_URL=${BASE_URL_PREFIX}/$name
     
     cd $devnote_dir
     HOST=127.0.0.1 curvenote build --html
