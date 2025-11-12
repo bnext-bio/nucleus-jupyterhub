@@ -1,7 +1,6 @@
 #!/bin/bash
 
 HOME=/home/jovyan
-GIT_REMOTE="https://github.com/bnext-bio/nucleus-jupyterhub.git"
 JUPYTER_SETTINGS=/opt/conda/share/jupyter/lab/settings
 DEVNOTE_PATH=/home/jovyan/work/devnotes/template
 
