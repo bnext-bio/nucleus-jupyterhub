@@ -2,6 +2,7 @@
 
 
 export REPO=/opt/repo
+export BRANCH=2i2c
 export GIT_REMOTE="https://github.com/bnext-bio/nucleus-jupyterhub.git"
 export LOG_FILE=/home/jovyan/.log/`date -Iseconds`-setup.log
 
@@ -15,6 +16,7 @@ fi
 
 cd ${REPO}
 git remote set-url origin ${GIT_REMOTE} |& tee -a ${LOG_FILE} # Fix up remote if image was built from a repo with an SSH origin.
+git checkout ${BRANCH}
 git pull |& tee -a ${LOG_FILE}
 
 echo "Running main setup" | tee -a ${LOG_FILE}
