@@ -8,7 +8,7 @@ c.LanguageServerManager.extra_node_roots = ["/opt/noderoots"]
 c.LabApp.custom_css = True
 
 c.JupyterLabTemplates.allowed_extensions = ["*.ipynb"]
-c.JupyterLabTemplates.template_dirs = ["/home/jovyan/hub-setup/templates"]
+c.JupyterLabTemplates.template_dirs = ["/opt/repo/templates", "/home/jovyan/shared/templates"]
 c.JupyterLabTemplates.include_default = False
 c.JupyterLabTemplates.include_core_paths = True
 c.JupyterLabTemplates.template_label = "Template"

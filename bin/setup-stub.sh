@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export REPO=/opt/repo
-export LOG_FILE=/home/jovyan/work/.log/`date -Iseconds`-setup.log
+export LOG_FILE=/home/jovyan/.log/`date -Iseconds`-setup.log
 
 echo "In setup-stub: logging to $LOG_FILE"
 mkdir -p `dirname $LOG_FILE`

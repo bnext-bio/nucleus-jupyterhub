@@ -1,10 +1,9 @@
-  sunlei/zsh-ssh
-  romkatv/powerlevel10k
-  zsh-users/zsh-syntax-highlighting
-  zsh-users/zsh-autosuggestions
-  ohmyzsh/ohmyzsh path:plugins/per-directory-history
-  ohmyzsh/ohmyzsh path:plugins/mosh
-  ohmyzsh/ohmyzsh path:plugins/gitfast
-  trystan2k/zsh-tab-title
-  unixorn/fzf-zsh-plugin
-  conda-incubator/conda-zsh-completion
+mattmc3/ez-compinit
+sunlei/zsh-ssh
+romkatv/powerlevel10k
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-autosuggestions
+ohmyzsh/ohmyzsh path:plugins/per-directory-history
+ohmyzsh/ohmyzsh path:plugins/gitfast
+trystan2k/zsh-tab-title
+conda-incubator/conda-zsh-completion

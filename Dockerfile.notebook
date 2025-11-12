@@ -2,23 +2,22 @@ FROM quay.io/jupyter/minimal-notebook:latest
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza caddy jq
-
-USER $NB_USER
-
-# Curvenote
-RUN mamba install -y -c conda-forge 'nodejs>=24'
-RUN npm install -g curvenote
-RUN npm install -g nodemon
-#RUN mamba install -y -c conda-forge caddy
+RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza caddy jq cargo ripgrep
 
 # UV
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh
+
+# FZF
+RUN curl -LsSf https://github.com/junegunn/fzf/releases/download/v0.66.1/fzf-0.66.1-linux_amd64.tar.gz | tar -xzf - -C /usr/local/bin
+
+# Antidote
+RUN git clone --depth=1 https://github.com/mattmc3/antidote.git /opt/antidote
+
+# Zoxide
+RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
-
-USER root
 
 ADD bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
 ADD --chown=$NB_USER:users . /opt/repo/
@@ -31,11 +30,11 @@ RUN chsh -s /bin/zsh jovyan
 
 USER $NB_USER
 
-RUN rsync -av /opt/repo/home-overlay/ /home/$NB_USER/
-RUN git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
-RUN zsh -ci "source ~/.antidote/antidote.zsh && antidote load"
+# Curvenote
+RUN mamba install -y -c conda-forge 'nodejs>=24'
+RUN npm install -g curvenote
+RUN npm install -g nodemon
 
-RUN git clone --depth=1 https://github.com/antonrmolina/devnote-template.git /home/jovyan/work/devnotes/template
-
+# Python environment
 ARG UV_INDEX=https://pypi.org/simple
-RUN ~/.local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
+RUN /usr/local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple 

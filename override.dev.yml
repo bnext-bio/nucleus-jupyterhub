@@ -2,3 +2,7 @@ services:
   hub:
     ports:
      - 8000:8000
+    labels: {}
+    environment:
+      DOCKER_NOTEBOOK_DIR: /home/jovyan
+  

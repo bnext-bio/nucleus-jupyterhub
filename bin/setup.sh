@@ -19,6 +19,9 @@ cd ${REPO}
 echo "Updating home directory overlay."
 rsync -a ${REPO}/home-overlay/ ${HOME}
 
+# Install shell basics if necessary
+zsh -ci "source /opt/antidote/antidote.zsh && antidote load"
+
 # Update our jupyter configuration
 echo "Updating jupyter configuration"
 cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
@@ -29,26 +32,27 @@ cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 mkdir -p /opt/noderoots
 cd /opt/noderoots
 npm install --save-dev unified-language-server
+
 cd ${REPO}
 
 # Drop in launcher configuration for the collaboration groups we're a part of
-echo "Creating collaboration launchers for user groups"
-if [[ ! $JUPYTERHUB_USER =~ "-collab" ]]; then
-    for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq -r '.groups | join("\n")'`; do
-        echo "Creating launcher for group: ${group}"
-        echo """
-- title: \"Collab: ${group}\"
-  description: Open the real-time collaboration server for ${group}
-  source: /user/${group}-collab
-  type: url
-  catalog: Nucleus
-  args:
-    createNewWindow: true
-""" > ${HOME}/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
-    done
-else
-    echo "Already in collaborative user: not creating launcher"
-fi
+# echo "Creating collaboration launchers for user groups"
+# if [[ ! $JUPYTERHUB_USER =~ "-collab" ]]; then
+#     for group in `curl -H "Authorization: token $JUPYTERHUB_API_TOKEN" $JUPYTERHUB_API_URL/user | jq -r '.groups | join("\n")'`; do
+#         echo "Creating launcher for group: ${group}"
+#         echo """
+# - title: \"Collab: ${group}\"
+#   description: Open the real-time collaboration server for ${group}
+#   source: /user/${group}-collab
+#   type: url
+#   catalog: Nucleus
+#   args:
+#     createNewWindow: true
+# """ > ${HOME}/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_collab_${group}.yml
+#     done
+# else
+#     echo "Already in collaborative user: not creating launcher"
+# fi
 
 # Add topbar text to indicate the user
 echo "Adding topbar configuration"
@@ -64,7 +68,7 @@ echo """{
 
 # Install our key packages
 echo "Installing environment packages"
-~/.local/bin/uv pip install --system -e ${REPO}/nucleus-env --no-progress
+uv pip install --system -e ${REPO}/nucleus-env --no-progress
 
 # Bring down the curvenote template
 echo "Updating curvenote template"
@@ -77,24 +81,9 @@ if [ -d ${DEVNOTE_PATH} ]; then
 else
     git clone --depth=1 https://github.com/antonrmolina/devnote-template.git ${DEVNOTE_PATH}
 fi
+
 mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
 
-# Create LSP symlink
-echo Creating symlink
-if [ ! -L ${HOME}/work/.lsp_symlink ]; then
-    ln -s / ${HOME}/work/.lsp_symlink
-fi
-
-# Create curvenote symlink
-echo Linking curvenote config
-if [ ! -L ${HOME}/.curvenote ]; then
-    ln -s ${HOME}/work/.curvenote ~/.curvenote
-fi
-
-# Run final shared setup commands
-echo Running final setup
-if [ -f ${HOME}/hub-setup/setup.sh ]; then
-    ${HOME}/hub-setup/setup.sh
-fi
+cd ~
 
 echo Nucleus environment setup
