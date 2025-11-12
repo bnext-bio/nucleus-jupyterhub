@@ -83,6 +83,7 @@ fi
 
 mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
 
-cd ~
+cd ${HOME}
+echo PWD: `pwd`
 
 echo Nucleus environment setup
