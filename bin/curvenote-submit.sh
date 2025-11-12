@@ -10,5 +10,5 @@ if [ ! -f ~/.curvenote/settings.json ]; then
 fi
 
 cd ~/work/devnotes
-cd `ls -d ./*/ | ~/.fzf/bin/fzf`
+cd `ls -d ./*/ | fzf`
 curvenote submit bnext-devnotes --yes --collection nucleus-contrib $1
