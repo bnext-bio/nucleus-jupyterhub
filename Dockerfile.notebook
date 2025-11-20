@@ -2,7 +2,20 @@ FROM quay.io/jupyter/minimal-notebook:latest
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza caddy jq cargo ripgrep
+RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza jq cargo ripgrep btop
+
+# Go
+RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+
+# XCaddy
+RUN sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-xcaddy.list
+RUN sudo apt update
+RUN sudo apt install xcaddy
+
+# Build and install caddy
+RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy
 
 # UV
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh
@@ -19,14 +32,13 @@ RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
 
-ADD bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
-ADD --chown=$NB_USER:users . /opt/repo/
-
 # Add directory and correct permissions for additional node installs
 RUN mkdir -p /opt/noderoots
 RUN chown $NB_USER:users /opt/noderoots
 
 RUN chsh -s /bin/zsh jovyan
+
+RUN chown -R ${NB_USER}:users /home/jovyan
 
 USER $NB_USER
 
@@ -35,8 +47,12 @@ RUN mamba install -y -c conda-forge 'nodejs>=24'
 RUN npm install -g curvenote
 RUN npm install -g nodemon
 
+ADD bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
+ADD --chown=$NB_USER:users . /opt/repo/
+
 # Python environment
 ARG UV_INDEX=https://pypi.org/simple
+RUN ls -alh /home/jovyan
 RUN /usr/local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
 
 WORKDIR /home/jovyan

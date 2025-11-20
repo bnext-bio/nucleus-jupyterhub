@@ -33,7 +33,7 @@ services:
       # JupyterHub will spawn this Notebook image for users
       DOCKER_NOTEBOOK_IMAGE: nucleus-jupyter:latest
       # Notebook directory inside user image
-      DOCKER_NOTEBOOK_DIR: /home/jovyan/work
+      DOCKER_NOTEBOOK_DIR: /home/jovyan
       DATA_DIRECTORY: jupyterhub-shared-data
       UV_INDEX: https://pypi.org/simple
       NB_USER: jovyan
