@@ -3,3 +3,5 @@ userlist
 .DS_Store
 __pycache__/
 .venv/
+.ipynb_checkpoints/Untitled-checkpoint.ipynb
+.ipynb_checkpoints/Untitled1-checkpoint.ipynb
