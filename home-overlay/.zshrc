@@ -18,6 +18,7 @@ antidote load
 if [[ -x $(which nvim) ]]; then
   export EDITOR="$(which nvim)"
   export VISUAL="$(which nvim)"
+  alias vim='nvim'
 fi
 
 EZA_ICON_SPACING=2
