@@ -1,5 +1,7 @@
 FROM quay.io/jupyter/minimal-notebook:latest
 
+ARG UV_INDEX=https://pypi.org/simple
+
 USER root
 
 RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza jq cargo ripgrep btop tmux psmisc
@@ -51,11 +53,14 @@ RUN mamba install -y -c conda-forge 'nodejs>=24'
 RUN npm install -g curvenote
 RUN npm install -g nodemon
 
+# Pre-install pip packages so we can have them cached as a docker layer
+# and only add updates based on the latest hub repo
+RUN /usr/local/bin/uv pip install --system "git+https://github.com/bnext-bio/nucleus-jupyterhub.git#egg=nucleus-env&subdirectory=nucleus-env" --index $UV_INDEX --default-index=https://pypi.org/simple
+
 ADD bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
 ADD --chown=$NB_USER:users . /opt/repo/
 
 # Python environment
-ARG UV_INDEX=https://pypi.org/simple
 RUN ls -alh /home/jovyan
 RUN /usr/local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
 
