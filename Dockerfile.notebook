@@ -97,7 +97,8 @@ ADD bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
 ADD --chown=$NB_USER:users . /opt/repo/
 
 # Jupyter Theme
-RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
+# RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
+RUN cd /opt/repo/share/theme && jlpm build
 RUN jupyter labextension develop /opt/repo/share/theme --overwrite
 
 # Python environment

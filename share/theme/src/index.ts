@@ -7,7 +7,7 @@ import {
 import { IThemeManager } from '@jupyterlab/apputils';
 import { LabIcon, jupyterFaviconIcon, jupyterIcon, jupyterlabWordmarkIcon } from '@jupyterlab/ui-components';
 import { Widget } from '@lumino/widgets';
-import { find } from '@lumino/algorithm';
+// import { find } from '@lumino/algorithm';
 
 /**
  * Initialization data for the nucleus-hub-theme extension.
@@ -67,7 +67,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       height: 'auto',
       width: '16px'
     });
-    shell.add(wordmark, 'top', { rank: 1500 });
+    shell.add(logo, 'top', { rank: 1500 });
 
     const nucleusWordMark = new LabIcon({ name: "ui-components:nucleus-wordmark", svgstr: nucleus_wordmark_svg });
     const wordmark = new Widget();
