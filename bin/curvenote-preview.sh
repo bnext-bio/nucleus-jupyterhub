@@ -29,8 +29,10 @@ trap "cleanup $1" SIGINT SIGTERM EXIT
 cd ~/devnotes/template
 #cd `ls -d ./*/ | fzf`
 
-HOST=127.0.0.1 curvenote -d start --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_FILE}.curvenote.log 2>&1 &
+/opt/repo/bin/curvenote-preview-start.sh --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_FILE}.curvenote.log 2>&1 &
 curvenote_pid=$!
+echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_FILE}.log
+echo ${curvenote_pid} > preview.$$.curvenote.pid
 
 sleep 2
 curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null
