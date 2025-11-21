@@ -1,12 +1,16 @@
 #!/usr/bin/zsh
-set -euo pipefail
-LOG_FILE="/tmp/preview`date -Iseconds`"
+set -uo pipefail
 PORT=$1
 THEME_PORT=$((PORT + 1))
 CONTENT_PORT=$((THEME_PORT + 100))
 PROXY_BASE="${JUPYTERHUB_SERVICE_PREFIX}proxy"
 
-cat <<EOF > ${LOG_FILE}.log
+LOG_DIR="/tmp/preview.`date -Iseconds`"
+mkdir -p ${LOG_DIR}
+
+ln -s /opt/repo/share/caddy/* ${LOG_DIR}
+
+cat <<EOF > ${LOG_DIR}/preview.log
 Starting Curvenote Preview
    Proxy Port: ${PORT}
    Theme Port: ${THEME_PORT}
@@ -23,11 +27,11 @@ function cleanup() {
   fi
   SHOULD_EXIT=1
   
-  echo "Quitting preview server: $1" >> ${LOG_FILE}.log
+  echo "Quitting preview server: $1" >> ${LOG_DIR}/preview.log
   
   # Kill curvenote
   if [[ -n "$curvenote_pid" ]] && kill -0 $curvenote_pid 2>/dev/null; then
-    echo "Killing curvenote PID ${curvenote_pid}" >> ${LOG_FILE}.log
+    echo "Killing curvenote PID ${curvenote_pid}" >> ${LOG_DIR}/preview.log
     kill $curvenote_pid 2>/dev/null || true
     sleep 1
     kill -9 $curvenote_pid 2>/dev/null || true
@@ -35,14 +39,14 @@ function cleanup() {
   
   # Kill caddy
   if [[ -n "$caddy_pid" ]] && kill -0 $caddy_pid 2>/dev/null; then
-    echo "Killing caddy PID ${caddy_pid}" >> ${LOG_FILE}.log
+    echo "Killing caddy PID ${caddy_pid}" >> ${LOG_DIR}/preview.log
     kill $caddy_pid 2>/dev/null || true
     sleep 1
     kill -9 $caddy_pid 2>/dev/null || true
   fi
 
   # Cleanup PID files
-  rm /tmp/preview.$$.curvenote.pid
+  rm -f ${LOG_DIR}.curvenote.pid
   
   exit
 }
@@ -53,11 +57,15 @@ cd ~/devnotes/template
 
 # Function to start/restart curvenote
 start_curvenote() {
-  echo "Starting curvenote" >> ${LOG_FILE}.log
-  HOST=127.0.0.1 curvenote -d start --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_FILE}.curvenote.log 2>&1 &
+  echo "Starting curvenote" >> ${LOG_DIR}/preview.log
+  HOST=127.0.0.1 curvenote -d start --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_DIR}/curvenote.log 2>&1 &
   curvenote_pid=$!
-  echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_FILE}.log
-  echo ${curvenote_pid} > preview.$$.curvenote.pid
+  echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_DIR}/preview.log
+  echo ${curvenote_pid} > ${LOG_DIR}/curvenote.pid
+
+  sleep 2
+  curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
+  echo "Curvenote started" >> ${LOG_DIR}/preview.log
 }
 
 # Monitor curvenote in background and restart if needed
@@ -66,8 +74,6 @@ start_curvenote() {
     if ! kill -0 $curvenote_pid 2>/dev/null; then
       if [[ $SHOULD_EXIT -eq 0 ]]; then
         start_curvenote
-        sleep 2
-        curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null
       fi
     fi
     sleep 5
@@ -76,7 +82,7 @@ start_curvenote() {
 monitor_pid=$!
 
 # Start Caddy in the background (not foreground) so we can wait on it
-cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_FILE}.log 2>&1 &
+cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_DIR}/preview.log 2>&1 &
 {
   debug
   auto_https off
@@ -99,9 +105,11 @@ http://localhost:${PORT} {
 
   handle_errors {
     rewrite * /error.html
-    templates
+    templates {
+      root ${LOG_DIR}
+    }
     file_server {
-      root /opt/repo/share/caddy
+      root ${LOG_DIR}
       status 200
     }
   }
