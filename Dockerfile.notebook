@@ -98,9 +98,11 @@ ADD --chown=$NB_USER:users . /opt/repo/
 
 # Jupyter Theme
 # RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
-RUN cd /opt/repo/share/theme && jlpm build
-RUN jupyter labextension develop /opt/repo/share/theme --overwrite
+WORKDIR /opt/repo/share/theme
+RUN pip install -e .
+RUN jlpm build
+RUN jupyter labextension develop . --overwrite
+WORKDIR /home/jovyan
 
 # Python environment
-RUN ls -alh /home/jovyan
 RUN /usr/local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
