@@ -3,12 +3,42 @@ FROM quay.io/jupyter/minimal-notebook:latest
 ARG UV_INDEX=https://pypi.org/simple
 
 USER root
+WORKDIR /root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza jq cargo ripgrep btop tmux psmisc
+RUN apt-get -y update && apt-get -y install build-essential gcc g++ rustup rsync zsh jq tmux psmisc
 
 # Reinstall man pages
 RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes
-RUN apt-get update && apt-get install -y man manpages-posix
+RUN apt-get update && apt-get install -y man manpages-posix man-db
+RUN rm -f /usr/bin/man
+RUN dpkg-divert --quiet --remove --rename /usr/bin/man
+
+# RipGrep
+RUN arch=$(arch | sed s/aarch64/aarch64-apple-darwin/ | sed s/x86_64/x86_64-unknown-linux-musl/) && curl -o ripgrep.tgz -L https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-${arch}.tar.gz
+RUN mkdir -p /opt/ripgrep
+RUN tar -C /opt/ripgrep -xvf ripgrep.tgz --strip-components=1
+RUN ln -s /opt/ripgrep/rg /usr/local/bin
+RUN rm -f ripgrep.tgz
+
+# btop
+RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/amd64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && echo && echo $arch && ls -alh && sleep 5
+RUN tar -C /tmp -xvf btop.tbz
+RUN cd /tmp/btop && make install
+RUN rm -rf /tmp/btop
+RUN rm -f btop.tbz
+
+# Neovim
+RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz
+RUN rm -rf /opt/nvim-linux-x86_64
+RUN tar -C /opt -xzf nvim.tgz
+RUN ln -s /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin
+RUN rm -f nvim.tgz
+
+# Rust / Cargo
+RUN rustup default stable
+
+# Eza
+RUN cargo install --root /usr/local eza
 
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
@@ -35,6 +65,9 @@ RUN git clone --depth=1 https://github.com/mattmc3/antidote.git /opt/antidote
 # Zoxide
 RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
+# Cleanup APT cache
+RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
 
@@ -44,9 +77,11 @@ RUN chown $NB_USER:users /opt/noderoots
 
 RUN chsh -s /bin/zsh jovyan
 
+RUN rm -rf /home/jovyan/.cache  # Remove whatever massive cache gets created in the above steps
 RUN chown -R ${NB_USER}:users /home/jovyan
 
 USER $NB_USER
+WORKDIR /home/jovyan
 
 # Curvenote
 RUN mamba install -y -c conda-forge 'nodejs>=24'
@@ -63,5 +98,3 @@ ADD --chown=$NB_USER:users . /opt/repo/
 # Python environment
 RUN ls -alh /home/jovyan
 RUN /usr/local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
-
-WORKDIR /home/jovyan

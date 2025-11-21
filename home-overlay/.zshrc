@@ -37,8 +37,16 @@ alias less='less -R' # passthrough colors
 
 alias tm='tmux new -A -s main'
 
-# Prepend our local path
+# === History ===
 export PATH=$HOME/bin:$HOME/.local/bin:/opt/repo/bin:$PATH
+
+if [ -d $HOME/.cargo/bin ]; then
+  export PATH=$HOME/.cargo/bin:$PATH
+fi
+
+if [ -d $HOME/go/bin ]; then
+  export PATH=$HOME/go/bin:$PATH
+fi
 
 # === History ===
 HISTORY_BASE="${HOME}/.history/${USER}@${HOSTNAME}/"; export HISTORY_BASE
