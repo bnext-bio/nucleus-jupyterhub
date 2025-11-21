@@ -56,9 +56,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
   </g>
 </svg>`;
 
-    const logo = find(shell.widgets("top"), widget => widget.id === "jp-MainLogo") || new Widget();
+    // const logo = find(shell.widgets("top"), widget => widget.id === "jp-MainLogo") || new Widget();
     const nucleusIcon = new LabIcon({ name: 'ui-components:nucleus-logo', svgstr: nucleus_svg });
 
+    const logo = new Widget();
     nucleusIcon.element({
       container: logo.node,
       elementPosition: 'center',
@@ -66,6 +67,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       height: 'auto',
       width: '16px'
     });
+    shell.add(wordmark, 'top', { rank: 1500 });
 
     const nucleusWordMark = new LabIcon({ name: "ui-components:nucleus-wordmark", svgstr: nucleus_wordmark_svg });
     const wordmark = new Widget();
