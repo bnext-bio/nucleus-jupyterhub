@@ -100,6 +100,7 @@ http://localhost:${PORT} {
 
   reverse_proxy localhost:${THEME_PORT} {
     header_up Accept-Encoding identity
+    header_down Cache-Control no-store
   }
 
   handle_errors {
