@@ -1,12 +1,9 @@
 #!/usr/bin/zsh
-
 set -euo pipefail
-
-LOG_FILE="/tmp/preview.`date -Iseconds`"
+LOG_FILE="/tmp/preview`date -Iseconds`"
 PORT=$1
 THEME_PORT=$((PORT + 1))
 CONTENT_PORT=$((THEME_PORT + 100))
-
 PROXY_BASE="${JUPYTERHUB_SERVICE_PREFIX}proxy"
 
 cat <<EOF > ${LOG_FILE}.log
@@ -16,49 +13,102 @@ Starting Curvenote Preview
  Content Port: ${CONTENT_PORT}
 EOF
 
+SHOULD_EXIT=0
+curvenote_pid=""
+caddy_pid=""
+
 function cleanup() {
-  echo Quitting preview server: $1 ${curvenote_pid} >> ${LOG_FILE}.log
-  kill $curvenote_pid > /dev/null 2>&1
-  sleep 5
-  kill -9 $curvenote_pid > /dev/null 2>&1
+  if [[ $SHOULD_EXIT -eq 1 ]]; then
+    return  # Prevent multiple cleanup calls
+  fi
+  SHOULD_EXIT=1
+  
+  echo "Quitting preview server: $1" >> ${LOG_FILE}.log
+  
+  # Kill curvenote
+  if [[ -n "$curvenote_pid" ]] && kill -0 $curvenote_pid 2>/dev/null; then
+    echo "Killing curvenote PID ${curvenote_pid}" >> ${LOG_FILE}.log
+    kill $curvenote_pid 2>/dev/null || true
+    sleep 1
+    kill -9 $curvenote_pid 2>/dev/null || true
+  fi
+  
+  # Kill caddy
+  if [[ -n "$caddy_pid" ]] && kill -0 $caddy_pid 2>/dev/null; then
+    echo "Killing caddy PID ${caddy_pid}" >> ${LOG_FILE}.log
+    kill $caddy_pid 2>/dev/null || true
+    sleep 1
+    kill -9 $caddy_pid 2>/dev/null || true
+  fi
+
+  # Cleanup PID files
+  rm /tmp/preview.$$.curvenote.pid
+  
   exit
 }
 
-trap "cleanup $1" SIGINT SIGTERM EXIT
+trap "cleanup $1" SIGINT SIGTERM
 
 cd ~/devnotes/template
-#cd `ls -d ./*/ | fzf`
 
-/opt/repo/bin/curvenote-preview-start.sh --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_FILE}.curvenote.log 2>&1 &
-curvenote_pid=$!
-echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_FILE}.log
-echo ${curvenote_pid} > preview.$$.curvenote.pid
-
-sleep 2
-curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null
-
-cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_FILE}.log 2>&1
-{
-        debug
-        auto_https off
+# Function to start/restart curvenote
+start_curvenote() {
+  echo "Starting curvenote" >> ${LOG_FILE}.log
+  HOST=127.0.0.1 curvenote -d start --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_FILE}.curvenote.log 2>&1 &
+  curvenote_pid=$!
+  echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_FILE}.log
+  echo ${curvenote_pid} > preview.$$.curvenote.pid
 }
 
+# Monitor curvenote in background and restart if needed
+(
+  while [[ $SHOULD_EXIT -eq 0 ]]; do
+    if ! kill -0 $curvenote_pid 2>/dev/null; then
+      if [[ $SHOULD_EXIT -eq 0 ]]; then
+        start_curvenote
+        sleep 2
+        curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null
+      fi
+    fi
+    sleep 5
+  done
+) &
+monitor_pid=$!
+
+# Start Caddy in the background (not foreground) so we can wait on it
+cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_FILE}.log 2>&1 &
+{
+  debug
+  auto_https off
+}
 http://localhost:${PORT} {
-        replace {
-                re "http://localhost:([0-9]+)" "${PROXY_BASE}/\$1"
-                re "/myst_assets_folder" "${PROXY_BASE}/${PORT}/myst_assets_folder"
-                re "/favicon.ico" "${PROXY_BASE}/${PORT}/favicon.ico"
-                re "/myst-theme.css" "${PROXY_BASE}/${PORT}/myst-theme.css"
-                re "/thebe-core.min.js" "${PROXY_BASE}/${PORT}/thebe-core.min.js"
-                re "/api" "${PROXY_BASE}/${PORT}/api"
+  replace {
+    re "http://localhost:([0-9]+)" "${PROXY_BASE}/\$1"
+    re "/myst_assets_folder" "${PROXY_BASE}/${PORT}/myst_assets_folder"
+    re "/favicon.ico" "${PROXY_BASE}/${PORT}/favicon.ico"
+    re "/myst-theme.css" "${PROXY_BASE}/${PORT}/myst-theme.css"
+    re "/thebe-core.min.js" "${PROXY_BASE}/${PORT}/thebe-core.min.js"
+    re "/api" "${PROXY_BASE}/${PORT}/api"
+    re "\"path\":\"\"" "\"path\":\"${PROXY_BASE}/${PORT}/\""
+    re ":\\$\{t.port\}/socket" ":8000${PROXY_BASE}/${CONTENT_PORT}/socket"
+  }
 
-                re "\"path\":\"\"" "\"path\":\"${PROXY_BASE}/${PORT}/\""
-                re ":\\$\{t.port\}/socket" ":8000${PROXY_BASE}/${CONTENT_PORT}/socket"
-                #re "\\$\{i\}:\\$\{t.port\}/socket" "localhost:8000${PROXY_BASE}/${CONTENT_PORT}/socket"
-        }
+  reverse_proxy localhost:${THEME_PORT} {
+    header_up Accept-Encoding identity
+  }
 
-        reverse_proxy localhost:${THEME_PORT} {
-                header_up Accept-Encoding identity
-        }
+  handle_errors {
+    rewrite * /error.html
+    templates
+    file_server {
+      root /opt/repo/share/caddy
+      status 200
+    }
+  }
 }
 EOF
+caddy_pid=$!
+
+# Wait for caddy to exit (either naturally or from a signal)
+wait $caddy_pid
+cleanup $1
