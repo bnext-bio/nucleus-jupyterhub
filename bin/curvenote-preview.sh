@@ -21,6 +21,29 @@ SHOULD_EXIT=0
 curvenote_pid=""
 caddy_pid=""
 
+# Unreasonable amount of cleanup housekeeping to stop
+# the forked content server from staying alive when we
+# shutdown curvenote. This only happens when it's directly
+# launched by the jupyter launcher, not if you launch the 
+# script from a shell. Could be related to different session/
+# PGID behavior.
+
+kill_tree() {
+    local pid=$1
+    local sig=${2:-TERM}
+    
+    # Get all children first
+    local children=$(pgrep -P $pid)
+    
+    # Recursively kill all children first
+    for child in $children; do
+        kill_tree $child $sig
+    done
+    
+    # Then kill the parent
+    kill -$sig $pid 2>/dev/null
+}
+
 function cleanup() {
   if [[ $SHOULD_EXIT -eq 1 ]]; then
     return  # Prevent multiple cleanup calls
@@ -28,25 +51,27 @@ function cleanup() {
   SHOULD_EXIT=1
   
   echo "Quitting preview server: $1" >> ${LOG_DIR}/preview.log
-  
-  # Kill curvenote
-  if [[ -n "$curvenote_pid" ]] && kill -0 $curvenote_pid 2>/dev/null; then
-    echo "Killing curvenote PID ${curvenote_pid}" >> ${LOG_DIR}/preview.log
-    kill $curvenote_pid 2>/dev/null || true
+  echo "Target PIDS: curvenote:$curvenote_pid caddy:$caddy_pid" >> ${LOG_DIR}/preview.log
+
+  for sig in ""; do  # Don't SIGKILL because it prevents proper node shutdown
+    # Kill curvenote
+    if [[ -n "$curvenote_pid" ]] && kill -0 $curvenote_pid 2>/dev/null; then
+      echo "Killing ${sig} curvenote PID ${curvenote_pid}" >> ${LOG_DIR}/preview.log
+      kill_tree $curvenote_pid || true
+      kill $sig $curvenote_pid 2>/dev/null || true
+    fi
+    
+    # Kill caddy
+    if [[ -n "$caddy_pid" ]] && kill -0 $caddy_pid 2>/dev/null; then
+      echo "Killing ${sig} caddy PID ${caddy_pid}" >> ${LOG_DIR}/preview.log
+      kill $sig $caddy_pid 2>/dev/null || true
+    fi
+
     sleep 1
-    kill -9 $curvenote_pid 2>/dev/null || true
-  fi
-  
-  # Kill caddy
-  if [[ -n "$caddy_pid" ]] && kill -0 $caddy_pid 2>/dev/null; then
-    echo "Killing caddy PID ${caddy_pid}" >> ${LOG_DIR}/preview.log
-    kill $caddy_pid 2>/dev/null || true
-    sleep 1
-    kill -9 $caddy_pid 2>/dev/null || true
-  fi
+  done
 
   # Cleanup PID files
-  rm -f ${LOG_DIR}.curvenote.pid
+  rm -f ${LOG_DIR}/*.pid || true
   
   exit
 }
@@ -54,32 +79,6 @@ function cleanup() {
 trap "cleanup $1" SIGINT SIGTERM
 
 cd ~/devnotes/template
-
-# Function to start/restart curvenote
-start_curvenote() {
-  echo "Starting curvenote" >> ${LOG_DIR}/preview.log
-  HOST=127.0.0.1 curvenote -d start --port ${THEME_PORT} --server-port ${CONTENT_PORT} > ${LOG_DIR}/curvenote.log 2>&1 &
-  curvenote_pid=$!
-  echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_DIR}/preview.log
-  echo ${curvenote_pid} > ${LOG_DIR}/curvenote.pid
-
-  sleep 2
-  curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
-  echo "Curvenote started" >> ${LOG_DIR}/preview.log
-}
-
-# Monitor curvenote in background and restart if needed
-(
-  while [[ $SHOULD_EXIT -eq 0 ]]; do
-    if ! kill -0 $curvenote_pid 2>/dev/null; then
-      if [[ $SHOULD_EXIT -eq 0 ]]; then
-        start_curvenote
-      fi
-    fi
-    sleep 5
-  done
-) &
-monitor_pid=$!
 
 # Start Caddy in the background (not foreground) so we can wait on it
 cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_DIR}/preview.log 2>&1 &
@@ -116,7 +115,29 @@ http://localhost:${PORT} {
 }
 EOF
 caddy_pid=$!
+echo ${curvenote_pid} > ${LOG_DIR}/caddy.pid
+echo "Caddy PID is ${caddy_pid}" >> ${LOG_DIR}/preview.log
 
-# Wait for caddy to exit (either naturally or from a signal)
-wait $caddy_pid
+# Monitor curvenote in background and restart if needed
+while [[ $SHOULD_EXIT -eq 0 ]]; do
+  if ! kill -0 $curvenote_pid 2>/dev/null; then
+    if [[ $SHOULD_EXIT -eq 0 ]]; then
+      echo "Starting curvenote" >> ${LOG_DIR}/preview.log
+
+      HOST=127.0.0.1 curvenote -d start --port ${THEME_PORT} --server-port ${CONTENT_PORT} >> ${LOG_DIR}/curvenote.log 2>&1 &
+      curvenote_pid=$!
+
+      echo "Curvenote PID is ${curvenote_pid}" >> ${LOG_DIR}/preview.log
+      echo ${curvenote_pid} > ${LOG_DIR}/curvenote.pid
+
+      sleep 2
+      curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
+      echo "Curvenote started" >> ${LOG_DIR}/preview.log
+    fi
+  fi
+
+  wait $curvenote_pid
+  sleep 5
+done
+
 cleanup $1
