@@ -3,7 +3,7 @@ FROM quay.io/jupyter/minimal-notebook:latest
 ARG UV_INDEX=https://pypi.org/simple
 
 USER root
-WORKDIR /root
+WORKDIR /tmp
 
 RUN apt-get -y update && apt-get -y install build-essential gcc g++ rustup rsync zsh jq tmux psmisc
 
@@ -28,7 +28,7 @@ RUN rm -rf /tmp/btop
 RUN rm -f btop.tbz
 
 # Neovim
-RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz
+RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz
 RUN mkdir -p /opt/nvim
 RUN tar -C /opt/nvim -xzf nvim.tgz --strip-components=1
 RUN ln -s /opt/nvim/bin/nvim /usr/local/bin
@@ -65,8 +65,9 @@ RUN git clone --depth=1 https://github.com/mattmc3/antidote.git /opt/antidote
 # Zoxide
 RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
-# Cleanup APT cache
+# Cleanup APT cache and working dirs
 RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+RUN rm -rf /tmp/*
 
 # ADD ./templates /home/jovyan/.jupyter/templates
 # ADD ./work-preload /home/jovyan/work-preload
