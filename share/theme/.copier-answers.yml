@@ -1,0 +1,15 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.5.0
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: anton@bnext.bio
+author_name: Anton Jackson-Smith
+has_ai_rules: false
+has_binder: false
+has_settings: false
+kind: theme
+labextension_name: nucleus-hub-theme
+project_short_description: The jupyter theme for Nucleus Hub.
+python_name: nucleus_hub_theme
+repository: ''
+test: false
+
