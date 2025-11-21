@@ -2,7 +2,11 @@ FROM quay.io/jupyter/minimal-notebook:latest
 
 USER root
 
-RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza jq cargo ripgrep btop
+RUN apt-get -y update && apt-get -y install gcc g++ rsync zsh neovim eza jq cargo ripgrep btop tmux psmisc
+
+# Reinstall man pages
+RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes
+RUN apt-get update && apt-get install -y man manpages-posix
 
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
