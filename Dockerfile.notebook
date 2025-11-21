@@ -21,7 +21,7 @@ RUN ln -s /opt/ripgrep/rg /usr/local/bin
 RUN rm -f ripgrep.tgz
 
 # btop
-RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/amd64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && echo && echo $arch && ls -alh && sleep 5
+RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && echo && echo $arch && ls -alh && sleep 5
 RUN tar -C /tmp -xvf btop.tbz
 RUN cd /tmp/btop && make install
 RUN rm -rf /tmp/btop
