@@ -32,7 +32,7 @@
           <h3>Curvenote</h3>
         </summary>
         <code>
-                        {{$lines := include "preview.curvenote.log" | splitList "\n"}}
+                        {{$lines := include "curvenote.log" | splitList "\n"}}
                         {{range slice $lines (sub (len $lines) 20)}}
                         {{.}}<br>
                         {{end}}

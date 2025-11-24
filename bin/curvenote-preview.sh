@@ -95,7 +95,7 @@ http://localhost:${PORT} {
     re "/thebe-core.min.js" "${PROXY_BASE}/${PORT}/thebe-core.min.js"
     re "/api" "${PROXY_BASE}/${PORT}/api"
     re "\"path\":\"\"" "\"path\":\"${PROXY_BASE}/${PORT}/\""
-    re ":\\$\{t.port\}/socket" ":8000${PROXY_BASE}/${CONTENT_PORT}/socket"
+    re ":\\$\{t.port\}/socket" "${PROXY_BASE}/${CONTENT_PORT}/socket"
   }
 
   reverse_proxy localhost:${THEME_PORT} {
