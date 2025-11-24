@@ -15,7 +15,11 @@
   {{end}}
 
   <style type="text/css">
-    {{include "css/pico.green.min.css"}}
+    {
+        {
+        include "css/pico.green.min.css"
+      }
+    }
   </style>
 </head>
 
@@ -40,7 +44,7 @@
           <h3>Curvenote</h3>
         </summary>
         <code>
-                        {{$lines := include "curvenote.log" | splitList "\n"}}
+                        {{$lines := readFile "curvenote.log" | splitList "\n"}}
                         {{range slice $lines (sub (len $lines) 20)}}
                         {{.}}<br>
                         {{end}}
@@ -52,7 +56,7 @@
           <h3>Preview Server</h3>
         </summary>
         <code>
-                        {{$lines := include "preview.log" | splitList "\n"}}
+                        {{$lines := readFile "preview.log" | splitList "\n"}}
                         {{range slice $lines (sub (len $lines) 20)}}
                         {{.}}<br>
                         {{end}}
