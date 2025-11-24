@@ -5,7 +5,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
+
+  {{if (fileExists "curvenote.pid")}}
+  <meta http-equiv="refresh" content="2">
+  <title>Loading Curvenote Preview</title>
+  {{else}}
   <meta http-equiv="refresh" content="30">
+  <title>Curvenote Preview Error</title>
+  {{end}}
+
   <style type="text/css">
     {
         {
@@ -13,11 +21,15 @@
       }
     }
   </style>
-  <title>Curvenote Preview Error</title>
 </head>
 
 <body>
   <main class="container">
+    {{if (fileExists "curvenote.pid")}}
+    <h1>Loading Curvenote Preview</h1>
+    <p aria-busy="true">The Curvenote server is loading. Please wait and the page will refresh.</p>
+
+    {{else}}
     <h1>⚠️ Error Loading Preview</h1>
     <section>
       <p>Curvenote preview is sad. Please bear with us.</p>
@@ -51,6 +63,7 @@
                 </code>
       </details>
     </section>
+    {{end}}
   </main>
 
   <footer class="container">
