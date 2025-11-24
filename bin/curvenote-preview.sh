@@ -136,7 +136,7 @@ while [[ $SHOULD_EXIT -eq 0 ]]; do
       curl -s --connect-timeout 10 http://localhost:${CONTENT_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
       echo "Curvenote started" >> ${LOG_DIR}/preview.log
 
-      sleep 2
+      sleep 5
       touch ${LOG_DIR}/curvenote.started
     fi
   fi
