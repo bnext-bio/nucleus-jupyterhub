@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="light dark">
 
   {{if (fileExists "curvenote.pid")}}
-  <meta http-equiv="refresh" content="2">
+  <meta http-equiv="refresh" content="5">
   <title>Loading Curvenote Preview</title>
   {{else}}
   <meta http-equiv="refresh" content="30">
@@ -15,7 +15,11 @@
   {{end}}
 
   <style type="text/css">
-      {{include "css/pico.green.min.css"}}
+    {
+        {
+        include "css/pico.green.min.css"
+      }
+    }
   </style>
 </head>
 
