@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
 
-  {{if (not (fileExists "curvenote.pid"))}}
+  {{if not (fileExists "curvenote.started")}}
   <meta http-equiv="refresh" content="5">
   <title>Loading Curvenote Preview</title>
   {{else}}
@@ -21,7 +21,7 @@
 
 <body>
   <main class="container">
-    {{if (not (fileExists "curvenote.pid"))}}
+    {{if not (fileExists "curvenote.started")}}
     <h1>Loading Curvenote Preview</h1>
     <p aria-busy="true">The Curvenote server is loading. Please wait and the page will refresh.</p>
 
