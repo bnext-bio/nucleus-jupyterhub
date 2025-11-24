@@ -15,7 +15,11 @@
   {{end}}
 
   <style type="text/css">
-    {{include "css/pico.green.min.css"}}
+    {
+        {
+        include "css/pico.green.min.css"
+      }
+    }
   </style>
 </head>
 
@@ -64,7 +68,7 @@
 
   <footer class="container">
     <hr>
-    <p class="pico-color-grey-100"><small>
+    <p class="pico-color-grey-50"><small>
         {{placeholder "http.request.orig_method"}}
         {{placeholder "http.request.orig_uri"}}
         {{placeholder "http.error.status_code"}}
