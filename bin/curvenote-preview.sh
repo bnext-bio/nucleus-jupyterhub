@@ -86,7 +86,7 @@ cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_DIR}/preview.log 2
   debug
   auto_https off
 }
-http://localhost:${PORT} {
+http://:${PORT} {
   replace {
     re "http://localhost:([0-9]+)" "${PROXY_BASE}/\$1"
     re "/myst_assets_folder" "${PROXY_BASE}/${PORT}/myst_assets_folder"
