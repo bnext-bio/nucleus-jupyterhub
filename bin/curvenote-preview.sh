@@ -102,11 +102,12 @@ cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_DIR}/preview.log 2
 http://:${PORT} {
   replace {
     re "http://localhost:([0-9]+)" "${PROXY_BASE}/\$1"
-    re "/myst_assets_folder" "${PROXY_BASE}/${PORT}/myst_assets_folder"
-    re "/favicon.ico" "${PROXY_BASE}/${PORT}/favicon.ico"
-    re "/myst-theme.css" "${PROXY_BASE}/${PORT}/myst-theme.css"
-    re "/thebe-core.min.js" "${PROXY_BASE}/${PORT}/thebe-core.min.js"
-    re "/api" "${PROXY_BASE}/${PORT}/api"
+    # re "/myst_assets_folder" "${PROXY_BASE}/${PORT}/myst_assets_folder"
+    # re "/favicon.ico" "${PROXY_BASE}/${PORT}/favicon.ico"
+    # re "/myst-theme.css" "${PROXY_BASE}/${PORT}/myst-theme.css"
+    # re "/thebe-core.min.js" "${PROXY_BASE}/${PORT}/thebe-core.min.js"
+    # re "/api" "${PROXY_BASE}/${PORT}/api"
+    re "href=\"/" "href=\"${PROXY_BASE}/${PORT}/"
     re "\"path\":\"\"" "\"path\":\"${PROXY_BASE}/${PORT}/\""
     re ":\\$\{t.port\}/socket" "${PROXY_BASE}/${CONTENT_PORT}/socket"
   }
