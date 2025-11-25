@@ -1,4 +1,4 @@
-- title: Create DevNote
+- title: Create
   description: Create a new Developer Note, starting from a template.
   icon: /opt/repo/share/curvenote-create.svg
   type: terminal
@@ -6,7 +6,7 @@
   cwd: "/home/jovyan/devnotes"
   args: {}
   catalog: Developer Notes
-- title: Devnote Preview
+- title: Preview
   description: Preview a Developer Note
   icon: /opt/repo/share/curvenote-preview.svg
   type: local-server
@@ -17,7 +17,7 @@
     - $CWD
     - $PORT
   catalog: Developer Notes
-- title: Devnote Draft Submit
+- title: Draft Submit
   description: Submits a devnote draft to Nucleus Community developer notes
   icon: /opt/repo/share/curvenote-draft.svg
   type: terminal
@@ -26,7 +26,7 @@
   args:
     reuse: false
   catalog: Developer Notes
-- title: Devnote Publish
+- title: Publish
   description: Submits a devnote for publication to Nucleus Community developer notes
   icon: /opt/repo/share/curvenote-submit.svg
   type: terminal
