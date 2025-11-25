@@ -7,7 +7,7 @@ import {
 import { IThemeManager } from '@jupyterlab/apputils';
 import { LabIcon, jupyterFaviconIcon, jupyterIcon, jupyterlabWordmarkIcon } from '@jupyterlab/ui-components';
 import { Widget } from '@lumino/widgets';
-// import { find } from '@lumino/algorithm';
+import { find } from '@lumino/algorithm';
 
 /**
  * Initialization data for the nucleus-hub-theme extension.
@@ -56,10 +56,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
   </g>
 </svg>`;
 
-    // const logo = find(shell.widgets("top"), widget => widget.id === "jp-MainLogo") || new Widget();
     const nucleusIcon = new LabIcon({ name: 'ui-components:nucleus-logo', svgstr: nucleus_svg });
 
-    const logo = new Widget();
+    // const logo = new Widget();
+    const logo = find(shell.widgets("top"), widget => widget.id === "jp-MainLogo") || new Widget();
     nucleusIcon.element({
       container: logo.node,
       elementPosition: 'center',
@@ -67,6 +67,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       height: 'auto',
       width: '16px'
     });
+    logo.id = "jp-nucleusLogo";
     shell.add(logo, 'top', { rank: 0 });
 
     const nucleusWordMark = new LabIcon({ name: "ui-components:nucleus-wordmark", svgstr: nucleus_wordmark_svg });
@@ -79,7 +80,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       height: '70%',
       width: '70%',
     });
-    wordmark.id = "jp-nucleusWordmark"
+    wordmark.id = "jp-nucleusWordmark";
     shell.add(wordmark, 'top', { rank: 1500 });
 
     console.log("Setting logo svg");
