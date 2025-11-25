@@ -26,7 +26,8 @@
     {{if (fileExists "curvenote.title")}}
     <h2>{{readFile "curvenote.title"}}</h2>
     {{end}}
-    <p aria-busy="true">The Curvenote server is loading. Please wait and the page will refresh.</p>
+    <progress />
+    <p>The Curvenote server is loading. Please wait and the page will refresh.</p>
 
     {{else if not (fileExists "curvenote.yml")}}
     <h1>⚠️ No DevNote Found</h1>
