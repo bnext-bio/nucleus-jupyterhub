@@ -19,41 +19,31 @@
     // 
     // Top bar description:
     "toolbar": [
-    //    {
-    //        "name": "spacer",
-    //        "args": {},
-    //        "command": "",
-    //        "disabled": false,
-    //        "type": "spacer",
-    //        "rank": 50
-    //    },
-    //    {
-    //        "name": "@jupyter/collaboration:shared-link",
-    //        "args": {},
-    //        "command": "collaboration:shared-link",
-    //        "disabled": false,
-    //        "rank": 99
-    //    },
-    //    {
-    //        "name": "user-menu",
-    //        "args": {},
-    //        "command": "",
-    //        "disabled": true,
-    //        "rank": 100
-    //    },
-    //    {
-    //        "name": "text",
-    //        "args": {},
-    //        "command": "",
-    //        "disabled": false,
-    //        "rank": 80
-    //    },
-    //    {
-    //        "name": "workspaceIndicator",
-    //        "args": {},
-    //        "command": "",
-    //        "disabled": true,
-    //        "rank": 1000
-    //    }
+        {
+            "name": "spacer",
+            "type": "spacer",
+            "rank": 50
+        },
+        {
+            "name": "@jupyter/collaboration:shared-link",
+            "command": "collaboration:shared-link",
+            "rank": 99,
+            "disabled": true
+        },
+        {
+            "name": "user-menu",
+            "rank": 100,
+            "disabled": true
+        },
+        {
+            "name": "text",
+            "rank": 110,
+            "disabled": true
+        },
+        {
+            "name": "workspaceIndicator",
+            "rank": 1000,
+            "disabled": true
+        } 
     ]
 }
