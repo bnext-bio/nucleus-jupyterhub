@@ -63,3 +63,4 @@ build-backend = "hatchling.build"
 
 [tool.uv.sources]
 triangle = { git = "https://github.com/drufat/triangle.git" }
+jupyter-app-launcher = { git = "https://github.com/antonjs/jupyter_app_launcher.git" }
