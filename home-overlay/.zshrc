@@ -37,7 +37,7 @@ alias less='less -R' # passthrough colors
 
 alias tm='tmux new -A -s main'
 
-# === History ===
+# === Path ===
 export PATH=$HOME/bin:$HOME/.local/bin:/opt/repo/bin:$PATH
 
 if [ -d $HOME/.cargo/bin ]; then
@@ -49,9 +49,9 @@ if [ -d $HOME/go/bin ]; then
 fi
 
 # === History ===
-HISTORY_BASE="${HOME}/.history/${USER}@${HOSTNAME}/"; export HISTORY_BASE
+HISTORY_BASE="${HOME}/.history/${USER}@nucleushub/"; export HISTORY_BASE
 mkdir -p $HISTORY_BASE
-HISTFILE="${HISTORY_BASE}/${USER}@${HOSTNAME}.history"; export HISTFILE
+HISTFILE="${HISTORY_BASE}/${USER}@nucleushub.history"; export HISTFILE
 HISTSIZE=10000
 SAVEHIST=100000000
 HISTORY_START_WITH_GLOBAL=true
