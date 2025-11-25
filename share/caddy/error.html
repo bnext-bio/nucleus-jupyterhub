@@ -34,10 +34,10 @@
       const countdownElement = document.getElementById('loading-progress');
 
       const timer = setInterval(() => {
-        countdownElement.setAttribute("value", timeLeft);
+        countdownElement.setAttribute("value", timeElapsed);
         timeElapsed += 0.1;
 
-        if (timeLeft >= 5) {
+        if (timeElapsed >= 5) {
           clearInterval(timer);
         }
       }, 100);
