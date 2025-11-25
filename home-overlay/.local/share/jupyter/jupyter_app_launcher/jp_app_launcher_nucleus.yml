@@ -35,8 +35,24 @@
   args:
     reuse: false
   catalog: Developer Notes
+- title: Nucleus Documentation
+  description: Visit the main Nucleus website.
+  icon: /opt/repo/share/nucleus-distribution.svg
+  source: https://nucleus.bnext.bio/
+  type: url
+  catalog: Nucleus
+  args:
+    sandbox:
+      [
+        "allow-same-origin",
+        "allow-scripts",
+        "allow-downloads",
+        "allow-modals",
+        "allow-popups",
+      ]
 - title: Developer Notes
   description: Visit the Nucleus Developer Notes website.
+  icon: /opt/repo/share/nucleus-devnotes.svg
   source: https://devnotes.bnext.bio/
   type: url
   catalog: Nucleus
@@ -50,17 +66,3 @@
         "allow-popups",
       ]
     createNewWindow: true
-- title: Nucleus Documentation
-  description: Visit the main Nucleus website.
-  source: https://nucleus.bnext.bio/
-  type: url
-  catalog: Nucleus
-  args:
-    sandbox:
-      [
-        "allow-same-origin",
-        "allow-scripts",
-        "allow-downloads",
-        "allow-modals",
-        "allow-popups",
-      ]
