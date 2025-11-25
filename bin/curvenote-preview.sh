@@ -108,6 +108,7 @@ http://:${PORT} {
     # re "/thebe-core.min.js" "${PROXY_BASE}/${PORT}/thebe-core.min.js"
     # re "/api" "${PROXY_BASE}/${PORT}/api"
     re "href=\"/" "href=\"${PROXY_BASE}/${PORT}/"
+    re "import \"/" "import \"${PROXY_BASE}/${PORT}/"
     re "\"path\":\"\"" "\"path\":\"${PROXY_BASE}/${PORT}/\""
     re ":\\$\{t.port\}/socket" "${PROXY_BASE}/${CONTENT_PORT}/socket"
   }
