@@ -50,6 +50,7 @@
         "allow-modals",
         "allow-popups",
       ]
+    createNewWindow: true
 - title: Developer Notes
   description: Visit the Nucleus Developer Notes website.
   icon: /opt/repo/share/nucleus-devnotes.svg
