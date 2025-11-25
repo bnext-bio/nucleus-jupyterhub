@@ -23,6 +23,9 @@
   <main class="container">
     {{if not (fileExists "curvenote.started")}}
     <h1>Loading Curvenote Preview</h1>
+    {{if (fileExists "curvenote.title")}}
+    <h2>{{readFile "curvenote.title"}}</h2>
+    {{end}}
     <p aria-busy="true">The Curvenote server is loading. Please wait and the page will refresh.</p>
 
     {{else if not (fileExists "curvenote.yml")}}

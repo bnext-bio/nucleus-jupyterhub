@@ -88,6 +88,7 @@ echo "${DEVNOTE_DIR}" > ${LOG_DIR}/preview.cwd
 
 if [ -f "${DEVNOTE_DIR}/curvenote.yml" ]; then
   ln -s "${DEVNOTE_DIR}/curvenote.yml" ${LOG_DIR}/curvenote.yml
+  cat "${DEVNOTE_DIR}/curvenote.yml" | yq ".project.title" > ${LOG_DIR}/curvenote.title
 else
   echo "No curvenote.yml found"
 fi

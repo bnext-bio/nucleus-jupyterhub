@@ -55,6 +55,7 @@ dependencies = [
     "jupyterlab-topbar-text>=1.1.0",
     "statsmodels>=0.14.4",
     "biocrnpyler>=1.1.1",
+    "yq>=3.4.3",
 ]
 
 [build-system]
