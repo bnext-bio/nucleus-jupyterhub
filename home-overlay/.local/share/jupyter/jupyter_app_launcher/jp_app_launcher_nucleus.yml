@@ -1,6 +1,6 @@
 - title: Create DevNote
   description: Create a new Developer Note, starting from a template.
-  icon: /opt/repo/share/curvenote-logo.svg
+  icon: /opt/repo/share/curvenote-create.svg
   type: terminal
   source: /opt/repo/bin/curvenote-init.sh
   cwd: "/home/jovyan/devnotes"
@@ -8,7 +8,7 @@
   catalog: Developer Notes
 - title: Devnote Preview
   description: Preview a Developer Note
-  icon: /opt/repo/share/curvenote-logo.svg
+  icon: /opt/repo/share/curvenote-preview.svg
   type: local-server
   source: http://localhost:$PORT/
   cwd: /home/jovyan/$BROWSER_DIR
@@ -19,7 +19,7 @@
   catalog: Developer Notes
 - title: Devnote Draft Submit
   description: Submits a devnote draft to Nucleus Community developer notes
-  icon: /opt/repo/share/curvenote-logo.svg
+  icon: /opt/repo/share/curvenote-draft.svg
   type: terminal
   source: "/opt/repo/bin/curvenote-submit.sh --draft"
   cwd: "./"
@@ -28,7 +28,7 @@
   catalog: Developer Notes
 - title: Devnote Publish
   description: Submits a devnote for publication to Nucleus Community developer notes
-  icon: /opt/repo/share/curvenote-logo.svg
+  icon: /opt/repo/share/curvenote-submit.svg
   type: terminal
   source: "/opt/repo/bin/curvenote-submit.sh"
   cwd: "./"

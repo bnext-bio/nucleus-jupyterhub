@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 400 400" style="enable-background:new 0 0 400 400;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#235F9D;}
-</style>
-<g id="icon">
-	<path class="st0" d="M389.8,304.2c0,47.2-38.2,85.5-85.5,85.6c-47.2,0-85.5-38.2-85.6-85.5c0-47.2,38.2-85.5,85.5-85.6c0,0,0,0,0,0
-		C351.5,218.7,389.8,257,389.8,304.2z"/>
-	<path class="st0" d="M10.2,218.8h171v171C86.7,389.8,10.2,313.2,10.2,218.8z"/>
-	<path class="st0" d="M60.3,60.3c32-32.1,75.6-50.2,120.9-50.1v171.1h-171C10.1,135.8,28.1,92.3,60.3,60.3z"/>
-	<path class="st0" d="M339.7,131.1c-32,32.1-75.6,50.2-120.9,50.1V10.2h171C389.9,55.5,371.8,99,339.7,131.1z"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <style>
+      .d {
+        fill: #235f9d;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g id="b" data-name="icon">
+    <path class="d" d="M389.8,304.2c0,47.2-38.2,85.5-85.5,85.6-47.2,0-85.5-38.2-85.6-85.5,0-47.2,38.2-85.5,85.5-85.6h0c47.3,0,85.6,38.3,85.6,85.5Z"/>
+    <path class="d" d="M10.2,218.8h171v171c-94.5,0-171-76.6-171-171Z"/>
+    <path class="d" d="M60.3,60.3C92.3,28.2,135.9,10.1,181.2,10.2v171.1H10.2c-.1-45.5,17.9-89,50.1-121Z"/>
+    <path class="d" d="M339.7,131.1c-32,32.1-75.6,50.2-120.9,50.1V10.2h171c.1,45.3-18,88.8-50.1,120.9Z"/>
+  </g>
 </svg>
