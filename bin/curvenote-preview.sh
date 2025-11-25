@@ -1,6 +1,8 @@
 #!/usr/bin/zsh
 set -uo pipefail
-PORT=$1
+
+DEVNOTE_DIR="$1"
+PORT="$2"
 THEME_PORT=$((PORT + 1))
 CONTENT_PORT=$((THEME_PORT + 100))
 PROXY_BASE="${JUPYTERHUB_SERVICE_PREFIX}proxy"
@@ -12,6 +14,8 @@ ln -s /opt/repo/share/caddy/* ${LOG_DIR}
 
 cat <<EOF > ${LOG_DIR}/preview.log
 Starting Curvenote Preview
+          CWD: `pwd`
+         Args: ${@}
    Proxy Port: ${PORT}
    Theme Port: ${THEME_PORT}
  Content Port: ${CONTENT_PORT}
@@ -78,7 +82,15 @@ function cleanup() {
 
 trap "cleanup $1" SIGINT SIGTERM
 
-cd ~/devnotes/template
+cd "${DEVNOTE_DIR}"
+
+echo "${DEVNOTE_DIR}" > ${LOG_DIR}/preview.cwd
+
+if [ -f "${DEVNOTE_DIR}/curvenote.yml" ]; then
+  ln -s "${DEVNOTE_DIR}/curvenote.yml" ${LOG_DIR}/curvenote.yml
+else
+  echo "No curvenote.yml found"
+fi
 
 # Start Caddy in the background (not foreground) so we can wait on it
 cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_DIR}/preview.log 2>&1 &

@@ -25,6 +25,10 @@
     <h1>Loading Curvenote Preview</h1>
     <p aria-busy="true">The Curvenote server is loading. Please wait and the page will refresh.</p>
 
+    {{else if not (fileExists "curvenote.yml")}}
+    <h1>⚠️ No DevNote Found</h1>
+    <p>We didn't find a Developer Note in the current directory. Perhaps you're not in the main DevNote directory (check for <code>curvenote.yml</code>).</p>
+    <p>Developer Note directory is <code>{{readFile "preview.cwd"}}</code></p>
     {{else}}
     <h1>⚠️ Error Loading Preview</h1>
     <section>
@@ -33,6 +37,7 @@
         you fix it, the server should restart automatically. If it doesn't, close the preview tab and open the DevNote
         preview again.</p>
     </section>
+    {{end}}
     <section id="accordions">
       <h2>Logs</h2>
       <details open>
@@ -59,7 +64,6 @@
                 </code>
       </details>
     </section>
-    {{end}}
   </main>
 
   <footer class="container">
