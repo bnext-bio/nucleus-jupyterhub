@@ -14,7 +14,7 @@ RUN rm -f /usr/bin/man
 RUN dpkg-divert --quiet --remove --rename /usr/bin/man
 
 # RipGrep
-RUN arch=$(arch | sed s/aarch64/aarch64-apple-darwin/ | sed s/x86_64/x86_64-unknown-linux-musl/) && curl -o ripgrep.tgz -L https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-${arch}.tar.gz
+RUN arch=$(arch | sed s/aarch64/aarch64-unknown-linux-gnu/ | sed s/x86_64/x86_64-unknown-linux-musl/) && curl -o ripgrep.tgz -L https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-${arch}.tar.gz
 RUN mkdir -p /opt/ripgrep
 RUN tar -C /opt/ripgrep -xvf ripgrep.tgz --strip-components=1
 RUN ln -s /opt/ripgrep/rg /usr/local/bin
