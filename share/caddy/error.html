@@ -15,7 +15,11 @@
   {{end}}
 
   <style type="text/css">
-    {{include "css/pico.green.min.css"}}
+    {
+        {
+        include "css/pico.green.min.css"
+      }
+    }
   </style>
 </head>
 
@@ -26,8 +30,22 @@
     {{if (fileExists "curvenote.title")}}
     <h2>{{readFile "curvenote.title"}}</h2>
     {{end}}
-    <progress />
+    <progress id="loading-progress" value="0" max="5" />
     <p>The Curvenote server is loading. Please wait and the page will refresh.</p>
+
+    <script type="text/javascript">
+      let timeElapsed = 0;
+      const countdownElement = document.getElementById('loading-progress');
+
+      const timer = setInterval(() => {
+        countdownElement.setAttribute("value", timeLeft);
+        timeElapsed += 0.1;
+
+        if (timeLeft >= 5) {
+          clearInterval(timer);
+        }
+      }, 100);
+    </script>
 
     {{else if not (fileExists "curvenote.yml")}}
     <h1>⚠️ No DevNote Found</h1>
