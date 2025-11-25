@@ -18,7 +18,7 @@
     // }
     // 
     // Top bar description:
-    //"toolbar": [
+    "toolbar": [
     //    {
     //        "name": "spacer",
     //        "args": {},
@@ -55,5 +55,5 @@
     //        "disabled": true,
     //        "rank": 1000
     //    }
-    //]
+    ]
 }
