@@ -22,7 +22,7 @@
   icon: /opt/repo/share/curvenote-draft.svg
   type: terminal
   source: "/opt/repo/bin/curvenote-submit.sh --draft"
-  cwd: "./"
+  cwd: "/home/jovyan/$BROWSER_DIR"
   args:
     reuse: false
   catalog: Developer Notes
@@ -31,7 +31,7 @@
   icon: /opt/repo/share/curvenote-submit.svg
   type: terminal
   source: "/opt/repo/bin/curvenote-submit.sh"
-  cwd: "./"
+  cwd: "/home/jovyan/$BROWSER_DIR"
   args:
     reuse: false
   catalog: Developer Notes
