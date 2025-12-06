@@ -2,7 +2,7 @@
 
 
 export REPO=/opt/repo
-export BRANCH=2i2c-dev
+export BRANCH=2i2c
 export GIT_REMOTE="https://github.com/bnext-bio/nucleus-jupyterhub.git"
 export LOG_FILE=/home/jovyan/.log/`date -Iseconds`-setup.log
 
