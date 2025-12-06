@@ -110,7 +110,7 @@ http://:${PORT} {
     re "/api" "${PROXY_BASE}/${PORT}/api"
     # re "import( |\(| [^\n]* from )?\"/" "import \$1\"${PROXY_BASE}/${PORT}/"
     re "\"path\":\"\"" "\"path\":\"${PROXY_BASE}/${PORT}/\""
-    re ":\\$\{t.port\}/socket" "${PROXY_BASE}/${CONTENT_PORT}/socket"
+    re ":\\$\{.+\\.port\}/socket" "${PROXY_BASE}/${CONTENT_PORT}/socket"
   }
 
   reverse_proxy localhost:${THEME_PORT} {
