@@ -1,5 +1,6 @@
 #!/usr/bin/zsh
 set -uo pipefail
+setopt extendedglob
 
 DEVNOTE_DIR="$1"
 PORT="$2"
@@ -82,16 +83,23 @@ function cleanup() {
 
 trap "cleanup $1" SIGINT SIGTERM
 
+# If we are in a subdirectory, try to find the DevNote parent directory
 cd "${DEVNOTE_DIR}"
+CURVENOTE_YAML="$(echo (../)#curvenote.yml(N:a))"
+
+if [[ -n "${CURVENOTE_YAML}" && -f "${CURVENOTE_YAML}" ]]; then
+  echo "curvenote.yml found at ${CURVENOTE_YAML}" >> ${LOG_DIR}/preview.log
+
+  DEVNOTE_DIR="$(dirname $CURVENOTE_YAML)"
+  cd "$DEVNOTE_DIR"
+
+  ln -s "${CURVENOTE_YAML}" ${LOG_DIR}/curvenote.yml
+  cat "${CURVENOTE_YAML}" | yq ".project.title" > ${LOG_DIR}/curvenote.title
+else
+  echo "No curvenote.yml found" >> ${LOG_DIR}/preview.log
+fi
 
 echo "${DEVNOTE_DIR}" > ${LOG_DIR}/preview.cwd
-
-if [ -f "${DEVNOTE_DIR}/curvenote.yml" ]; then
-  ln -s "${DEVNOTE_DIR}/curvenote.yml" ${LOG_DIR}/curvenote.yml
-  cat "${DEVNOTE_DIR}/curvenote.yml" | yq ".project.title" > ${LOG_DIR}/curvenote.title
-else
-  echo "No curvenote.yml found"
-fi
 
 # Start Caddy in the background (not foreground) so we can wait on it
 cat <<EOF | caddy run --adapter caddyfile --config - >> ${LOG_DIR}/preview.log 2>&1 &
