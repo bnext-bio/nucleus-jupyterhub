@@ -67,3 +67,19 @@
         "allow-popups",
       ]
     createNewWindow: true
+- title: Forum
+  description: Nucleus Forum for questions and discussion.
+  icon: /opt/repo/share/nucleus-forum.svg
+  source: https://forum.bnext.bio/
+  type: url
+  catalog: Nucleus
+  args:
+    sandbox:
+      [
+        "allow-same-origin",
+        "allow-scripts",
+        "allow-downloads",
+        "allow-modals",
+        "allow-popups",
+      ]
+    createNewWindow: true
