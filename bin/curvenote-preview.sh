@@ -147,7 +147,7 @@ while [[ $SHOULD_EXIT -eq 0 ]]; do
       echo ${curvenote_pid} > ${LOG_DIR}/curvenote.pid
 
       sleep 2
-      curl -s --connect-timeout 10 http://localhost:${THEME_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
+      curl -s --connect-timeout 60 http://localhost:${THEME_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
       curl -s --connect-timeout 10 http://localhost:${CONTENT_PORT}/ > /dev/null || echo Failed to connect to theme server >> ${LOG_DIR}/preview.log
       echo "Curvenote started" >> ${LOG_DIR}/preview.log
 
