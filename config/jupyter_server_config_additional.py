@@ -22,21 +22,33 @@ c.JupyterLabTemplates.template_label = "Template"
 c.ContentsManager.allow_hidden = True
 c.FileContentsManager.always_delete_dir = True
 
-c.ServerProxy.servers = {
-    "curvenote-start": {
-        "command": ["/bin/bash", "/opt/repo/bin/curvenote-launch.sh", "{port}"],
-        "absolute_url": False,
-        "environment": {"BASE_URL_PREFIX": "{base_url}curvenote-start"},
-        "timeout": 120,
-        "launcher_entry": {
-            "enabled": True,
-            "title": "Curvenote Preview",
-            # "category": "Nucleus",
-            "icon_path": "/opt/repo/share/curvenote-logo.svg",
-        },
-        "new_browser_tab": False,
-    }
-}
+# c.ServerProxy.servers = {
+#     "curvenote-start": {
+#         "command": ["/bin/bash", "/opt/repo/bin/curvenote-launch.sh", "{port}"],
+#         "absolute_url": False,
+#         "environment": {"BASE_URL_PREFIX": "{base_url}curvenote-start"},
+#         "timeout": 120,
+#         "launcher_entry": {
+#             "enabled": True,
+#             "title": "Curvenote Preview",
+#             # "category": "Nucleus",
+#             "icon_path": "/opt/repo/share/curvenote-logo.svg",
+#         },
+#         "new_browser_tab": False,
+#     },
+#     "syncthing": {
+#         "command": ["/home/jovyan/opt/syncthing/syncthing"],
+#         "absolute_url": False,
+#         "timeout": 120,
+#         "launcher_entry": {
+#             "enabled": True,
+#             "title": "Syncthing",
+#             # "category": "Nucleus",
+#             "icon_path": "/opt/repo/share/curvenote-logo.svg",
+#         },
+#         "new_browser_tab": True,
+#     }
+# }
 
 # Set default terminal shell
 c.NotebookApp.terminado_settings = {"shell_command": ["/bin/zsh"]}
