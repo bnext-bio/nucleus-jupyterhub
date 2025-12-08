@@ -1,6 +1,6 @@
 [project]
 name = "nucleus-env"
-version = "0.1.0a1"
+version = "0.5.0rc1"
 description = "Metapackage to set up a default environment for working with the Nucleus CDK and synthetic cells."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -36,7 +36,7 @@ dependencies = [
     "jupyter-collaboration>=1.1.0",
     "ipympl>=0.9.7",
     "jupyterlab-templates>=0.5.2",
-    "nucleus-cdk>=0.3.0a1",
+    "nucleus-cdk>=0.5.0rc1",
     "ipykernel>=6.29.5",
     # No Napari for now
     # "triangle", # https://blog.rtwilson.com/how-to-install-the-python-triangle-package-on-an-apple-silicon-mac/
