@@ -1,0 +1,16 @@
+[project]
+name = "modeling"
+version = "0.1.0"
+description = "Metapackage for BioCRNpyler modeling environment."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "biocrnpyler",
+    "bioscrape",
+    "ipykernel>=7.1.0",
+    "seaborn>=0.13.2",
+]
+
+[tool.uv.sources]
+biocrnpyler = { git = "https://github.com/murrayrm/biocrnpyler.git", rev = "parameter_update-22Nov2025" }
+bioscrape = { git = "https://github.com/murrayrm/bioscrape.git", rev = "propensity_fix-30Nov2025" }
