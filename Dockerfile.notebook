@@ -106,3 +106,7 @@ WORKDIR /home/jovyan
 
 # Python environment
 RUN /usr/local/bin/uv pip install --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
+
+WORKDIR /opt/repo/envs/modeling
+RUN /usr/local/bin/uv sync
+RUN /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling

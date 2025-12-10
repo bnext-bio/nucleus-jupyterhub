@@ -71,6 +71,12 @@ USER_STUB="${JUPYTERHUB_USER#*:}"
 echo "Installing environment packages"
 uv pip install --system -e ${REPO}/nucleus-env --no-progress
 
+# Install BioCRNpyler env
+echo "Installing modeling environment"
+cd ${REPO}/envs/modeling
+uv sync
+uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
+
 # Bring down the curvenote template
 echo "Updating curvenote template"
 if [ -d ${DEVNOTE_PATH} ]; then 
