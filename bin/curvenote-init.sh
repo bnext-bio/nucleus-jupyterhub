@@ -11,4 +11,4 @@ echo "Creating DevNote in ${dirname}"
 mkdir -p "${dirname}"
 cd "${dirname}"
 
-curvenote init --github https://github.com/antonrmolina/devnote-template
+curvenote init --github https://github.com/antonrmolina/devnote-template --output .
