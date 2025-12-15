@@ -28,6 +28,12 @@
     {{end}}
     <progress id="loading-progress" value="0" max="5" />
     <p>The Curvenote server is loading. Please wait and the page will refresh.</p>
+    <code>
+      {{$lines := readFile "curvenote.log" | splitList "\n"}}
+      {{range slice $lines (sub (len $lines) 1)}}
+      {{.}}<br>
+      {{end}}
+    </code>
 
     <script type="text/javascript">
       let timeElapsed = 0;
