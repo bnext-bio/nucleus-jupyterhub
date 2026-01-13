@@ -83,10 +83,13 @@ if [ -d ${DEVNOTE_PATH} ]; then
     cd ${DEVNOTE_PATH}
     if [ -d .git.disable ]; then
         mv .git.disable .git
+
+        # Update origin URL to nucleus-eng template
+        git remote set-url origin https://github.com/nucleus-eng/devnote-template
         git pull --ff-only
     fi
-else
-    git clone --depth=1 https://github.com/antonrmolina/devnote-template.git ${DEVNOTE_PATH}
+# else
+#     git clone --depth=1 https://github.com/nucleus-eng/devnote-template ${DEVNOTE_PATH}
 fi
 
 mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
