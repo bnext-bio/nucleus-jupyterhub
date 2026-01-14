@@ -86,7 +86,7 @@ WORKDIR /home/jovyan
 
 # Curvenote
 RUN mamba install -y -c conda-forge 'nodejs>=24,<25'
-RUN npm install -g curvenote
+RUN npm install -g curvenote@0.13.2
 RUN npm install -g nodemon
 
 # Pre-install pip packages so we can have them cached as a docker layer
