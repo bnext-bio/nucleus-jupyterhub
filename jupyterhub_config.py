@@ -24,7 +24,10 @@ c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
 c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
 
 # Set timeout high since we might be doing a lot of warmup on the server
+# start_timeout: time to wait for container to start
 c.DockerSpawner.start_timeout = 300
+# http_timeout: time to wait for HTTP server to respond (this was defaulting to 30s)
+c.DockerSpawner.http_timeout = 300
 
 if "NB_USER" in os.environ:
     c.DockerSpawner.extra_create_kwargs = {"user": os.environ["NB_USER"]}
