@@ -2,14 +2,14 @@
 
 
 export REPO=/opt/repo
-export BRANCH=2i2c-dev
+export BRANCH="$(cd ${REPO} && git rev-parse --abbrev-ref HEAD)"
 export GIT_REMOTE="https://github.com/bnext-bio/nucleus-jupyterhub.git"
 export LOG_FILE=/home/jovyan/.log/`date -Iseconds`-setup.log
 
 echo "In setup-stub: logging to $LOG_FILE"
 mkdir -p `dirname $LOG_FILE`
 
-echo "Updating git repository: ${REPO}" | tee -a ${LOG_FILE}
+echo "Updating git repository: ${REPO} on ${BRANCH}" | tee -a ${LOG_FILE}
 if [ ! -d ${REPO} ]; then
     git clone --depth=1 ${GIT_REMOTE} ${REPO} |& tee -a ${LOG_FILE}
 fi
