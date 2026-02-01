@@ -8,37 +8,45 @@ WORKDIR /tmp
 RUN apt-get -y update && apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rustup rsync zsh jq tmux psmisc && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Reinstall man pages
-RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes
-RUN apt-get update && apt-get install -y man manpages-posix man-db && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
-RUN rm -f /usr/bin/man
-RUN dpkg-divert --quiet --remove --rename /usr/bin/man
-
-# RipGrep
-RUN arch=$(arch | sed s/aarch64/aarch64-unknown-linux-gnu/ | sed s/x86_64/x86_64-unknown-linux-musl/) && curl -o ripgrep.tgz -L https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-${arch}.tar.gz
-RUN mkdir -p /opt/ripgrep
-RUN tar -C /opt/ripgrep -xvf ripgrep.tgz --strip-components=1
-RUN ln -s /opt/ripgrep/rg /usr/local/bin
-RUN rm -f ripgrep.tgz
-
-# btop
-RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && echo && echo $arch && ls -alh && sleep 5
-RUN tar -C /tmp -xvf btop.tbz
-RUN cd /tmp/btop && make install
-RUN rm -rf /tmp/btop
-RUN rm -f btop.tbz
-
-# Neovim
-RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz
-RUN mkdir -p /opt/nvim
-RUN tar -C /opt/nvim -xzf nvim.tgz --strip-components=1
-RUN ln -s /opt/nvim/bin/nvim /usr/local/bin
-RUN rm -f nvim.tgz
-
-# Rust / Cargo
-RUN rustup default stable
+RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes && \
+  apt-get update && apt-get install -y man manpages-posix man-db && rm -rf /var/cache/apt/archives /var/lib/apt/lists/* && \
+  rm -f /usr/bin/man && \
+  dpkg-divert --quiet --remove --rename /usr/bin/man
 
 # Eza
-RUN cargo install --root /usr/local eza
+RUN wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg && \
+  echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list && \
+  chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list && \
+  apt update -y && \
+  apt install -y eza && \
+  rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
+# RipGrep
+RUN arch=$(arch | sed s/aarch64/aarch64-unknown-linux-gnu/ | sed s/x86_64/x86_64-unknown-linux-musl/) && curl -o ripgrep.tgz -L https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-${arch}.tar.gz && \
+  mkdir -p /opt/ripgrep && \
+  tar -C /opt/ripgrep -xvf ripgrep.tgz --strip-components=1 && \
+  ln -s /opt/ripgrep/rg /usr/local/bin && \
+  rm -f ripgrep.tgz
+
+# btop
+RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && \
+  tar -C /tmp -xvf btop.tbz && \
+  cd /tmp/btop && make install && \
+  rm -rf /tmp/btop && \
+  rm -f btop.tbz && \
+
+# Neovim
+RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz && \
+  mkdir -p /opt/nvim && \
+  tar -C /opt/nvim -xzf nvim.tgz --strip-components=1 && \
+  ln -s /opt/nvim/bin/nvim /usr/local/bin && \
+  rm -f nvim.tgz
+
+# Rust / Cargo
+# RUN rustup default stable
+
+# Eza
+# RUN cargo install --root /usr/local eza
 
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
@@ -49,7 +57,7 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg
   sudo apt-get -y update && apt-get -y install xcaddy && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Build and install caddy
-RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy
+RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy && rm -rf /home/jovyan/.cache
 
 # UV
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh
@@ -76,8 +84,8 @@ RUN chown $NB_USER:users /opt/noderoots
 
 RUN chsh -s /bin/zsh jovyan
 
-RUN rm -rf /home/jovyan/.cache  # Remove whatever massive cache gets created in the above steps
-RUN chown -R ${NB_USER}:users /home/jovyan
+# RUN rm -rf /home/jovyan/.cache  # Remove whatever massive cache gets created in the above steps
+# RUN chown -R ${NB_USER}:users /home/jovyan
 
 USER $NB_USER
 WORKDIR /home/jovyan
@@ -87,7 +95,7 @@ RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && npm install -g curvenote
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
-RUN /usr/local/bin/uv pip install --no-cache --system "git+https://github.com/bnext-bio/nucleus-jupyterhub.git#egg=nucleus-env&subdirectory=nucleus-env" --index $UV_INDEX --default-index=https://pypi.org/simple
+# RUN /usr/local/bin/uv pip install --no-cache --system "git+https://github.com/bnext-bio/nucleus-jupyterhub.git#egg=nucleus-env&subdirectory=nucleus-env" --index $UV_INDEX --default-index=https://pypi.org/simple
 
 COPY bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
 COPY --chown=$NB_USER:users . /opt/repo/
@@ -95,7 +103,7 @@ COPY --chown=$NB_USER:users . /opt/repo/
 # Jupyter Theme
 # RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
 WORKDIR /opt/repo/share/theme
-RUN pip install -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean
+RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean
 WORKDIR /home/jovyan
 
 # Python environment
