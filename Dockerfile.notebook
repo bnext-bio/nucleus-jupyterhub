@@ -33,7 +33,7 @@ RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop
   tar -C /tmp -xvf btop.tbz && \
   cd /tmp/btop && make install && \
   rm -rf /tmp/btop && \
-  rm -f btop.tbz && \
+  rm -f btop.tbz
 
 # Neovim
 RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz && \
