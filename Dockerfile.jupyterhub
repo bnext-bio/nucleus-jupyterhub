@@ -1,6 +1,5 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-ARG JUPYTERHUB_VERSION
 FROM quay.io/jupyterhub/jupyterhub:latest
 
 # Install dockerspawner, nativeauthenticator
@@ -10,5 +9,6 @@ RUN python3 -m pip install --no-cache-dir \
     jupyterhub-nativeauthenticator
 
 ADD ./config/jupyterhub-style/variables.scss /usr/local/share/jupyterhub/static/scss/variables.scss
+ADD ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
 
 CMD ["jupyterhub", "-f", "/srv/jupyterhub/jupyterhub_config.py"]

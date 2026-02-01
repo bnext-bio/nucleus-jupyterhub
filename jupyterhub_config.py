@@ -46,7 +46,7 @@ c.DockerSpawner.notebook_dir = notebook_dir
 
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
-c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir}
+c.DockerSpawner.volumes = {"hub-user-{username}": notebook_dir}
 
 # Run our post-setup script
 # c.DockerSpawner.post_start_cmd = "/opt/repo/bin/setup.sh"
@@ -58,7 +58,7 @@ c.DockerSpawner.remove = True
 c.DockerSpawner.debug = True
 
 # User containers will access hub by container name on the Docker network
-c.JupyterHub.hub_ip = "jupyterhub"
+c.JupyterHub.hub_ip = "hub"
 c.JupyterHub.hub_port = 8080
 
 # Persist hub data on volume mounted inside container

@@ -8,86 +8,65 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.jupyterhub
-      args:
-        JUPYTERHUB_VERSION: latest
     restart: always
-    image: jupyterhub
-    container_name: jupyterhub
-    networks:
-      - jupyterhub-network
+    image: nucleushub-hub
     volumes:
-      # The JupyterHub configuration file
-      - "./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro"
       # Bind Docker socket on the host so we can connect to the daemon from
       # within the container
       - "/var/run/docker.sock:/var/run/docker.sock:rw"
       # Bind Docker volume on host for JupyterHub database and cookie secrets
-      - "jupyterhub-data:/data"
+      - "hub-data:/data"
     environment:
       # This username will be a JupyterHub admin
       JUPYTERHUB_ADMIN: admin
       # All containers will join this network
-      DOCKER_NETWORK_NAME: jupyterhub-network
+      DOCKER_NETWORK_NAME: ${HUB_NETWORK:-jupyterhub_default}
       # JupyterHub will spawn this Notebook image for users
-      DOCKER_NOTEBOOK_IMAGE: jupyter-workshop:latest
+      DOCKER_NOTEBOOK_IMAGE: nucleushub-notebook:latest
       # Notebook directory inside user image
-      DOCKER_NOTEBOOK_DIR: /home/jovyan/work
+      DOCKER_NOTEBOOK_DIR: /home/jovyan/
       DATA_DIRECTORY: ${DATA_DIRECTORY:-jupyterhub-shared-data}
       UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
       NB_USER: ${NB_USER}
       NB_UMASK: ${NB_UMASK:-022}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jupyterhub.rule=Host(`workshop.int.bnext.bio`)"
-      - "traefik.http.routers.jupyterhub.entrypoints=websecure"
-      - "traefik.http.services.jupyterhub.loadbalancer.server.port=8000"
-      - "traefik.http.routers.jupyterhub.tls.certresolver=myresolver"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.rule=Host(`hub.int.bnext.bio`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.entrypoints=websecure"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.loadbalancer.server.port=8000"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.tls.certresolver=myresolver"
 
   singleuser-image:
     pull_policy: build
     build:
       context: .
       dockerfile: Dockerfile.notebook
-    image: jupyter-workshop:latest
+    image: nucleushub-notebook:latest
     container_name: singleuser-build
+    links:
+      - hub
     # environment:
     #   UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
     #   NB_USER: ${NB_USER}
     #   NB_UMASK: ${NB_UMASK:-022}
-    networks:
-      - jupyterhub-network
     # We don't actually run this container, just build the image
     entrypoint: /bin/true
 
 # PyPI intermediate cache to speed startup
-  proxpi:
-    restart: unless-stopped
-    image: epicwink/proxpi:latest
-    environment:
-      PROXPI_BINARY_FILE_MIME_TYPE: 1
-      PROXPI_INDEX_TTL: 86400
-      PROXPI_CACHE_DIR: /mnt/cache
-      PROXPI_DOWNLOAD_TIMEOUT: 0.1
-    volumes:
-      - pycache:/mnt/cache
-    networks:
-      - jupyterhub-network
-
-  # Cloudflare tunnel for remote access
-  tunnel:
-    image: cloudflare/cloudflared
-    restart: unless-stopped
-    command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    networks:
-      - jupyterhub-network
+  # proxpi:
+  #   restart: unless-stopped
+  #   image: epicwink/proxpi:latest
+  #   environment:
+  #     PROXPI_BINARY_FILE_MIME_TYPE: 1
+  #     PROXPI_INDEX_TTL: 86400
+  #     PROXPI_CACHE_DIR: /mnt/cache
+  #     PROXPI_DOWNLOAD_TIMEOUT: 0.1
+  #   volumes:
+  #     - pycache:/mnt/cache
+  #   networks:
+  #     - jupyterhub-network
 
 volumes:
-  jupyterhub-data:
-  jupyterhub-shared-data:
-  pycache:
-
-networks:
-  jupyterhub-network:
-      name: jupyterhub-network
+  hub-data:
+  # jupyterhub-shared-data:
+  # pycache:
