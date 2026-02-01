@@ -5,3 +5,5 @@ __pycache__/
 .venv/
 .ipynb_checkpoints/Untitled-checkpoint.ipynb
 .ipynb_checkpoints/Untitled1-checkpoint.ipynb
+home-overlay/.local/share/jupyter/jupyter_app_launcher/jp_app_launcher_test.yml
+share/curvenote-logo.ai
