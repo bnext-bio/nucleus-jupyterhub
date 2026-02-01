@@ -4,6 +4,8 @@ FROM quay.io/jupyter/minimal-notebook:latest AS builder
 USER root
 WORKDIR /tmp
 
+RUN apt-get -y update && apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
 
@@ -14,6 +16,8 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg
 
 # Build and install caddy
 RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy && rm -rf /home/jovyan/.cache
+
+
 
 # Main Image
 FROM quay.io/jupyter/minimal-notebook:latest
