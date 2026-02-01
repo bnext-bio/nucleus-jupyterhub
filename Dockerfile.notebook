@@ -93,8 +93,8 @@ RUN npm install -g nodemon
 # and only add updates based on the latest hub repo
 RUN /usr/local/bin/uv pip install --system "git+https://github.com/bnext-bio/nucleus-jupyterhub.git#egg=nucleus-env&subdirectory=nucleus-env" --index $UV_INDEX --default-index=https://pypi.org/simple
 
-ADD bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
-ADD --chown=$NB_USER:users . /opt/repo/
+COPY bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
+COPY --chown=$NB_USER:users . /opt/repo/
 
 # Jupyter Theme
 # RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
