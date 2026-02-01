@@ -1,3 +1,18 @@
+# Builder image
+FROM quay.io/jupyter/minimal-notebook:latest AS builder
+
+# Go
+RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+
+# XCaddy
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg && \
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-xcaddy.list && \
+  sudo apt-get -y update && apt-get -y install xcaddy && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
+# Build and install caddy
+RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy && rm -rf /home/jovyan/.cache
+
+# Main Image
 FROM quay.io/jupyter/minimal-notebook:latest
 
 ARG UV_INDEX=https://pypi.org/simple
@@ -42,22 +57,8 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.t
   ln -s /opt/nvim/bin/nvim /usr/local/bin && \
   rm -f nvim.tgz
 
-# Rust / Cargo
-# RUN rustup default stable
-
-# Eza
-# RUN cargo install --root /usr/local eza
-
-# Go
-RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
-
-# XCaddy
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg && \
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-xcaddy.list && \
-  sudo apt-get -y update && apt-get -y install xcaddy && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
-
-# Build and install caddy
-RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy && rm -rf /home/jovyan/.cache
+# Caddy
+COPY --from=builder /usr/local/bin/caddy /usr/local/bin/caddy
 
 # UV
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh
@@ -103,7 +104,7 @@ COPY --chown=$NB_USER:users . /opt/repo/
 # Jupyter Theme
 # RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
 WORKDIR /opt/repo/share/theme
-RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean
+RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache
 WORKDIR /home/jovyan
 
 # Python environment
