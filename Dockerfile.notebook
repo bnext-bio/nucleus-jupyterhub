@@ -1,6 +1,9 @@
 # Builder image
 FROM quay.io/jupyter/minimal-notebook:latest AS builder
 
+USER root
+WORKDIR /tmp
+
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
 
