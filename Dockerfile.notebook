@@ -99,7 +99,11 @@ USER $NB_USER
 WORKDIR /home/jovyan
 
 # Curvenote
-RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && npm install -g curvenote@0.13.2 nodemon && npm cache clean --force
+RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
+  npm install -g curvenote@0.13.2 nodemon && \
+  npm cache clean --force && \
+  mamba clean --all && \
+  rm -rf /tmp/*
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
