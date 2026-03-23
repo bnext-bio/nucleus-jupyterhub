@@ -100,7 +100,7 @@ WORKDIR /home/jovyan
 
 # Curvenote
 RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
-  npm install -g curvenote@0.13.2 nodemon && \
+  npm install -g curvenote@0.14.3 nodemon && \
   npm cache clean --force && \
   mamba clean --all && \
   rm -rf /tmp/*
