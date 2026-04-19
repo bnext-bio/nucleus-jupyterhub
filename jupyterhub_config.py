@@ -35,6 +35,7 @@ c.GenericOAuthenticator.userdata_url = os.environ["HUB_OAUTH_USERDATA_URL"]
 c.GenericOAuthenticator.scope = ["openid", "email", "groups"]
 c.GenericOAuthenticator.username_claim = "email"
 c.GenericOAuthenticator.auth_state_groups_key = "oauth_user.groups"
+c.GenericOAuthenticator.manage_groups = True
 
 c.GenericOAuthenticator.allowed_users = set()
 c.GenericOAuthenticator.allowed_groups = {"hub-users"}
