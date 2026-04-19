@@ -6,7 +6,8 @@ FROM quay.io/jupyterhub/jupyterhub:latest
 # hadolint ignore=DL3013
 RUN python3 -m pip install --no-cache-dir \
     dockerspawner \
-    jupyterhub-nativeauthenticator
+    jupyterhub-nativeauthenticator \
+    oauthenticator
 
 ADD ./config/jupyterhub-style/variables.scss /usr/local/share/jupyterhub/static/scss/variables.scss
 ADD ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
