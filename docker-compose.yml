@@ -17,21 +17,17 @@ services:
       # Bind Docker volume on host for JupyterHub database and cookie secrets
       - "hub-data:/data"
     environment:
-      # This username will be a JupyterHub admin
-      JUPYTERHUB_ADMIN: admin
-      # All containers will join this network
-      DOCKER_NETWORK_NAME: ${HUB_NETWORK:-jupyterhub_default}
-      # JupyterHub will spawn this Notebook image for users
-      DOCKER_NOTEBOOK_IMAGE: nucleushub-notebook:latest
-      # Notebook directory inside user image
-      DOCKER_NOTEBOOK_DIR: /home/jovyan/
-      DATA_DIRECTORY: ${DATA_DIRECTORY:-jupyterhub-shared-data}
-      UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
-      NB_USER: ${NB_USER}
-      NB_UMASK: ${NB_UMASK:-022}
+      HUB_NETWORK_NAME: ${HUB_NETWORK:-jupyterhub_default}
+      HUB_NOTEBOOK_IMAGE: nucleushub-notebook:latest
+      HUB_NOTEBOOK_DIR: /home/jovyan/
+      HUB_OAUTH_CLIENT_ID: ${HUB_OAUTH_CLIENT_ID}
+      HUB_OAUTH_CLIENT_SECRET: ${HUB_OAUTH_CLIENT_SECRET}
+      HUB_OAUTH_AUTH_URL: ${HUB_OAUTH_AUTH_URL}
+      HUB_OAUTH_TOKEN_URL: ${HUB_OAUTH_TOKEN_URL}
+      HUB_OAUTH_USERDATA_URL: ${HUB_OAUTH_USERDATA_URL}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.rule=Host(`hub.int.bnext.bio`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.rule=Host(`${HUB_HOSTNAME}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.entrypoints=websecure"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.loadbalancer.server.port=8000"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${SERVICE_NAME}.tls.certresolver=myresolver"

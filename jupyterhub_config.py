@@ -45,7 +45,7 @@ c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 # ---------------------
 
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
-c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
+c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
 c.DockerSpawner.start_timeout = 300
 
 if "NB_USER" in os.environ:
@@ -55,13 +55,13 @@ if "NB_USER" in os.environ:
 c.DockerSpawner.env_keep.extend(["UV_INDEX", "NB_UMASK"])
 
 c.DockerSpawner.use_internal_ip = True
-c.DockerSpawner.network_name = os.environ["DOCKER_NETWORK_NAME"]
+c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
 
 # Explicitly set notebook directory because we'll be mounting a volume to it.
 # Most `jupyter/docker-stacks` *-notebook images run the Notebook server as
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
-notebook_dir = os.environ.get("DOCKER_NOTEBOOK_DIR", "/home/jovyan")
+notebook_dir = os.environ.get("HUB_NOTEBOOK_DIR", "/home/jovyan")
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {
     "hub-user-{username}": notebook_dir
