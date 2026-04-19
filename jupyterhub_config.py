@@ -3,27 +3,49 @@
 
 # Configuration file for JupyterHub
 import os
-import nativeauthenticator
 
 from jupyterhub.orm import User, Group
 from jupyterhub.app import JupyterHub
 
 c = get_config()  # noqa: F821
 
-# We rely on environment variables to configure JupyterHub so that we
-# avoid having to rebuild the JupyterHub container every time we change a
-# configuration parameter.
-
 # c.Application.log_level = "DEBUG"
 # c.JupyterHub.log_level = "DEBUG"
 
-# Spawn single-user servers as Docker containers
+# Hub Configuration
+# -----------------
+c.JupyterHub.hub_ip = "hub"
+c.JupyterHub.hub_port = 8080
+
+c.JupyterHub.cookie_secret_file = "/data/jupyterhub_cookie_secret"
+c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
+
+# Authentication
+# --------------
+
+c.JupyterHub.authenticator_class = "generic-oauth"
+
+c.GenericOAuthenticator.client_id = os.environ["HUB_OAUTH_CLIENT_ID"]
+c.GenericOAuthenticator.client_secret = os.environ["HUB_OAUTH_CLIENT_SECRET"]
+
+c.GenericOAuthenticator.authorize_url = os.environ["HUB_OAUTH_AUTH_URL"]
+c.GenericOAuthenticator.token_url = os.environ["HUB_OAUTH_TOKEN_URL"]
+c.GenericOAuthenticator.userdata_url = os.environ["HUB_OAUTH_USERDATA_URL"]
+
+c.GenericOAuthenticator.scope = ["openid", "email", "groups"]
+c.GenericOAuthenticator.username_claim = "email"
+c.GenericOAuthenticator.auth_state_groups_key = "oauth_user.groups"
+
+c.GenericOAuthenticator.allowed_users = {}
+c.GenericOAuthenticator.allowed_groups = {"hub-users"}
+c.GenericOAuthenticator.admin_users = {}
+c.GenericOAuthenticator.admin_groups = {"hub-admins"}
+
+# Spawner Configuration
+# ---------------------
+
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
-
-# Spawn containers from this image
 c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
-
-# Set timeout high since we might be doing a lot of warmup on the server
 c.DockerSpawner.start_timeout = 300
 
 if "NB_USER" in os.environ:
@@ -32,10 +54,8 @@ if "NB_USER" in os.environ:
 
 c.DockerSpawner.env_keep.extend(["UV_INDEX", "NB_UMASK"])
 
-# Connect containers to this Docker network
-network_name = os.environ["DOCKER_NETWORK_NAME"]
 c.DockerSpawner.use_internal_ip = True
-c.DockerSpawner.network_name = network_name
+c.DockerSpawner.network_name = os.environ["DOCKER_NETWORK_NAME"]
 
 # Explicitly set notebook directory because we'll be mounting a volume to it.
 # Most `jupyter/docker-stacks` *-notebook images run the Notebook server as
@@ -43,198 +63,25 @@ c.DockerSpawner.network_name = network_name
 # We follow the same convention.
 notebook_dir = os.environ.get("DOCKER_NOTEBOOK_DIR", "/home/jovyan")
 c.DockerSpawner.notebook_dir = notebook_dir
+c.DockerSpawner.volumes = {
+    "hub-user-{username}": notebook_dir
+}
 
-# Mount the real user's Docker volume on the host to the notebook user's
-# notebook directory in the container
-c.DockerSpawner.volumes = {"hub-user-{username}": notebook_dir}
-
-# Run our post-setup script
-# c.DockerSpawner.post_start_cmd = "/opt/repo/bin/setup.sh"
-
-# Remove containers once they are stopped
 c.DockerSpawner.remove = True
-
-# For debugging arguments passed to spawned containers
 c.DockerSpawner.debug = True
 
-# User containers will access hub by container name on the Docker network
-c.JupyterHub.hub_ip = "hub"
-c.JupyterHub.hub_port = 8080
-
-# Persist hub data on volume mounted inside container
-c.JupyterHub.cookie_secret_file = "/data/jupyterhub_cookie_secret"
-c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
-
-# Allow all signed-up users to login
-c.Authenticator.allow_all = True
-
-# Authenticate users with Native Authenticator
-c.JupyterHub.authenticator_class = "nativeauthenticator.NativeAuthenticator"
-c.JupyterHub.template_paths = [
-    f"{os.path.dirname(nativeauthenticator.__file__)}/templates/"
-]
-
-# Allow anyone to sign-up without approval
-c.NativeAuthenticator.open_signup = False
-
-# Additional config
-c.NativeAuthenticator.allowed_failed_logins = 3
-c.NativeAuthenticator.ask_email_on_signup = True
-
-# Allowed admins
-admin = os.environ.get("JUPYTERHUB_ADMIN")
-if admin:
-    c.Authenticator.admin_users = ["admin", "acjs", "molina"]
-
 # Permissions for sharing / RTC
-c.JupyterHub.load_roles = [
-    {
-        "name": "user",
-        "scopes": [
-            "self",
-            "shares!user",
-            "read:users:name",
-            "read:groups:name",
-            "access:servers",
-        ],
-    },
-]
+# c.JupyterHub.load_roles = [
+#     {
+#         "name": "user",
+#         "scopes": [
+#             "self",
+#             "shares!user",
+#             "read:users:name",
+#             "read:groups:name",
+#             "access:servers",
+#         ],
+#     },
+# ]
 
-c.DockerSpawner.oauth_client_allowed_scopes = ["access:servers!server", "shares!server"]
-
-
-# Collaboration group setup
-# Experimentally vibe-coded based on https://jupyterhub.readthedocs.io/en/latest/tutorial/collaboration-users.html
-
-# def create_collaboration_users():
-#     """
-#     Create collaboration users for all groups with collaboration=True property
-#     """
-#     app = JupyterHub.instance()
-#     db = app.db
-
-#     app.log.info("Running pre-spawn collaboration hook.")
-
-#     # Setup for our collaborative users group
-#     collab_group_name = "collaborative"
-#     c.JupyterHub.load_groups = {
-#         # collaborative accounts get added to this group
-#         # so it's easy to see which accounts are collaboration accounts
-#         "collaborative": {"users": []},
-#     }
-#     collab_group = db.query(Group).filter_by(name=collab_group_name).first()
-#     if not collab_group:
-#         app.log.info(f"Creating collaborative group '{collab_group_name}'")
-#         collab_group = Group(name=collab_group_name)
-#         db.add(collab_group)
-#         db.commit()
-
-#     # Get all groups from the database
-#     all_groups = db.query(Group).all()
-
-#     # # Initialize roles list if not already present
-#     if not hasattr(c.JupyterHub, 'load_roles'):
-#         c.JupyterHub.load_roles = []
-
-#     for group in all_groups:
-#         # Check if this group has the collaboration property set to True
-#         # Since Group doesn't have a 'collaboration' property by default,
-#         # we'll check a custom data attribute that needs to be set elsewhere
-#         # (e.g., via an admin API extension or custom database modification)
-
-#         # Option 1: Check if the group has a data property
-#         has_collab_flag = False
-
-#         # If you've extended the Group model with a 'properties' or 'data' field:
-#         if hasattr(group, 'properties') and isinstance(group.properties, dict) and "collaboration" in group.properties and group.properties["collaboration"].lower() == "true":
-#             has_collab_flag = True
-
-#         # Option 2: Check based on naming convention (e.g., groups prefixed with "collab-")
-#         # if group.name.startswith("collab-"):
-#         #     has_collab_flag = True
-
-#         # Option 3: Check against a predefined list of collaboration groups
-#         # collab_group_names = ["group1", "group2", "group3"]
-#         # if group.name in collab_group_names:
-#         #     has_collab_flag = True
-
-#         if has_collab_flag:
-#             # Create collaboration user for this group if it doesn't exist already
-#             collab_username = f"{group.name}-collab"
-#             collab_user = db.query(User).filter_by(name=collab_username).first()
-
-#             if not collab_user:
-#                 app.log.info(f"Creating collaboration user '{collab_username}' for group '{group.name}'")
-#                 collab_user = User(name=collab_username)
-
-#                 # Add to the collaborative group
-#                 collab_user.groups.append(collab_group)
-
-#                 db.add(collab_user)
-#                 db.commit()
-
-#             # Get the members of the group
-#             members = [user.name for user in group.users]
-#             app.log.info(f"Group '{group.name}' has members: {members}")
-
-#             # Create the role for access to the collab user's server
-#             role_name = f"collab-access-{group.name}"
-
-#             # Check if the role already exists in load_roles
-#             app.log.info(f"Checking group role access for group {group.name}")
-#             app.log.info("Roles: ")
-#             for role in c.JupyterHub.load_roles:
-#                 app.log.info(f"  {role.get('name')}")
-#                 for scope in role['scopes']:
-#                     app.log.info(f"    - {scope}")
-
-#             role_exists = any([role.get('name') == role_name for role in c.JupyterHub.load_roles])
-
-#             if not role_exists:
-#                 app.log.info(f"Creating collaboration role '{role_name}' for group '{group.name}")
-#                 c.JupyterHub.load_roles.append({
-#                     "name": role_name,
-#                     "scopes": [
-#                         f"access:servers!user={collab_username}",
-#                         f"admin:servers!user={collab_username}",
-#                         "admin-ui",
-#                         f"list:users!user={collab_username}",
-#                     ],
-#                     "groups": [group.name],
-#                 })
-
-# # create_collaboration_users()
-
-
-# # Enable real-time collaboration for collaborative users
-# def pre_spawn_hook(spawner):
-#     user = spawner.user
-#     group_names = {group.name for group in user.groups}
-
-#     if "collaborative" in group_names:
-#         spawner.log.info(f"Enabling collaborative mode for user {user.name}")
-#         spawner.args.append("--LabApp.collaborative=True")
-
-#         # Additional collaboration-specific configurations can be added here
-#         # For example, mounting shared data directories, etc.
-
-#     # Connect the user to a shared data directory for every group they're a member of.
-
-#     # spawner.log.info(f"Group info for {user.name}: {user}")
-#     # for group in user.groups:
-#     #     # Test if we can access group properties in here
-#     #     spawner.log.info(f"Group: {group}")
-#     #     spawner.log.info(f"  attrs: {group.__dict__.keys()}")
-#     #     spawner.log.info(f"  properties: {group.properties}")
-
-#     for group in user.groups:
-#         if hasattr(group, 'properties') and isinstance(group.properties, dict):
-#             if "collaboration" in group.properties and group.properties["collaboration"].lower() == "true":
-#                 host_dir = os.path.join(os.environ.get("DATA_DIRECTORY", "jupyterhub-shared-data"), group.name)
-#                 os.makedirs(host_dir, exist_ok=True)
-#                 spawner.volumes[host_dir] = f"/home/jovyan/work/shared/{group}"
-
-#             if group.name == "bnext":
-#                 spawner.volumes["/data/bnext"] = "/home/jovyan/work/bnext"
-
-# c.Spawner.pre_spawn_hook = pre_spawn_hook
+# c.DockerSpawner.oauth_client_allowed_scopes = ["access:servers!server", "shares!server"]
