@@ -36,9 +36,9 @@ c.GenericOAuthenticator.scope = ["openid", "email", "groups"]
 c.GenericOAuthenticator.username_claim = "email"
 c.GenericOAuthenticator.auth_state_groups_key = "oauth_user.groups"
 
-c.GenericOAuthenticator.allowed_users = {}
+c.GenericOAuthenticator.allowed_users = set()
 c.GenericOAuthenticator.allowed_groups = {"hub-users"}
-c.GenericOAuthenticator.admin_users = {}
+c.GenericOAuthenticator.admin_users = set()
 c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 
 # Spawner Configuration
