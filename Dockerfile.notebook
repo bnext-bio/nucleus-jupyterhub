@@ -125,3 +125,6 @@ WORKDIR /opt/repo/envs/modeling
 RUN /usr/local/bin/uv sync --no-cache && /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 WORKDIR /home/jovyan
+
+# Run through our startup shim so we can emit logging
+CMD ["/opt/repo/bin/start-jupyter.sh"]
