@@ -23,7 +23,7 @@ zsh -ci "source /opt/antidote/antidote.zsh && antidote load"
 
 # Update our jupyter configuration
 echo "Updating jupyter configuration"
-cat ${REPO}/config/jupyter_server_config_additional.py >> ${HOME}/.jupyter/jupyter_server_config.py
+cat ${REPO}/config/jupyter_server_config_additional.py > ${HOME}/.jupyter/jupyter_server_config.py
 mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
