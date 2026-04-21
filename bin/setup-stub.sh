@@ -15,6 +15,7 @@ if [ ! -d ${REPO} ]; then
 fi
 
 cd ${REPO}
+git status |& tee -a ${LOG_FILE}
 git remote set-url origin ${GIT_REMOTE} |& tee -a ${LOG_FILE} # Fix up remote if image was built from a repo with an SSH origin.
 git checkout ${BRANCH}
 git pull |& tee -a ${LOG_FILE}
