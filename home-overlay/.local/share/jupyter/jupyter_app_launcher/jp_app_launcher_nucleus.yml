@@ -17,6 +17,18 @@
     - $CWD
     - $PORT
   catalog: Developer Notes
+- title: Preview (Theme Server)
+  description: Preview a Developer Note (beta test)
+  icon: /opt/repo/share/curvenote-preview.svg
+  type: local-server
+  source: http://localhost:$PORT/
+  cwd: /home/jovyan/$BROWSER_DIR
+  args:
+    - /opt/repo/bin/curvenote-preview-v2.sh
+    - $CWD
+    - $PORT
+  catalog: Developer Notes
+  absolute: true
 - title: Draft Submit
   description: Submits a devnote draft to Nucleus Community developer notes
   icon: /opt/repo/share/curvenote-draft.svg
