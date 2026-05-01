@@ -1,9 +1,12 @@
-#!/bin/bash
-
-cd $1
+#!/bin/zsh
+set -uo pipefail
+setopt extendedglob
 
 export HOST=127.0.0.1
 export BASE_PATH=${JUPYTERHUB_SERVICE_PREFIX}proxy/absolute/$2
+
+DEVNOTE_DIR="$1"
+PORT="$2"
 
 LOG_DIR="/tmp/preview.`date -Iseconds`"
 mkdir -p ${LOG_DIR}
@@ -11,7 +14,8 @@ mkdir -p ${LOG_DIR}
 cat <<EOF > ${LOG_DIR}/preview.log
 `date -Iseconds`
 Cwd: `pwd`
-Port: $2
+Devnote: $DEVNOTE_DIR
+Port: $PORT
 Host: $HOST
 Base: $BASE_PATH
 EOF
@@ -32,4 +36,4 @@ else
   echo "No curvenote.yml found" >> ${LOG_DIR}/preview.log
 fi
 
-/opt/conda/bin/curvenote start --port $2 > ${LOG_DIR}/curvenote.log 2>&1
+/opt/conda/bin/curvenote start --port ${PORT} > ${LOG_DIR}/curvenote.log 2>&1
