@@ -14,8 +14,14 @@ services:
       # Bind Docker socket on the host so we can connect to the daemon from
       # within the container
       - "/var/run/docker.sock:/var/run/docker.sock:rw"
+
       # Bind Docker volume on host for JupyterHub database and cookie secrets
       - "hub-data:/data"
+
+      # Bind SSS for user auth info
+      - /var/lib/sss/pipes:/var/lib/sss/pipes
+      - /var/lib/sss/mc:/var/lib/sss/mc:ro
+      - /etc/nsswitch.conf:/etc/nsswitch.conf:ro
     environment:
       HUB_LOG_LEVEL: ${HUB_LOG_LEVEL:-INFO}
       HUB_NETWORK_NAME: ${HUB_NETWORK:-jupyterhub_default}
