@@ -92,6 +92,8 @@ RUN chown $NB_USER /opt/noderoots
 
 RUN chsh -s /bin/zsh $NB_USER
 
+RUN git config --global --add safe.directory /opt/repo
+
 # RUN rm -rf /home/jovyan/.cache  # Remove whatever massive cache gets created in the above steps
 # RUN chown -R ${NB_USER}:users /home/jovyan
 

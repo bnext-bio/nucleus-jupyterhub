@@ -11,7 +11,7 @@ mkdir -p `dirname $LOG_FILE` && chown $NB_USER `dirname $LOG_FILE`
 touch $LOG_FILE && chown $NB_USER $LOG_FILE
 
 # Permissions on repository might be weird if we're running as a local user
-git config --global --add safe.directory ${REPO} 
+# git config --global --add safe.directory ${REPO} 
 
 echo "Updating git repository: ${REPO} on ${BRANCH}" | tee -a ${LOG_FILE}
 if [ ! -d ${REPO} ]; then
