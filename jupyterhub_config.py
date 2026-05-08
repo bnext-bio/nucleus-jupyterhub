@@ -72,7 +72,7 @@ c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
 #     "nucleushub-user-{username}": notebook_dir
 # }
 
-c.DockerSpawner.remove = True
+c.DockerSpawner.remove = False
 c.DockerSpawner.debug = True
 
 # Permissions for sharing / RTC
