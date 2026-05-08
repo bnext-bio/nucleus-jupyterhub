@@ -36,21 +36,21 @@ services:
       - default
       - traefik
 
-  singleuser-image:
-    pull_policy: build
-    build:
-      context: .
-      dockerfile: Dockerfile.notebook
-    image: nucleushub-notebook:latest
-    container_name: singleuser-build
-    links:
-      - hub
-    # environment:
-    #   UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
-    #   NB_USER: ${NB_USER}
-    #   NB_UMASK: ${NB_UMASK:-022}
-    # We don't actually run this container, just build the image
-    entrypoint: /bin/true
+  # singleuser-image:
+  #   pull_policy: build
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.notebook
+  #   image: nucleushub-notebook:latest
+  #   container_name: singleuser-build
+  #   links:
+  #     - hub
+  #   # environment:
+  #   #   UV_INDEX: ${UV_INDEX:-https://pypi.org/simple}
+  #   #   NB_USER: ${NB_USER}
+  #   #   NB_UMASK: ${NB_UMASK:-022}
+  #   # We don't actually run this container, just build the image
+  #   entrypoint: /bin/true
 
 # PyPI intermediate cache to speed startup
   # proxpi:
