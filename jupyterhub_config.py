@@ -14,6 +14,8 @@ c = get_config()  # noqa: F821
 
 # Hub Configuration
 # -----------------
+c.Application.log_level = os.environ.get("HUB_LOG_LEVEL", "INFO")
+
 c.JupyterHub.hub_ip = "hub"
 c.JupyterHub.hub_port = 8080
 
@@ -32,7 +34,7 @@ c.GenericOAuthenticator.authorize_url = os.environ["HUB_OAUTH_AUTH_URL"]
 c.GenericOAuthenticator.token_url = os.environ["HUB_OAUTH_TOKEN_URL"]
 c.GenericOAuthenticator.userdata_url = os.environ["HUB_OAUTH_USERDATA_URL"]
 
-c.GenericOAuthenticator.scope = ["openid", "email", "groups"]
+c.GenericOAuthenticator.scope = ["openid", "email", "profile"]
 c.GenericOAuthenticator.username_claim = "email"
 c.GenericOAuthenticator.auth_state_groups_key = "oauth_user.groups"
 c.GenericOAuthenticator.manage_groups = True

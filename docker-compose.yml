@@ -31,6 +31,9 @@ services:
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.entrypoints=websecure"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-hub.loadbalancer.server.port=8000"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.tls.certresolver=myresolver"
+    networks:
+      - default
+      - traefik
 
   singleuser-image:
     pull_policy: build
