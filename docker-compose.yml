@@ -27,10 +27,10 @@ services:
       HUB_OAUTH_USERDATA_URL: ${HUB_OAUTH_USERDATA_URL}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${HUB_HOSTNAME}.rule=Host(`${HUB_HOSTNAME}`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${HUB_HOSTNAME}.entrypoints=websecure"
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-${HUB_HOSTNAME}.loadbalancer.server.port=8000"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-${HUB_HOSTNAME}.tls.certresolver=myresolver"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.rule=Host(`${HUB_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.entrypoints=websecure"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-hub.loadbalancer.server.port=8000"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.tls.certresolver=myresolver"
 
   singleuser-image:
     pull_policy: build
