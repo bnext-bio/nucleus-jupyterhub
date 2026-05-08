@@ -16,7 +16,7 @@ cd ${REPO}
 
 # Bring down and update our baseline home directory
 echo "Updating home directory overlay."
-cp -R ${REPO}/home-overlay/ ${HOME}
+cp -Rv ${REPO}/home-overlay/. ${HOME}
 
 # Install shell basics if necessary
 zsh -ci "source /opt/antidote/antidote.zsh && antidote load"
