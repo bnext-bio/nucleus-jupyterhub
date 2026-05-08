@@ -88,7 +88,7 @@ RUN rm -rf /tmp/*
 
 # Add directory and correct permissions for additional node installs
 RUN mkdir -p /opt/noderoots
-RUN chown $NB_USER:$NB_GROUP /opt/noderoots
+RUN chown $NB_USER /opt/noderoots
 
 RUN chsh -s /bin/zsh $NB_USER
 
