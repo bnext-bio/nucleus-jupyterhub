@@ -48,7 +48,22 @@ c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 # ---------------------
 
 c.JupyterHub.spawner_class = "dockerspawner.SystemUserSpawner"
-c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}/hub'
+
+c.DockerSpawner.volumes = {
+    'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
+    '/home/{username}':             '/home/{username}/host',     # real host data
+}
+
+c.SystemUserSpawner.environment = {
+    'NB_USER':         '{username}',
+    'NB_UID':          '{userid}',     # populated by SystemUserSpawner
+    'NB_GID':          '{groupid}',    # ditto if your version exposes it; otherwise hardcode or compute
+    'CHOWN_HOME':      'yes',
+    'CHOWN_HOME_OPTS': '-R',
+    # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
+}
+
+# c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}/hub'
 c.SystemUserSpawner.run_as_root = True
 
 c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
