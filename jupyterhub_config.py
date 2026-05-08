@@ -47,13 +47,15 @@ c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 # Spawner Configuration
 # ---------------------
 
-c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
+c.JupyterHub.spawner_class = "dockerspawner.SystemUserSpawner"
+c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}'
+
 c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
 c.DockerSpawner.start_timeout = 300
 
-if "NB_USER" in os.environ:
-    c.DockerSpawner.extra_create_kwargs = {"user": os.environ["NB_USER"]}
-    c.DockerSpawner.extra_host_config = {"group_add": ["users"]}
+# if "NB_USER" in os.environ:
+#     c.DockerSpawner.extra_create_kwargs = {"user": os.environ["NB_USER"]}
+#     c.DockerSpawner.extra_host_config = {"group_add": ["users"]}
 
 c.DockerSpawner.env_keep.extend(["UV_INDEX", "NB_UMASK"])
 
@@ -64,13 +66,13 @@ c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
 # Most `jupyter/docker-stacks` *-notebook images run the Notebook server as
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
-notebook_dir = os.environ.get("HUB_NOTEBOOK_DIR", "/home/jovyan")
-c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = {
-    "nucleushub-user-{username}": notebook_dir
-}
+# notebook_dir = os.environ.get("HUB_NOTEBOOK_DIR", "/home/jovyan")
+# c.DockerSpawner.notebook_dir = notebook_dir
+# c.DockerSpawner.volumes = {
+#     "nucleushub-user-{username}": notebook_dir
+# }
 
-c.DockerSpawner.remove = False
+c.DockerSpawner.remove = True
 c.DockerSpawner.debug = True
 
 # Permissions for sharing / RTC
