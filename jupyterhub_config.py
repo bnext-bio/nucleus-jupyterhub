@@ -68,7 +68,7 @@ c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
 # notebook_dir = os.environ.get("HUB_NOTEBOOK_DIR", "/home/jovyan")
-# c.DockerSpawner.notebook_dir = notebook_dir
+c.DockerSpawner.notebook_dir = "~/"
 # c.DockerSpawner.volumes = {
 #     "nucleushub-user-{username}": notebook_dir
 # }
