@@ -1,8 +1,7 @@
 #!/bin/bash
 
-HOME=/home/jovyan
 JUPYTER_SETTINGS=/opt/conda/share/jupyter/lab/settings
-DEVNOTE_PATH=/home/jovyan/work/devnotes/template
+DEVNOTE_PATH=${HOME}/work/devnotes/template
 
 echo "Setting up environment"
 echo "Running as: `whoami`"
@@ -11,6 +10,7 @@ echo "NB_UID: $NB_UID"
 echo "NB_GID: $NB_GID"
 echo "NB_UMASK: $NB_UMASK"
 echo "UV_INDEX: $UV_INDEX"
+echo "HOME: $HOME"
 
 cd ${REPO}
 

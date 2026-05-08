@@ -88,15 +88,15 @@ RUN rm -rf /tmp/*
 
 # Add directory and correct permissions for additional node installs
 RUN mkdir -p /opt/noderoots
-RUN chown $NB_USER:users /opt/noderoots
+RUN chown $NB_USER:$NB_GROUP /opt/noderoots
 
-RUN chsh -s /bin/zsh jovyan
+RUN chsh -s /bin/zsh $NB_USER
 
 # RUN rm -rf /home/jovyan/.cache  # Remove whatever massive cache gets created in the above steps
 # RUN chown -R ${NB_USER}:users /home/jovyan
 
 USER $NB_USER
-WORKDIR /home/jovyan
+WORKDIR /home/$NB_USER
 
 # Curvenote
 RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
@@ -116,6 +116,7 @@ COPY --chown=$NB_USER:users . /opt/repo/
 # RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
 WORKDIR /opt/repo/share/theme
 RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache
+
 WORKDIR /home/jovyan
 
 # Python environment
