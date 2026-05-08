@@ -48,7 +48,7 @@ c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 # ---------------------
 
 c.JupyterHub.spawner_class = "dockerspawner.SystemUserSpawner"
-c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}'
+c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}/hub'
 c.SystemUserSpawner.run_as_root = True
 
 c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
