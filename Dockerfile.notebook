@@ -100,7 +100,7 @@ WORKDIR /home/jovyan
 
 # Curvenote
 RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
-  npm install -g curvenote@0.14.3 nodemon && \
+  npm install -g curvenote@0.15.0 nodemon && \
   npm cache clean --force && \
   mamba clean --all && \
   rm -rf /tmp/*
@@ -125,3 +125,6 @@ WORKDIR /opt/repo/envs/modeling
 RUN /usr/local/bin/uv sync --no-cache && /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 WORKDIR /home/jovyan
+
+# Run through our startup shim so we can emit logging
+CMD ["/opt/repo/bin/start-jupyter.sh"]
