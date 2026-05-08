@@ -87,8 +87,7 @@ RUN rm -rf /tmp/*
 # ADD ./work-preload /home/jovyan/work-preload
 
 # Add directory and correct permissions for additional node installs
-RUN mkdir -p /opt/noderoots
-RUN chown $NB_USER /opt/noderoots
+RUN mkdir -p /opt/noderoots && chown $NB_USER:users /opt/noderoots && chmod g+wS /opt/noderoots
 
 RUN chsh -s /bin/zsh $NB_USER
 
@@ -112,7 +111,7 @@ RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
 # RUN /usr/local/bin/uv pip install --no-cache --system "git+https://github.com/bnext-bio/nucleus-jupyterhub.git#egg=nucleus-env&subdirectory=nucleus-env" --index $UV_INDEX --default-index=https://pypi.org/simple
 
 COPY bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
-COPY --chown=$NB_USER:users . /opt/repo/
+COPY --chown=$NB_USER:users --chmod=g+ws . /opt/repo/
 
 # Jupyter Theme
 # RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme

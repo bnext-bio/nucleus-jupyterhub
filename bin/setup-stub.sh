@@ -27,8 +27,8 @@ if [ -n "${BRANCH}" ]; then
     git pull |& tee -a ${LOG_FILE}
 fi
 
-echo "Fixing up permissions: new user $NB_USER" | tee -a ${LOG_FILE}
-chown -R ${NB_USER} /opt/repo /opt/noderoots /opt/conda |& tee -a ${LOG_FILE}
+# echo "Fixing up permissions: new user $NB_USER" | tee -a ${LOG_FILE}
+# chown -R ${NB_USER} /opt/repo /opt/noderoots /opt/conda |& tee -a ${LOG_FILE}
 
 echo "Running main setup" | tee -a ${LOG_FILE}
 su $NB_USER -c "/opt/repo/bin/setup.sh" |& tee -a ${LOG_FILE}
