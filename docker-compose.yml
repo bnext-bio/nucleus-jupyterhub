@@ -70,3 +70,7 @@ volumes:
   hub-data:
   # jupyterhub-shared-data:
   # pycache:
+
+networks:
+  traefik:
+    external: true
