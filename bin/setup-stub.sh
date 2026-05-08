@@ -4,10 +4,11 @@
 export REPO=/opt/repo
 export BRANCH="$(cd ${REPO} && git branch -r --contains HEAD | sed 's^.*origin/^^')"
 export GIT_REMOTE="https://github.com/bnext-bio/nucleus-jupyterhub.git"
-export LOG_FILE=/home/jovyan/.log/`date -Iseconds`-setup.log
+export LOG_FILE=/home/${NB_USER}/.log/`date -Iseconds`-setup.log
 
 echo "In setup-stub: logging to $LOG_FILE"
-mkdir -p `dirname $LOG_FILE`
+mkdir -p `dirname $LOG_FILE` && chown $NB_USER `dirname $LOG_FILE`
+touch $LOG_FILE && chown $NB_USER $LOG_FILE
 
 # Permissions on repository might be weird if we're running as a local user
 git config --global --add safe.directory ${REPO} 
