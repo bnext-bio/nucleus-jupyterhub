@@ -35,7 +35,7 @@ c.GenericOAuthenticator.token_url = os.environ["HUB_OAUTH_TOKEN_URL"]
 c.GenericOAuthenticator.userdata_url = os.environ["HUB_OAUTH_USERDATA_URL"]
 
 c.GenericOAuthenticator.scope = ["openid", "email", "profile"]
-c.GenericOAuthenticator.username_claim = "email"
+c.GenericOAuthenticator.username_claim = "preferred_username"
 c.GenericOAuthenticator.auth_state_groups_key = "oauth_user.groups"
 c.GenericOAuthenticator.manage_groups = True
 
@@ -67,10 +67,10 @@ c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
 notebook_dir = os.environ.get("HUB_NOTEBOOK_DIR", "/home/jovyan")
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {
-    "hub-user-{username}": notebook_dir
+    "nucleushub-user-{username}": notebook_dir
 }
 
-c.DockerSpawner.remove = True
+c.DockerSpawner.remove = False
 c.DockerSpawner.debug = True
 
 # Permissions for sharing / RTC
