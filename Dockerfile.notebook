@@ -87,7 +87,7 @@ RUN rm -rf /tmp/*
 # ADD ./work-preload /home/jovyan/work-preload
 
 # Add directory and correct permissions for additional node installs
-RUN mkdir -p /opt/noderoots && chown $NB_USER:users /opt/noderoots && chmod g+wS /opt/noderoots
+RUN mkdir -p /opt/noderoots && chown $NB_USER:users /opt/noderoots && chmod g+ws /opt/noderoots
 
 RUN chsh -s /bin/zsh $NB_USER
 
