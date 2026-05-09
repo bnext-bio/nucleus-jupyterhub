@@ -23,17 +23,20 @@ RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/re
 FROM quay.io/jupyter/minimal-notebook:latest
 
 ARG UV_INDEX=https://pypi.org/simple
+ENV UV_CACHE_DIR=/opt/uv
 
 USER root
 WORKDIR /tmp
 
 RUN apt-get -y update && \
-  apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rustup rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools && \
+  apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools && \
   rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Reinstall man pages
 RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes && \
-  apt-get update && apt-get install -y man manpages-posix man-db && rm -rf /var/cache/apt/archives /var/lib/apt/lists/* && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends man manpages-posix man-db && \
+  rm -rf /var/cache/apt/archives /var/lib/apt/lists/* && \
   rm -f /usr/bin/man && \
   dpkg-divert --quiet --remove --rename /usr/bin/man
 
@@ -79,21 +82,15 @@ RUN git clone --depth=1 https://github.com/mattmc3/antidote.git /opt/antidote
 RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
 # Cleanup APT cache and working dirs
-RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
-RUN rm -rf /tmp/*
+RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/* /tmp/*
 
-# ADD ./templates /home/jovyan/.jupyter/templates
-# ADD ./work-preload /home/jovyan/work-preload
-
-# Add directory and correct permissions for additional node installs
-RUN mkdir -p /opt/noderoots && chown $NB_USER:users /opt/noderoots && chmod g+ws /opt/noderoots
+# Add directory and correct permissions for additional node installs and uv cache
+RUN mkdir -p /opt/noderoots && chown $NB_USER:users /opt/noderoots && chmod g+ws /opt/noderoots && \
+  mkdir -p /opt/uv && chown $NB_USER:users /opt/uv && chmod g+ws /opt/uv
 
 RUN chsh -s /bin/zsh $NB_USER
 
 RUN git config --global --add safe.directory /opt/repo
-
-# RUN rm -rf /home/jovyan/.cache  # Remove whatever massive cache gets created in the above steps
-# RUN chown -R ${NB_USER}:users /home/jovyan
 
 USER $NB_USER
 WORKDIR /home/$NB_USER
@@ -107,27 +104,23 @@ RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
-# RUN /usr/local/bin/uv pip install --no-cache --system "git+https://github.com/bnext-bio/nucleus-jupyterhub.git#egg=nucleus-env&subdirectory=nucleus-env" --index $UV_INDEX --default-index=https://pypi.org/simple
 
 COPY bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
 COPY --chown=$NB_USER:users --chmod=g+ws . /opt/repo/
 COPY --chown=$NB_USER:users ./home-overlay /home/$NB_USER
 
 # Jupyter Theme
-# RUN /usr/local/bin/uv pip install --system -e /opt/repo/share/theme
 WORKDIR /opt/repo/share/theme
-RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache
+RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache && rm -rf /home/jovyan/.yarn/berry/cache
 
 WORKDIR /home/jovyan
 
-# Shell
-RUN zsh -ci "source /opt/antidote/antidote.zsh && antidote load"
-
 # Python environment
-RUN /usr/local/bin/uv pip install --no-cache --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
+RUN cd /opt/repo/nucleus-env && \
+  UV_PROJECT_ENVIRONMENT=/opt/conda /usr/local/bin/uv sync
 
 WORKDIR /opt/repo/envs/modeling
-RUN /usr/local/bin/uv sync --no-cache && /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
+RUN /usr/local/bin/uv sync && /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 WORKDIR /home/jovyan
 
