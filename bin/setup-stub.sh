@@ -18,7 +18,10 @@ if [ "$(id -u)" == 0 ]; then
 fi
 
 # Permissions on repository might be weird if we're running as a local user
-# git config --global --add safe.directory ${REPO} 
+# 
+
+sudo --preserve-env --set-home --user "${NB_USER}" bash <<'EOF'
+git config --global --add safe.directory ${REPO} 
 
 echo "Updating git repository: ${REPO} on ${BRANCH}" | tee -a ${LOG_FILE}
 if [ ! -d ${REPO} ]; then
@@ -33,6 +36,7 @@ if [ -n "${BRANCH}" ]; then
     git checkout ${BRANCH} |& tee -a ${LOG_FILE}
     git pull |& tee -a ${LOG_FILE}
 fi
+EOF
 
 # echo "Fixing up permissions: new user $NB_USER" | tee -a ${LOG_FILE}
 # chown -R ${NB_USER} /opt/repo /opt/noderoots /opt/conda |& tee -a ${LOG_FILE}
