@@ -6,6 +6,7 @@ import os
 
 from jupyterhub.orm import User, Group
 from jupyterhub.app import JupyterHub
+from dockerspawner import DockerSpawner, SystemUserSpawner
 
 c = get_config()  # noqa: F821
 
@@ -46,8 +47,16 @@ c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 
 # Spawner Configuration
 # ---------------------
+class NestedHomeSpawner(SystemUserSpawner):
+    @property
+    def volume_binds(self):
+        # Bypass SystemUserSpawner's forced host_home -> homedir bind;
+        # we manage the layering ourselves via c.DockerSpawner.volumes.
+        return DockerSpawner.volume_binds.fget(self)
 
-c.JupyterHub.spawner_class = "dockerspawner.SystemUserSpawner"
+c.JupyterHub.spawner_class = NestedHomeSpawner
+
+# c.JupyterHub.spawner_class = "dockerspawner.SystemUserSpawner"
 
 c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
