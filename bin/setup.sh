@@ -18,9 +18,6 @@ cd ${REPO}
 echo "Updating home directory overlay."
 cp -Rv ${REPO}/home-overlay/. ${HOME}
 
-# Install shell basics if necessary
-zsh -ci "source /opt/antidote/antidote.zsh && antidote load"
-
 # Update our jupyter configuration
 echo "Updating jupyter configuration"
 cat ${REPO}/config/jupyter_server_config_additional.py > ${HOME}/.jupyter/jupyter_server_config.py
@@ -28,9 +25,9 @@ mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
 # Install LSP into node roots using npm
-mkdir -p /opt/noderoots
-cd /opt/noderoots
-npm install --save-dev unified-language-server
+# mkdir -p /opt/noderoots
+# cd /opt/noderoots
+# npm install --save-dev unified-language-server
 
 cd ${REPO}
 
@@ -68,14 +65,14 @@ USER_STUB="${JUPYTERHUB_USER#*:}"
 # }""" > ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/plugin.jupyterlab-settings
 
 # Install our key packages
-echo "Installing environment packages"
-uv pip install --system -e ${REPO}/nucleus-env --no-progress
+# echo "Installing environment packages"
+# uv pip install --system -e ${REPO}/nucleus-env --no-progress
 
 # Install BioCRNpyler env
-echo "Installing modeling environment"
-cd ${REPO}/envs/modeling
-uv sync
-uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
+# echo "Installing modeling environment"
+# cd ${REPO}/envs/modeling
+# uv sync
+# uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 # Bring down the curvenote template
 # echo "Updating curvenote template"
