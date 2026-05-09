@@ -67,7 +67,7 @@ c.SystemUserSpawner.environment = {
     'NB_GID':          '{groupid}',    # ditto if your version exposes it; otherwise hardcode or compute
     'CHOWN_HOME':      'yes',
     'CHOWN_HOME_OPTS': '',
-    'CHOWN_EXTRA': ['/opt/repo', '/opt/noderoots']
+    'CHOWN_EXTRA': '/opt/repo,/opt/noderoots'
     # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
 }
 
