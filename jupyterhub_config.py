@@ -61,7 +61,7 @@ c.DockerSpawner.volumes = {
     '/mnt/ssd/users/{username}':    '/home/{username}/home',     # real host data
     '/mnt/storage/data':            '/home/{username}/data',
     '/mnt/storage/scratch/groups':  '/home/{username}/groups',
-    '/var/lib/sss/pipes':           '/var/lib/sss/pipes'
+    '/var/lib/sss/pipes/nss':       '/var/lib/sss/pipes/nss'
 }
 
 c.DockerSpawner.read_only_volumes = {
@@ -75,7 +75,7 @@ c.SystemUserSpawner.environment = {
     'NB_GID':          '{groupid}',    # ditto if your version exposes it; otherwise hardcode or compute
     'CHOWN_HOME':      'yes',
     'CHOWN_HOME_OPTS': '',
-    'CHOWN_EXTRA': '/opt/repo,/opt/noderoots'
+    'CHOWN_EXTRA': '/opt/conda,/opt/repo,/opt/noderoots'
     # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
 }
 
