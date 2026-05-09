@@ -98,9 +98,9 @@ RUN git config --global --add safe.directory /opt/repo
 USER $NB_USER
 WORKDIR /home/$NB_USER
 
-# Curvenote
+# Curvenote and other node packages
 RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
-  npm install -g curvenote@0.15.0 nodemon && \
+  npm install -g curvenote@0.15.0 nodemon unified-language-server && \
   npm cache clean --force && \
   mamba clean --all && \
   rm -rf /tmp/*
@@ -118,6 +118,9 @@ WORKDIR /opt/repo/share/theme
 RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache
 
 WORKDIR /home/jovyan
+
+# Shell
+RUN zsh -ci "source /opt/antidote/antidote.zsh && antidote load"
 
 # Python environment
 RUN /usr/local/bin/uv pip install --no-cache --system -e /opt/repo/nucleus-env --index $UV_INDEX --default-index=https://pypi.org/simple
