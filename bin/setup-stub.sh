@@ -31,4 +31,4 @@ fi
 # chown -R ${NB_USER} /opt/repo /opt/noderoots /opt/conda |& tee -a ${LOG_FILE}
 
 echo "Running main setup" | tee -a ${LOG_FILE}
-su $NB_USER -c "/opt/repo/bin/setup.sh" |& tee -a ${LOG_FILE}
+sudo --preserve-env --set-home --user "${NB_USER}" "/opt/repo/bin/setup.sh" |& tee -a ${LOG_FILE}
