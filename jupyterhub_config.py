@@ -105,7 +105,7 @@ c.DockerSpawner.notebook_dir = "~/"
 #     "nucleushub-user-{username}": notebook_dir
 # }
 
-c.DockerSpawner.remove = True
+c.DockerSpawner.remove = False
 c.DockerSpawner.debug = True
 
 # Permissions for sharing / RTC
