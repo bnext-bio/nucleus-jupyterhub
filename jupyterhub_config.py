@@ -10,12 +10,10 @@ from dockerspawner import DockerSpawner, SystemUserSpawner
 
 c = get_config()  # noqa: F821
 
-# c.Application.log_level = "DEBUG"
-# c.JupyterHub.log_level = "DEBUG"
-
 # Hub Configuration
 # -----------------
 c.Application.log_level = os.environ.get("HUB_LOG_LEVEL", "INFO")
+c.JupyterHub.log_level = os.environ.get("HUB_LOG_LEVEL", "INFO")
 
 c.JupyterHub.hub_ip = "hub"
 c.JupyterHub.hub_port = 8080
@@ -68,7 +66,8 @@ c.SystemUserSpawner.environment = {
     'NB_UID':          '{userid}',     # populated by SystemUserSpawner
     'NB_GID':          '{groupid}',    # ditto if your version exposes it; otherwise hardcode or compute
     'CHOWN_HOME':      'yes',
-    'CHOWN_HOME_OPTS': '-R',
+    'CHOWN_HOME_OPTS': '',
+    'CHOWN_EXTRA': ['/opt/repo', '/opt/noderoots']
     # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
 }
 
