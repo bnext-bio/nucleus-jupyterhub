@@ -10,6 +10,13 @@ echo "In setup-stub: logging to $LOG_FILE"
 mkdir -p `dirname $LOG_FILE` && chown $NB_USER `dirname $LOG_FILE`
 touch $LOG_FILE && chown $NB_USER $LOG_FILE
 
+# If we're running as root, we're in an environment that is expecting us to transition
+# into a specific user.
+if [ "$(id -u)" == 0 ]; then
+    # Ensure our user is added to the users group within the container so we can write in /opt
+    gpasswd -a $NB_USER users
+fi
+
 # Permissions on repository might be weird if we're running as a local user
 # git config --global --add safe.directory ${REPO} 
 
