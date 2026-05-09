@@ -76,8 +76,11 @@ c.SystemUserSpawner.environment = {
     'CHOWN_HOME':      'yes',
     'CHOWN_HOME_OPTS': '',
     'CHOWN_EXTRA': '/opt/conda,/opt/repo,/opt/noderoots',
-    'CHOWN_EXTRA_OPTS': '-R'
     # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
+}
+
+c.DockerSpawner.extra_create_kwargs = {
+    "group-add": "users"
 }
 
 # c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}/hub'
