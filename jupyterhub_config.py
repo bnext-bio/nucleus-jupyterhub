@@ -75,6 +75,7 @@ c.SystemUserSpawner.environment = {
 c.SystemUserSpawner.run_as_root = True
 
 c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
+c.DockerSpawner.prefix = "nucleushub"
 c.DockerSpawner.start_timeout = 300
 
 # if "NB_USER" in os.environ:
