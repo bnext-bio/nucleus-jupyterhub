@@ -76,7 +76,6 @@ c.SystemUserSpawner.environment = {
     'CHOWN_HOME':      'yes',
     'CHOWN_HOME_OPTS': '',
     'CHOWN_EXTRA': '/opt/repo,/opt/noderoots',
-    'CHOWN_EXTRA_OPTS': '-R',
     "JUPYTER_RUNTIME_DIR": "/tmp/jupyter-runtime" # Move runtime outside of mounted volume, so restarts clean up runtime info
     # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
 }
