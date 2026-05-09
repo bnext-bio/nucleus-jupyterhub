@@ -80,7 +80,7 @@ c.SystemUserSpawner.environment = {
 }
 
 c.DockerSpawner.extra_host_config = {
-    "group-add": ["users"]
+    "group_add": ["users"]
 }
 
 # c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}/hub'
