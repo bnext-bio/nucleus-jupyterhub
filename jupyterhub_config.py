@@ -60,7 +60,13 @@ c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
     '/mnt/ssd/users/{username}':    '/home/{username}/home',     # real host data
     '/mnt/storage/data':            '/home/{username}/data',
-    '/mnt/storage/scratch/groups':  '/home/{username}/groups'
+    '/mnt/storage/scratch/groups':  '/home/{username}/groups',
+    '/var/lib/sss/pipes':           '/var/lib/sss/pipes'
+}
+
+c.DockerSpawner.read_only_volumes = {
+    '/var/lib/sss/mc':      '/var/lib/sss/mc',
+    '/etc/nsswitch.conf':   '/etc/nsswitch.conf'
 }
 
 c.SystemUserSpawner.environment = {

@@ -27,7 +27,9 @@ ARG UV_INDEX=https://pypi.org/simple
 USER root
 WORKDIR /tmp
 
-RUN apt-get -y update && apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rustup rsync zsh jq tmux psmisc acl && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+RUN apt-get -y update && \
+  apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rustup rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools && \
+  rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Reinstall man pages
 RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes && \
