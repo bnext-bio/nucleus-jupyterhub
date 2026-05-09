@@ -60,7 +60,7 @@ c.JupyterHub.spawner_class = NestedHomeSpawner
 
 c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
-    '/home/{username}':             '/home/{username}/host',     # real host data
+    '/mnt/ssd/users/{username}':    '/home/{username}/home',     # real host data
 }
 
 c.SystemUserSpawner.environment = {
