@@ -78,21 +78,21 @@ uv sync
 uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 # Bring down the curvenote template
-echo "Updating curvenote template"
-if [ -d ${DEVNOTE_PATH} ]; then 
-    cd ${DEVNOTE_PATH}
-    if [ -d .git.disable ]; then
-        mv .git.disable .git
+# echo "Updating curvenote template"
+# if [ -d ${DEVNOTE_PATH} ]; then 
+#     cd ${DEVNOTE_PATH}
+#     if [ -d .git.disable ]; then
+#         mv .git.disable .git
 
-        # Update origin URL to nucleus-eng template
-        git remote set-url origin https://github.com/nucleus-eng/devnote-template
-        git pull --ff-only
-    fi
+#         # Update origin URL to nucleus-eng template
+#         git remote set-url origin https://github.com/nucleus-eng/devnote-template
+#         git pull --ff-only
+#     fi
 # else
 #     git clone --depth=1 https://github.com/nucleus-eng/devnote-template ${DEVNOTE_PATH}
-fi
+# fi
 
-mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
+# mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
 
 cd ${HOME}
 echo PWD: `pwd`
