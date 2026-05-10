@@ -79,7 +79,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     apt-get -y update \
-    && apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools man man-db
+    && apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rsync zsh jq tmux psmisc ffmpeg acl libnss-sss libpam-sss sssd-tools man man-db
 
 # RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes && \
 #   apt-get update && \
