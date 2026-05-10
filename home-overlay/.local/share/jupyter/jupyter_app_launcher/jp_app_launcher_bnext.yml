@@ -1,8 +1,9 @@
 - title: Copyparty
   description: Launch copyparty to transfer files
   type: local-server
-  source: http://localhost:$PORT/
+  source: http://localhost:3923/
   cwd: $HOME
   args:
     - /opt/repo/bin/copyparty.sh
   catalog: b.next
+  absolute: true
