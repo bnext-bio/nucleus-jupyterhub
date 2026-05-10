@@ -160,7 +160,7 @@ RUN pip install --no-cache-dir /tmp/*.whl \
 
 # Python environment
 RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
-  cd /opt/repo/nucleus-env && UV_PROJECT_ENVIRONMENT=/opt/conda uv sync \
+  cd /opt/repo/nucleus-env && uv pip install --system -e . \
   && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 # Run through our startup shim so we can emit logging
