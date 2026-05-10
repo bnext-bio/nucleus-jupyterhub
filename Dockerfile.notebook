@@ -4,7 +4,14 @@ FROM quay.io/jupyter/minimal-notebook:latest AS builder
 USER root
 WORKDIR /tmp
 
-RUN apt-get -y update && apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+# Disable the docker-clean script that wipes apt caches after install
+RUN rm -f /etc/apt/apt.conf.d/docker-clean \
+ && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
+    > /etc/apt/apt.conf.d/keep-cache
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \ 
+    apt-get -y update && apt-get -y install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++
 
 # Go
 RUN curl -fsSL https://go.dev/dl/go1.25.4.linux-amd64.tar.gz | tar -C /usr/local -xzf -
@@ -25,7 +32,9 @@ RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop
   rm -f btop.tbz
 
 # build our theme
-RUN mamba install -y -c conda-forge 'nodejs>=24,<25'
+RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
+    --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
+    mamba install -y -c conda-forge 'nodejs>=24,<25'
 
 WORKDIR /src
 COPY ./share/theme .
@@ -40,7 +49,15 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 FROM quay.io/jupyter/minimal-notebook:latest AS manpages
 
 USER root
-RUN yes | unminimize; rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
+# Disable the docker-clean script that wipes apt caches after install
+RUN rm -f /etc/apt/apt.conf.d/docker-clean \
+ && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
+    > /etc/apt/apt.conf.d/keep-cache
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \ 
+    yes | unminimize || true
 
 # Main Image
 FROM quay.io/jupyter/minimal-notebook:latest
@@ -54,9 +71,15 @@ WORKDIR /tmp
 # Reinstall man pages
 COPY --from=manpages /usr/share/man /usr/share/man
 
-RUN apt-get -y update && \
-  apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools man man-db && \
-  rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+# Disable the docker-clean script that wipes apt caches after install
+RUN rm -f /etc/apt/apt.conf.d/docker-clean \
+ && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
+    > /etc/apt/apt.conf.d/keep-cache
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get -y update \
+    && apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools man man-db
 
 # RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes && \
 #   apt-get update && \
@@ -117,11 +140,11 @@ USER $NB_USER
 WORKDIR /home/$NB_USER
 
 # Curvenote and other node packages
-RUN mamba install -y -c conda-forge 'nodejs>=24,<25' && \
-  npm install -g curvenote@0.15.0 nodemon unified-language-server && \
-  npm cache clean --force && \
-  mamba clean --all && \
-  rm -rf /tmp/*
+RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
+    --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
+    mamba install -y -c conda-forge 'nodejs>=24,<25' && \
+    npm install --prefer-offline --no-audit --no-fund -g curvenote@0.15.0 nodemon unified-language-server && \
+    rm -rf /tmp/*
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
@@ -138,7 +161,7 @@ RUN pip install --no-cache-dir /tmp/*.whl \
   && rm -rf /tmp/*.whl
 
 # Python environment
-RUN --mount=type=cache,target=/root/.cache/uv \
+RUN --mount=type=cache,target=/home/$NB_USER/.cache/uv,uid=$NB_UID,gid=$NB_GID \
   cd /opt/repo/nucleus-env && UV_PROJECT_ENVIRONMENT=/opt/conda uv sync \
   && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
