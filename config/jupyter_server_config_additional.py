@@ -30,7 +30,7 @@ c.NotebookApp.terminado_settings = {"shell_command": ["/bin/zsh"]}
 # Server proxies
 c.ServerProxy.servers = {
     "copyparty": {
-        "command": ["/opt/repo/bin/copyparty.sh"],
+        "command": ["/opt/repo/bin/copyparty.sh", "{port}"],
         "absolute_url": True,
         "new_browser_tab": True
     }

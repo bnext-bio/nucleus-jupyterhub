@@ -5,5 +5,6 @@
   cwd: ./
   args:
     - /opt/repo/bin/copyparty.sh
+    - $PORT
   catalog: b.next
   absolute: true
