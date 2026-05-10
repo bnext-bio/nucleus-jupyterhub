@@ -73,6 +73,7 @@ c.SystemUserSpawner.environment = {
     'NB_USER':         '{username}',
     'NB_UID':          '{userid}',     # populated by SystemUserSpawner
     'NB_GID':          '{groupid}',    # ditto if your version exposes it; otherwise hardcode or compute
+    'NB_UMASK':        '002',
     'CHOWN_HOME':      'yes',
     'CHOWN_HOME_OPTS': '',
     'CHOWN_EXTRA': '/opt/repo,/opt/noderoots',
@@ -95,7 +96,7 @@ c.DockerSpawner.start_timeout = 300
 #     c.DockerSpawner.extra_create_kwargs = {"user": os.environ["NB_USER"]}
 #     c.DockerSpawner.extra_host_config = {"group_add": ["users"]}
 
-c.DockerSpawner.env_keep.extend(["UV_INDEX", "NB_UMASK"])
+c.DockerSpawner.env_keep.extend(["UV_INDEX"])
 
 c.DockerSpawner.use_internal_ip = True
 c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
