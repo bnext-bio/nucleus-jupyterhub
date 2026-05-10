@@ -8,3 +8,10 @@
     - $PORT
   catalog: b.next
   absolute: true
+- title: Copy
+  description: Launch copyparty to transfer files
+  source: https://hub.int.bnext.bio/hub/user-redirect/copyparty
+  type: url
+  catalog: b.next
+  args:
+      createNewWindow: true
