@@ -1,6 +1,15 @@
 - title: Copyparty
   description: Launch copyparty to transfer files
+  icon: /opt/repo/share/copyparty.svg
   source: https://hub.int.bnext.bio/hub/user-redirect/copyparty
+  type: url
+  catalog: b.next
+  args:
+      createNewWindow: true
+- title: Grafana
+  description: Grafana monitoring system
+  icon: /opt/repo/share/grafana.svg
+  source: https://grafana.int.bnext.bio/login
   type: url
   catalog: b.next
   args:
