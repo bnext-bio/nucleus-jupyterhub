@@ -17,27 +17,47 @@ RUN curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | sudo gpg
 # Build and install caddy
 RUN PATH=/usr/local/go/bin:${PATH} xcaddy build --with=github.com/caddyserver/replace-response --output=/usr/local/bin/caddy && rm -rf /home/jovyan/.cache
 
+# btop
+RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && \
+  tar -C /tmp -xvf btop.tbz && \
+  cd /tmp/btop && make install && \
+  rm -rf /tmp/btop && \
+  rm -f btop.tbz
 
+# build our theme
+RUN mamba install -y -c conda-forge 'nodejs>=24,<25'
+
+WORKDIR /src
+COPY ./share/theme .
+
+# Use BuildKit cache mounts so jlpm/pip downloads survive across builds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=cache,target=/usr/local/share/.cache/yarn \
+    pip install --break-system-packages build \
+    && python3 -m build --wheel
+
+
+FROM quay.io/jupyter/minimal-notebook:latest AS manpages
+
+USER root
+RUN yes | unminimize; rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
 # Main Image
 FROM quay.io/jupyter/minimal-notebook:latest
 
 ARG UV_INDEX=https://pypi.org/simple
-ENV UV_CACHE_DIR=/opt/uv
+ENV UV_LINK_MODE=copy
 
 USER root
 WORKDIR /tmp
 
+# Reinstall man pages
+COPY --from=manpages /usr/share/man /usr/share/man
+
 RUN apt-get -y update && \
-  apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools && \
+  apt-get -y --no-install-recommends install debian-keyring debian-archive-keyring apt-transport-https build-essential gcc g++ rsync zsh jq tmux psmisc acl libnss-sss libpam-sss sssd-tools man man-db && \
   rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-# Reinstall man pages
-RUN yes | unminimize && \
- apt-get update && \
- apt-get install -y man-db manpages manpages-dev && \
- rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
- 
 # RUN sed -i 's:^path-exclude=/usr/share/man:#path-exclude=/usr/share/man:' /etc/dpkg/dpkg.cfg.d/excludes && \
 #   apt-get update && \
 #   apt-get install -y --no-install-recommends man manpages-posix man-db && \
@@ -58,11 +78,7 @@ RUN arch=$(arch | sed s/aarch64/aarch64-unknown-linux-gnu/ | sed s/x86_64/x86_64
   rm -f ripgrep.tgz
 
 # btop
-RUN arch=$(arch | sed s/aarch64/aarch64/ | sed s/x86_64/x86_64/) && curl -o btop.tbz -L https://github.com/aristocratos/btop/releases/download/v1.4.5/btop-${arch}-linux-musl.tbz && \
-  tar -C /tmp -xvf btop.tbz && \
-  cd /tmp/btop && make install && \
-  rm -rf /tmp/btop && \
-  rm -f btop.tbz
+COPY --from=builder /usr/local/bin/btop /usr/local/bin/btop
 
 # Neovim
 RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.tgz -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${arch}.tar.gz && \
@@ -115,19 +131,21 @@ COPY --chown=$NB_USER:users --chmod=g+ws . /opt/repo/
 COPY --chown=$NB_USER:users ./home-overlay /home/$NB_USER
 
 # Jupyter Theme
-WORKDIR /opt/repo/share/theme
-RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache && rm -rf /home/jovyan/.yarn/berry/cache
-
-WORKDIR /home/jovyan
+# WORKDIR /opt/repo/share/theme
+# RUN pip install --no-cache-dir -e . && jlpm build && jupyter labextension develop . --overwrite && jlpm cache clean && rm -rf /home/jovyan/.cache && rm -rf /home/jovyan/.yarn/berry/cache
+COPY --from=builder --chown=$NB_USER:users /src/dist/*.whl /tmp/
+RUN pip install --no-cache-dir /tmp/*.whl \
+  && rm -rf /tmp/*.whl
 
 # Python environment
-RUN cd /opt/repo/nucleus-env && \
-  UV_PROJECT_ENVIRONMENT=/opt/conda /usr/local/bin/uv sync
+RUN --mount=type=cache,target=/root/.cache/uv \
+  cd /opt/repo/nucleus-env && UV_PROJECT_ENVIRONMENT=/opt/conda uv sync \
+  && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
-WORKDIR /opt/repo/envs/modeling
-RUN /usr/local/bin/uv sync && /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
+# WORKDIR /opt/repo/envs/modeling
+# RUN /usr/local/bin/uv sync && /usr/local/bin/uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
-WORKDIR /home/jovyan
+# WORKDIR /home/jovyan
 
 # Run through our startup shim so we can emit logging
 CMD ["/opt/repo/bin/start-jupyter.sh"]
