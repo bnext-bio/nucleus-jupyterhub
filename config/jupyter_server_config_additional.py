@@ -32,6 +32,9 @@ c.ServerProxy.servers = {
     "copyparty": {
         "command": ["/opt/repo/bin/copyparty.sh", "{port}"],
         "absolute_url": True,
-        "new_browser_tab": True
+        "new_browser_tab": True,
+        "launcher_entry": {
+            "enabled": False
+        }
     }
 }

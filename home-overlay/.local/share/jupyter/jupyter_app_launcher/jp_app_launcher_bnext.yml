@@ -1,15 +1,5 @@
 - title: Copyparty
   description: Launch copyparty to transfer files
-  type: local-server
-  source: http://localhost:3923/
-  cwd: ./
-  args:
-    - /opt/repo/bin/copyparty.sh
-    - $PORT
-  catalog: b.next
-  absolute: true
-- title: Copy
-  description: Launch copyparty to transfer files
   source: https://hub.int.bnext.bio/hub/user-redirect/copyparty
   type: url
   catalog: b.next
