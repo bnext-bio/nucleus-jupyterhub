@@ -33,6 +33,7 @@ services:
       HUB_OAUTH_AUTH_URL: ${HUB_OAUTH_AUTH_URL}
       HUB_OAUTH_TOKEN_URL: ${HUB_OAUTH_TOKEN_URL}
       HUB_OAUTH_USERDATA_URL: ${HUB_OAUTH_USERDATA_URL}
+      HUB_AUTO_LOGIN: ${HUB_AUTO_LOGIN}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.rule=Host(`${HUB_HOSTNAME:-hub}`)"

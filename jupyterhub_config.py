@@ -47,6 +47,9 @@ c.GenericOAuthenticator.allowed_groups = {"hub-users"}
 c.GenericOAuthenticator.admin_users = set()
 c.GenericOAuthenticator.admin_groups = {"hub-admins"}
 
+if os.environ.get("HUB_AUTO_LOGIN", "0") == "1":
+    c.GenericOAuthenticator.auto_login = True
+    
 # Spawner Configuration
 # ---------------------
 class NestedHomeSpawner(SystemUserSpawner):
