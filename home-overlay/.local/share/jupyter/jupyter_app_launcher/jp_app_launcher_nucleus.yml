@@ -2,8 +2,8 @@
   description: Create a new Developer Note, starting from a template.
   icon: /opt/repo/share/curvenote-create.svg
   type: terminal
-  source: /opt/repo/bin/curvenote-init.sh
-  cwd: "$BROWSER_DIR"
+  source: "/opt/repo/bin/curvenote-init.sh $BROWSER_DIR"
+  cwd: "~/$BROWSER_DIR"
   args: {}
   catalog: Developer Notes
 - title: Preview
