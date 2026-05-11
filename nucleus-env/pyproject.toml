@@ -56,11 +56,15 @@ dependencies = [
     "biocrnpyler>=1.1.1",
     "yq>=3.4.3",
     "jupyter-ai>=3.0.0",
+    "jupyterlab-chat>=0.21.1",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.uv]
+exclude-newer = "14 days"
 
 [tool.uv.sources]
 triangle = { git = "https://github.com/drufat/triangle.git" }

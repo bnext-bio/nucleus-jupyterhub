@@ -1,0 +1,19 @@
+{
+    "sendWithShiftEnter": false,
+    "stackMessages": true,
+    "unreadNotifications": true,
+    "enableCodeToolbar": true,
+    "sendTypingNotification": true,
+    "showDeleted": false,
+    "defaultDirectory": "chats/",
+    "toolbar": [
+        {
+            "name": "moveToSide",
+            "command": "jupyterlab-chat:moveToSide"
+        },
+        {
+            "name": "markAsRead",
+            "command": "jupyterlab-chat:markAsRead"
+        }
+    ]
+}
