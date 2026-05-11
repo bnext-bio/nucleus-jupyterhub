@@ -55,6 +55,7 @@ dependencies = [
     "statsmodels>=0.14.4",
     "biocrnpyler>=1.1.1",
     "yq>=3.4.3",
+    "jupyter-ai>=3.0.0",
 ]
 
 [build-system]

@@ -163,5 +163,10 @@ RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
   cd /opt/repo/nucleus-env && uv pip install --system -e . \
   && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
+# Claude code and AI connectors
+RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
+    npm install --prefer-offline --no-audit --no-fund -g @agentclientprotocol/claude-agent-acp @zed-industries/codex-acp \
+    && curl -fsSL https://claude.ai/install.sh | bash
+
 # Run through our startup shim so we can emit logging
 # CMD ["/opt/repo/bin/start-jupyter.sh"]
