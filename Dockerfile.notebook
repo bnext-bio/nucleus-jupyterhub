@@ -64,6 +64,7 @@ FROM quay.io/jupyter/minimal-notebook:latest
 
 ARG UV_INDEX=https://pypi.org/simple
 ENV UV_LINK_MODE=copy
+ENV UV_EXCLUDE_NEWER="14 days"
 
 USER root
 WORKDIR /tmp
