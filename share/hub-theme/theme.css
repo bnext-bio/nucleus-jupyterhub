@@ -1,0 +1,31 @@
+/* b.next green brand overrides for JupyterHub hub UI.
+   Replaces the default JupyterHub orange (#f37524 / #e34f21) with #006837. */
+
+/* Sign In button and any .btn-jupyter elements */
+.btn-jupyter {
+  --bs-btn-bg: #006837;
+  --bs-btn-border-color: #005229;
+  --bs-btn-hover-bg: #005229;
+  --bs-btn-hover-border-color: #003d1e;
+  --bs-btn-focus-shadow-rgb: 0, 104, 55;
+  --bs-btn-active-bg: #004d26;
+  --bs-btn-active-border-color: #003d1e;
+  --bs-btn-disabled-bg: #006837;
+  --bs-btn-disabled-border-color: #005229;
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-color: #fff;
+  --bs-btn-disabled-color: #fff;
+}
+
+/* Login form header bar */
+#login-main .auth-form-header {
+  background: #006837;
+}
+
+/* Form control focus ring */
+.form-control:focus {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #006837;
+  border-color: #006837;
+  outline-color: #006837;
+}

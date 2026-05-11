@@ -1,0 +1,14 @@
+{% extends "templates/page.html" %}
+
+{% block title %}Nucleus Hub{% endblock title %}
+
+{% block favicon %}
+  <link rel="icon" href="{{ static_url('theme/favicon.png') }}" type="image/png">
+{% endblock favicon %}
+
+{% block stylesheet %}
+  {{ super() }}
+  <link rel="stylesheet"
+        href="{{ static_url('theme/theme.css') }}"
+        type="text/css" />
+{% endblock stylesheet %}

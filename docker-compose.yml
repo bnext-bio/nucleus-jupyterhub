@@ -24,6 +24,7 @@ services:
       - /etc/nsswitch.conf:/etc/nsswitch.conf:ro
     environment:
       HUB_LOG_LEVEL: ${HUB_LOG_LEVEL:-INFO}
+      HUB_HOSTNAME: ${HUB_HOSTNAME:-hub}
       HUB_NETWORK_NAME: ${HUB_NETWORK:-jupyterhub_default}
       HUB_NOTEBOOK_IMAGE: nucleushub-notebook:latest
       HUB_NOTEBOOK_DIR: /home/jovyan/
@@ -34,7 +35,7 @@ services:
       HUB_OAUTH_USERDATA_URL: ${HUB_OAUTH_USERDATA_URL}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.rule=Host(`${HUB_HOSTNAME}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.rule=Host(`${HUB_HOSTNAME:-hub}`)"
       - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-hub.entrypoints=websecure"
       - "traefik.http.services.${COMPOSE_PROJECT_NAME}-hub.loadbalancer.server.port=8000"
     networks:

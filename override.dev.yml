@@ -5,4 +5,8 @@ services:
     labels: {}
     environment:
       DOCKER_NOTEBOOK_DIR: /home/jovyan
+    networks: !override
+      - default
+
+networks: !reset {}
   

@@ -11,7 +11,13 @@ RUN python3 -m pip install --no-cache-dir \
 
 RUN apt-get update && apt-get install -y libnss-sss libpam-sss sssd-tools && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
 
-ADD ./config/jupyterhub-style/variables.scss /usr/local/share/jupyterhub/static/scss/variables.scss
-ADD ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+
+# Hub UI theme: CSS overrides (served from upstream static root) and template extension
+COPY ./share/hub-theme/theme.css /srv/venv/share/jupyterhub/static/theme/theme.css
+COPY ./share/hub-theme/page.html /srv/jupyterhub/templates/page.html
+COPY ./share/hub-theme/logo.png /srv/venv/share/jupyterhub/static/theme/logo.png
+COPY ./share/hub-theme/favicon.png /srv/venv/share/jupyterhub/static/theme/favicon.png
+
+COPY ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
 
 CMD ["jupyterhub", "-f", "/srv/jupyterhub/jupyterhub_config.py"]

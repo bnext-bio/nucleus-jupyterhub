@@ -21,6 +21,10 @@ c.JupyterHub.hub_port = 8080
 c.JupyterHub.cookie_secret_file = "/data/jupyterhub_cookie_secret"
 c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
 
+c.JupyterHub.template_paths = ["/srv/jupyterhub/templates"]
+c.JupyterHub.logo_file = "/srv/venv/share/jupyterhub/static/theme/logo.png"
+
+
 # Authentication
 # --------------
 
