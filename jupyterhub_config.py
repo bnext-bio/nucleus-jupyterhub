@@ -61,7 +61,18 @@ class NestedHomeSpawner(SystemUserSpawner):
 
 c.JupyterHub.spawner_class = NestedHomeSpawner
 
-# c.JupyterHub.spawner_class = "dockerspawner.SystemUserSpawner"
+c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
+c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
+c.DockerSpawner.prefix = "nucleushub"
+
+c.DockerSpawner.start_timeout = 300
+c.SystemUserSpawner.run_as_root = True
+c.DockerSpawner.remove = True
+c.DockerSpawner.debug = True
+c.DockerSpawner.use_internal_ip = True
+
+c.DockerSpawner.notebook_dir = "~/"
+c.DockerSpawner.env_keep.extend(["UV_INDEX"])
 
 c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
@@ -91,35 +102,6 @@ c.SystemUserSpawner.environment = {
 c.DockerSpawner.extra_host_config = {
     "group_add": ["users"]
 }
-
-# c.SystemUserSpawner.host_homedir_format_string = '/mnt/ssd/users/{username}/hub'
-c.SystemUserSpawner.run_as_root = True
-
-c.DockerSpawner.image = os.environ["HUB_NOTEBOOK_IMAGE"]
-c.DockerSpawner.prefix = "nucleushub"
-c.DockerSpawner.start_timeout = 300
-
-# if "NB_USER" in os.environ:
-#     c.DockerSpawner.extra_create_kwargs = {"user": os.environ["NB_USER"]}
-#     c.DockerSpawner.extra_host_config = {"group_add": ["users"]}
-
-c.DockerSpawner.env_keep.extend(["UV_INDEX"])
-
-c.DockerSpawner.use_internal_ip = True
-c.DockerSpawner.network_name = os.environ["HUB_NETWORK_NAME"]
-
-# Explicitly set notebook directory because we'll be mounting a volume to it.
-# Most `jupyter/docker-stacks` *-notebook images run the Notebook server as
-# user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
-# We follow the same convention.
-# notebook_dir = os.environ.get("HUB_NOTEBOOK_DIR", "/home/jovyan")
-c.DockerSpawner.notebook_dir = "~/"
-# c.DockerSpawner.volumes = {
-#     "nucleushub-user-{username}": notebook_dir
-# }
-
-c.DockerSpawner.remove = True
-c.DockerSpawner.debug = True
 
 # Permissions for sharing / RTC
 # c.JupyterHub.load_roles = [
