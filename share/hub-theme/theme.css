@@ -2,7 +2,7 @@
    Replaces the default JupyterHub orange (#f37524 / #e34f21) with #006837. */
 
 /* Sign In button and any .btn-jupyter elements */
-.btn-jupyter {
+.btn-jupyter, .btn-primary {
   --bs-btn-bg: #006837;
   --bs-btn-border-color: #005229;
   --bs-btn-hover-bg: #005229;
