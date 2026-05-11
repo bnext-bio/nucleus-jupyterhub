@@ -3,7 +3,7 @@
   icon: /opt/repo/share/curvenote-create.svg
   type: terminal
   source: /opt/repo/bin/curvenote-init.sh
-  cwd: "/home/jovyan/devnotes"
+  cwd: "$BROWSER_DIR"
   args: {}
   catalog: Developer Notes
 - title: Preview
