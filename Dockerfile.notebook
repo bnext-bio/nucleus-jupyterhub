@@ -151,7 +151,7 @@ RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
 RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
     umask 0027 \
     && cd /opt/noderoots \
-    && npm ci --prefer-offline --no-audit --no-fund --save-dev unified-language-server
+    && npm install --prefer-offline --no-audit --no-fund --save-dev unified-language-server
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
