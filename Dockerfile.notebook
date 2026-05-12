@@ -143,9 +143,14 @@ WORKDIR /home/$NB_USER
 # Curvenote and other node packages
 RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
     --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
-    mamba install -y -c conda-forge 'nodejs>=24,<25' && \
-    npm install --prefer-offline --no-audit --no-fund -g curvenote@0.15.0 nodemon unified-language-server && \
-    rm -rf /tmp/*
+    umask 0027 \
+    && mamba install -y -c conda-forge 'nodejs>=24,<25' \
+    && npm install --prefer-offline --no-audit --no-fund -g curvenote@0.15.0 nodemon unified-language-server \
+    && rm -rf /tmp/*
+
+RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
+    umask 0027 \
+    && npm install --prefer-offline --no-audit --no-fund -g --save-dev unified-language-server
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
@@ -156,17 +161,20 @@ COPY --chown=$NB_USER:users ./home-overlay /home/$NB_USER
 
 # Jupyter Theme
 COPY --from=builder --chown=$NB_USER:users /src/dist/*.whl /tmp/
-RUN pip install --no-cache-dir /tmp/*.whl \
+RUN umask 0027 \
+  &&pip install --no-cache-dir /tmp/*.whl \
   && rm -rf /tmp/*.whl
 
 # Python environment
 RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
-  cd /opt/repo/nucleus-env && uv pip install --system -e . \
+  umask 0027 \
+  && cd /opt/repo/nucleus-env && uv pip install --system -e . \
   && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 # Claude code and AI connectors
 RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
-    npm install --prefer-offline --no-audit --no-fund -g @agentclientprotocol/claude-agent-acp @zed-industries/codex-acp \
+    umask 0027 \
+    && npm install --prefer-offline --no-audit --no-fund -g @agentclientprotocol/claude-agent-acp @zed-industries/codex-acp \
     && curl -fsSL https://claude.ai/install.sh | bash
 
 # Run through our startup shim so we can emit logging
