@@ -7,7 +7,10 @@ home_dir = os.environ.get("HOME", "/home/jovyan")
 # c.ServerApp.root_dir = home_dir 
 
 # Extra node roots so we can install the language server
-c.LanguageServerManager.extra_node_roots = ["/opt/noderoots"]
+c.LanguageServerManager.extra_node_roots = [
+    "/opt/noderoots",
+    "/opt/conda/lib"
+]
 
 c.LabApp.custom_css = True
 
