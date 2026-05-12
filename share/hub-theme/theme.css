@@ -18,6 +18,10 @@
   --bs-btn-disabled-color: #fff;
 }
 
+.progress-bar {
+  --bs-progress-bar-bg: #006837;
+}
+
 /* Login form header bar */
 #login-main .auth-form-header {
   background: #006837;
