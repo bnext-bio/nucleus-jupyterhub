@@ -78,8 +78,8 @@ c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
     '/mnt/ssd/users/{username}/hub':    '/home/{username}/hub',     # real host data
     '/mnt/storage/data':            '/home/{username}/data',
-    '/mnt/storage/scratch/groups':  '/home/{username}/groups',
-    'glycine-smb':                  '/home/{username}/hub/glycine',
+    '/mnt/storage/scratch/groups':  '/home/{username}/projects',
+    'glycine-smb':                  '/home/{username}/glycine',
     '/var/lib/sss/pipes/nss':       '/var/lib/sss/pipes/nss'
 }
 
