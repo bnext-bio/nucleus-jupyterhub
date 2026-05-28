@@ -45,6 +45,18 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --break-system-packages build \
     && python3 -m build --wheel
 
+# Build typst
+# Actually, we're just going to install the binary directly way easier
+# ENV CARGO_HOME=/root/.cargo \
+#     CARGO_TARGET_DIR=/tmp/target \
+#     PATH=/root/.cargo/bin:$PATH
+
+# RUN --mount=type=cache,target=/root/.cargo/registry,sharing=locked \
+#     --mount=type=cache,target=/root/.cargo/git,sharing=locked \
+#     --mount=type=cache,target=/tmp/target,sharing=locked \
+#     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+#       | sh -s -- -y --default-toolchain stable --profile minimal --no-modify-path && \
+#     cargo install --locked typst-cli
 
 FROM quay.io/jupyter/minimal-notebook:latest AS manpages
 
@@ -126,6 +138,9 @@ RUN git clone --depth=1 https://github.com/mattmc3/antidote.git /opt/antidote
 # Zoxide
 RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh -s -- --bin-dir /usr/local/bin --man-dir /usr/local/share/man
 
+# Typst
+# COPY --from=builder /root/.cargo/bin/typst /usr/local/bin/typst https://github.com/typst/typst/releases/download/v0.14.2/typst-x86_64-unknown-linux-musl.tar.xz
+
 # Cleanup APT cache and working dirs
 RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/* /tmp/*
 
@@ -143,13 +158,13 @@ WORKDIR /home/$NB_USER
 # Curvenote and other node packages
 RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
     --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
-    umask 0027 \
+    umask 002 \
     && mamba install -y -c conda-forge 'nodejs>=24,<25' \
     && npm install --prefer-offline --no-audit --no-fund -g curvenote@0.15.0 nodemon unified-language-server \
     && rm -rf /tmp/*
 
 RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
-    umask 0027 \
+    umask 002 \
     && cd /opt/noderoots \
     && npm install --prefer-offline --no-audit --no-fund --save-dev unified-language-server
 
@@ -162,19 +177,19 @@ COPY --chown=$NB_USER:users ./home-overlay /home/$NB_USER
 
 # Jupyter Theme
 COPY --from=builder --chown=$NB_USER:users /src/dist/*.whl /tmp/
-RUN umask 0027 \
+RUN umask 002 \
   &&pip install --no-cache-dir /tmp/*.whl \
   && rm -rf /tmp/*.whl
 
 # Python environment
 RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
-  umask 0027 \
+  umask 002 \
   && cd /opt/repo/nucleus-env && uv pip install --system -e . \
   && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 # Claude code and AI connectors
 RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
-    umask 0027 \
+    umask 002 \
     && npm install --prefer-offline --no-audit --no-fund -g @agentclientprotocol/claude-agent-acp @zed-industries/codex-acp \
     && curl -fsSL https://claude.ai/install.sh | bash
 
