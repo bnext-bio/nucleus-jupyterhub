@@ -57,6 +57,7 @@ dependencies = [
     "yq>=3.4.3",
     "jupyter-ai>=3.0.0",
     "jupyterlab-chat>=0.21.1",
+    "pyarrow>=24.0.0",
 ]
 
 [build-system]
