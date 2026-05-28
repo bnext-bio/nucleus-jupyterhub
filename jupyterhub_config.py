@@ -79,6 +79,7 @@ c.DockerSpawner.volumes = {
     '/mnt/ssd/users/{username}/hub':    '/home/{username}/hub',     # real host data
     '/mnt/storage/data':            '/home/{username}/data',
     '/mnt/storage/scratch/groups':  '/home/{username}/groups',
+    'glycine-smb':                  '/home/{username}/hub/glycine'
     '/var/lib/sss/pipes/nss':       '/var/lib/sss/pipes/nss'
 }
 
