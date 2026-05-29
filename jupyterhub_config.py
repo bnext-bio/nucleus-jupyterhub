@@ -77,8 +77,9 @@ c.DockerSpawner.env_keep.extend(["UV_INDEX"])
 c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
     '/mnt/ssd/users/{username}/hub':    '/home/{username}/hub',     # real host data
+    '/mnt/ssd/stacks/nucleushub/config': '/opt/localconfig',
     '/mnt/storage/data':            '/home/{username}/data',
-    '/mnt/storage/scratch/groups':  '/home/{username}/projects',
+    '/mnt/storage/engineering':  '/home/{username}/projects',
     'glycine-smb':                  '/home/{username}/glycine',
     '/var/lib/sss/pipes/nss':       '/var/lib/sss/pipes/nss'
 }
@@ -97,7 +98,6 @@ c.SystemUserSpawner.environment = {
     'CHOWN_HOME_OPTS': '',
     'CHOWN_EXTRA': '/opt/repo,/opt/noderoots',
     "JUPYTER_RUNTIME_DIR": "/tmp/jupyter-runtime" # Move runtime outside of mounted volume, so restarts clean up runtime info
-    # Critically: do NOT set CHOWN_EXTRA to include the bind-mounted host path
 }
 
 c.DockerSpawner.extra_host_config = {
