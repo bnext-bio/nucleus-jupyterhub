@@ -5,7 +5,7 @@
   type: url
   catalog: b.next
   args:
-      createNewWindow: true
+    createNewWindow: true
 - title: Grafana
   description: Grafana monitoring system
   icon: /opt/repo/share/grafana.svg
@@ -13,7 +13,7 @@
   type: url
   catalog: b.next
   args:
-      createNewWindow: true
+    createNewWindow: true
 - title: MFG Workbench
   description: Manufacturing workbench tools
   icon: /opt/repo/share/mfg-workbench.svg
@@ -21,7 +21,8 @@
   type: url
   catalog: b.next
   args:
-      createNewWindow: false
+    sandbox: [ 'allow-same-origin', 'allow-scripts', 'allow-downloads', 'allow-modals', 'allow-popups']
+    createNewWindow: false
 - title: BLIMS
   description: BLIMS Demo
   icon: /opt/repo/share/blims.svg
@@ -29,4 +30,5 @@
   type: url
   catalog: b.next
   args:
-      createNewWindow: false
+    sandbox: [ 'allow-same-origin', 'allow-scripts', 'allow-downloads', 'allow-modals', 'allow-popups']
+    createNewWindow: false
