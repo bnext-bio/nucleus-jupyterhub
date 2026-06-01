@@ -17,7 +17,7 @@
 - title: MFG Workbench
   description: Manufacturing workbench tools
   icon: /opt/repo/share/mfg-workbench.svg
-  source: https://glycine:2718/
+  source: http://glycine:2718/
   type: url
   catalog: b.next
   args:
