@@ -22,3 +22,11 @@
   catalog: b.next
   args:
       createNewWindow: false
+- title: BLIMS
+  description: BLIMS Demo
+  icon: /opt/repo/share/blims.svg
+  source: https://blims.onrender.com/
+  type: url
+  catalog: b.next
+  args:
+      createNewWindow: false
