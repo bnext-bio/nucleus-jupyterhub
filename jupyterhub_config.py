@@ -104,18 +104,9 @@ c.DockerSpawner.extra_host_config = {
     "group_add": ["users"]
 }
 
-# Permissions for sharing / RTC
-# c.JupyterHub.load_roles = [
-#     {
-#         "name": "user",
-#         "scopes": [
-#             "self",
-#             "shares!user",
-#             "read:users:name",
-#             "read:groups:name",
-#             "access:servers",
-#         ],
-#     },
-# ]
-
-# c.DockerSpawner.oauth_client_allowed_scopes = ["access:servers!server", "shares!server"]
+c.JupyterHub.load_roles = [
+    {
+        "name": "user",
+        "scopes": ["self", "shares!user", "read:users:name", "read:groups:name"],
+    },
+]
