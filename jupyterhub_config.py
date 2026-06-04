@@ -104,6 +104,14 @@ c.DockerSpawner.extra_host_config = {
     "group_add": ["users"]
 }
 
+c.DockerSpawner.oauth_client_allowed_scopes = [
+    "access:servers!server", 
+    "shares!server",
+    "read:users:name", 
+    "shares!user", 
+    "list:users", 
+    "servers!user"]
+
 c.JupyterHub.load_roles = [
     {
         "name": "user",
