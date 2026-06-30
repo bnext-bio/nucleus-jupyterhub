@@ -1,0 +1,117 @@
+{% extends "page.html" %}
+
+{# Custom Nucleus server-loading page.
+
+   We override `main` (not just `message`) to take full control of the layout:
+   a large centered quote, with a slim progress bar fixed along the bottom of the
+   viewport and the most recent event message faded above it.
+
+   We keep upstream's EventSource progress streaming but reimplement the `script`
+   block so it drives our simplified UI (single latest message instead of a full
+   event log). The element IDs `progress-bar` and `progress-message` are preserved
+   so the streaming logic maps cleanly onto the new markup. #}
+
+{% block main %}
+  <div class="nucleus-spawn">
+    <div class="nucleus-spawn-center">
+      <blockquote id="nucleus-quote" class="nucleus-quote" aria-live="polite"></blockquote>
+    </div>
+    <div class="nucleus-progress">
+      <p id="progress-message" class="nucleus-progress-message" aria-live="polite"></p>
+      <div class="nucleus-progress-track">
+        <div id="progress-bar"
+             class="nucleus-progress-bar"
+             role="progressbar"
+             aria-valuenow="0"
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <span class="visually-hidden"><span id="sr-progress">0%</span> Complete</span>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock main %}
+
+{% block script %}
+  {{ super() }}
+  <script type="text/javascript">
+    (function () {
+      // --- Random quote -------------------------------------------------
+      // Placeholder quotes — swap these for the real list.
+      var quotes = [
+        { text: "Somewhere, something incredible is waiting to be known.", author: "Carl Sagan" },
+        { text: "The important thing is not to stop questioning. Curiosity has its own reason for existing.", author: "Albert Einstein" },
+        { text: "Nothing in life is to be feared, it is only to be understood.", author: "Marie Curie" },
+        { text: "If I have seen further it is by standing on the shoulders of giants.", author: "Isaac Newton" },
+        { text: "What we observe is not nature itself, but nature exposed to our method of questioning.", author: "Werner Heisenberg" },
+        { text: "Equipped with his five senses, man explores the universe around him and calls the adventure Science.", author: "Edwin Hubble" },
+        { text: "An experiment is a question which science poses to Nature, and a measurement is the recording of Nature's answer.", author: "Max Planck" },
+        { text: "The most exciting phrase to hear in science is not 'Eureka!' but 'That's funny...'", author: "Isaac Asimov" },
+        { text: "Art is I; science is we.", author: "Claude Bernard"},
+        { text: "Bold ideas, unjustified anticipations, and speculative thought, are our only means for interpreting nature: our only organon, our only instrument, for grasping her.", author: "Karl Popper"},
+        { text: "To those devoid of imagination a blank place on the map is a useless waste; to others, the most valuable part.", author: "Aldo Leopold"},
+        { text: "Acts of creation are ordinarily reserved for gods and poets, but humbler folk may circumvent this restriction if they know how. To plant a pine, for example, one need be neither god nor poet; one need only own a shovel. By virtue of this curious loophole in the rules, any clodhopper may say: Let there be a tree - and there will be one.", author: "Aldo Leopold"},
+        { text: "Unless someone like you cares a whole awful lot, Nothing is going to get better. It's not.", author: "Dr. Seuss"},
+        { text: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost"},
+        { text: "... the science knowledge only adds to the excitement, the mystery and the awe of a flower. It only adds. I don't understand how it subtracts.", author: "Richard P. Feynman"},
+        { text: "What I cannot create, I do not understand.", author: "Richard P. Feynman"},
+        { text: "36 proteins ought to be enough for anyone.", author: "(with apologies to) Bill Gates"}
+      ];
+    
+      var q = quotes[Math.floor(Math.random() * quotes.length)];
+      var quoteEl = document.getElementById("nucleus-quote");
+      if (quoteEl && q) {
+        quoteEl.textContent = "“" + q.text + "”";
+        if (q.author) {
+          var cite = document.createElement("cite");
+          cite.className = "nucleus-quote-author";
+          cite.textContent = "— " + q.author;
+          quoteEl.appendChild(cite);
+        }
+        // Fade in on load (next frame, so the transition runs).
+        requestAnimationFrame(function () {
+          quoteEl.classList.add("is-visible");
+        });
+      }
+
+      // --- Progress streaming (adapted from upstream spawn_pending.html) -
+      var evtSource = new EventSource("{{ progress_url }}");
+      var progressMessage = document.getElementById("progress-message");
+      var progressBar = document.getElementById("progress-bar");
+      var srProgress = document.getElementById("sr-progress");
+
+      evtSource.onmessage = function (e) {
+        var evt = JSON.parse(e.data);
+        if (evt.progress !== undefined) {
+          var progText = evt.progress.toString();
+          progressBar.setAttribute("aria-valuenow", progText);
+          if (srProgress) srProgress.textContent = progText + "%";
+          progressBar.style.width = progText + "%";
+        }
+        // Show only the most recent message (no full event log).
+        if (evt.html_message !== undefined) {
+          progressMessage.innerHTML = evt.html_message;
+        } else if (evt.message !== undefined) {
+          progressMessage.textContent = evt.message;
+        }
+
+        if (evt.ready) {
+          evtSource.close();
+          // Fade the quote out, then reload — redirects to the running server.
+          if (quoteEl) quoteEl.classList.remove("is-visible");
+          setTimeout(function () {
+            window.location.reload();
+          }, 800);
+        }
+
+        if (evt.failed) {
+          evtSource.close();
+          progressBar.classList.add("nucleus-progress-bar--failed");
+        }
+      };
+
+      // signal that page has finished loading (mostly for tests)
+      window._jupyterhub_page_loaded = true;
+    })();
+  </script>
+{% endblock script %}

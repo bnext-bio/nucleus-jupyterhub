@@ -33,3 +33,91 @@
   border-color: #006837;
   outline-color: #006837;
 }
+
+/* ---------------------------------------------------------------------------
+   Server-loading page (spawn_pending.html)
+   Full-viewport layout: centered quote + slim progress bar fixed to the bottom.
+   --------------------------------------------------------------------------- */
+
+/* Fill the viewport below the navbar (navbar has mb-4 margin). */
+.nucleus-spawn {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 5rem);
+}
+
+.nucleus-spawn-center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+
+.nucleus-quote {
+  max-width: 60rem;
+  margin: 0;
+  border: none;
+  text-align: center;
+  font-family: serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  line-height: 1.35;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.nucleus-quote.is-visible {
+  opacity: 1;
+}
+
+.nucleus-quote-author {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.75em;
+  font-style: normal;
+  opacity: 0.55;
+}
+
+/* Progress region pinned to the bottom of the viewport. */
+.nucleus-progress {
+  flex: 0 0 auto;
+  padding: 0 1rem 0.75rem;
+}
+
+.nucleus-progress-message {
+  margin: 0 0 0.4rem;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.nucleus-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.nucleus-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: #006837;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.nucleus-progress-bar--failed {
+  background: #c0392b;
+}
+
+/* Dark mode (JupyterHub toggles data-bs-theme="dark" on <html>). */
+[data-bs-theme="dark"] .nucleus-progress-message {
+  color: #777;
+}
+
+[data-bs-theme="dark"] .nucleus-progress-track {
+  background: rgba(255, 255, 255, 0.12);
+}
