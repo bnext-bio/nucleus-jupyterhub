@@ -14,10 +14,10 @@
   catalog: b.next
   args:
     createNewWindow: true
-- title: MFG Workbench
-  description: Manufacturing workbench tools
+- title: Cytosol Workbench
+  description: Cytosol workbench tools
   icon: /opt/repo/share/mfg-workbench.svg
-  source: http://glycine:2718/
+  source: https://cytosol.int.bnext.bio/
   type: url
   catalog: b.next
   args:
