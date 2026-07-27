@@ -36,7 +36,7 @@ dependencies = [
     "jupyter-collaboration>=1.1.0",
     "ipympl>=0.9.7",
     "jupyterlab-templates>=0.5.2",
-    "nucleus-cdk>=0.5.0rc1",
+    "nucleus-cdk>=0.6.0rc2",
     "ipykernel>=6.29.5",
     # No Napari for now
     # "triangle", # https://blog.rtwilson.com/how-to-install-the-python-triangle-package-on-an-apple-silicon-mac/
