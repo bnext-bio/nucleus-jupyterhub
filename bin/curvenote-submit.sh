@@ -7,4 +7,9 @@ if [ ! -f ~/.curvenote/settings.json ]; then
     echo "Go to https://editor.curvenote.com/profile"
 fi
 
+# cd into home directory using relative path passed through from launcher.
+if [[ -v 1 ]]; then
+    cd ~/$1
+fi
+
 curvenote submit bnext-devnotes --yes --collection nucleus-contrib $1

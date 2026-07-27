@@ -11,7 +11,7 @@
   icon: /opt/repo/share/curvenote-preview.svg
   type: local-server
   source: http://localhost:$PORT/
-  cwd: /home/jovyan/$BROWSER_DIR
+  cwd: home/$BROWSER_DIR
   args:
     - /opt/repo/bin/curvenote-preview.sh
     - $CWD
@@ -22,7 +22,7 @@
   icon: /opt/repo/share/curvenote-preview.svg
   type: local-server
   source: http://localhost:$PORT/
-  cwd: /home/jovyan/$BROWSER_DIR
+  cwd: home/$BROWSER_DIR
   args:
     - /opt/repo/bin/curvenote-preview-v2.sh
     - $CWD
@@ -33,8 +33,8 @@
   description: Submits a devnote draft to Nucleus Community developer notes
   icon: /opt/repo/share/curvenote-draft.svg
   type: terminal
-  source: "/opt/repo/bin/curvenote-submit.sh --draft"
-  cwd: "/home/jovyan/$BROWSER_DIR"
+  source: "/opt/repo/bin/curvenote-submit.sh --draft $BROWSER_DIR"
+  cwd: "home/$BROWSER_DIR"
   args:
     reuse: false
   catalog: Developer Notes
@@ -42,8 +42,8 @@
   description: Submits a devnote for publication to Nucleus Community developer notes
   icon: /opt/repo/share/curvenote-submit.svg
   type: terminal
-  source: "/opt/repo/bin/curvenote-submit.sh"
-  cwd: "/home/jovyan/$BROWSER_DIR"
+  source: "/opt/repo/bin/curvenote-submit.sh $BROWSER_DIR"
+  cwd: "home/$BROWSER_DIR"
   args:
     reuse: false
   catalog: Developer Notes
