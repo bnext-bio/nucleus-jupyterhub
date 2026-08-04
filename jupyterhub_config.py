@@ -72,7 +72,10 @@ c.DockerSpawner.debug = True
 c.DockerSpawner.use_internal_ip = True
 
 c.DockerSpawner.notebook_dir = "~/"
-c.DockerSpawner.env_keep.extend(["UV_INDEX"])
+c.DockerSpawner.env_keep.extend([
+    "UV_INDEX",
+    "EXTRA_PACKAGES"
+])
 
 c.DockerSpawner.volumes = {
     'nucleushub-user-{username}':   '/home/{username}',          # dotfiles, caches
