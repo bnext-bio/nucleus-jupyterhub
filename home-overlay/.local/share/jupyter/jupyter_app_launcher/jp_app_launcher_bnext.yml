@@ -32,3 +32,10 @@
   args:
     sandbox: [ 'allow-same-origin', 'allow-scripts', 'allow-downloads', 'allow-modals', 'allow-popups']
     createNewWindow: false
+- title: Update CDK
+  description: Update the CDK and other key packages.
+  icon: /opt/repo/share/cdk-update.svg
+  type: terminal
+  source: "/opt/repo/bin/update-packages.sh"
+  args: {}
+  catalog: b.next
