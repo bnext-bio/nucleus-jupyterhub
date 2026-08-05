@@ -1,3 +1,5 @@
+#!/usr/bin/zsh
+
 set -euo pipefail
 
 if [ -n "${EXTRA_PACKAGES}" ]; then
