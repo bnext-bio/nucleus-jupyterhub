@@ -74,10 +74,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Main Image
 FROM quay.io/jupyter/minimal-notebook:latest
 
-ARG UV_INDEX=https://pypi.org/simple
-ENV UV_LINK_MODE=copy
-ENV UV_EXCLUDE_NEWER="14 days"
-ARG EXTRA_PACKAGES
+
 
 USER root
 WORKDIR /tmp
@@ -183,6 +180,11 @@ RUN umask 002 \
   && rm -rf /tmp/*.whl
 
 # Python environment
+ENV UV_LINK_MODE=copy
+ENV UV_EXCLUDE_NEWER="14 days"
+ARG UV_INDEX=https://pypi.org/simple
+ARG EXTRA_PACKAGES
+
 RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
   umask 002 \
   && cd /opt/repo/nucleus-env && uv pip install --system -e . \
