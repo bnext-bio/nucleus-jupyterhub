@@ -29,7 +29,11 @@ keywords = [
 ]
 dependencies = [
     "tqdm>=4.67.1",
-    "numpy>=1.26.4",
+    # numba (via nucleus-cdk -> shap) caps numpy: the latest resolvable numba
+    # (0.66.x) requires numpy<2.5. Without this ceiling the resolver floats numpy
+    # up and backslides numba/llvmlite to unbuildable ~2020 releases. See the
+    # `environments` note under [tool.uv].
+    "numpy>=1.26.4,<2.5",
     "pandas>=2.2.3",
     "seaborn>=0.13.2",
     "anywidget>=0.9.18",
@@ -66,8 +70,20 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 exclude-newer = "14 days"
+# Only resolve for platforms we actually target: the Linux deploy image
+# (Dockerfile.notebook) and Apple Silicon dev machines. This drops Intel macOS
+# (x86_64 darwin), whose shap `numba<0.63` / `llvmlite<0.46` pins would
+# otherwise cap the *entire* universal lock at numba 0.62.x. With Intel macOS
+# excluded, shap leaves numba/llvmlite unconstrained and the resolver can reach
+# numba 0.66 + llvmlite 0.48 (both wheels). Paired with the numpy<2.5 ceiling
+# on the numpy dependency above.
+environments = [
+    "sys_platform == 'linux'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
 
 [tool.uv.sources]
 triangle = { git = "https://github.com/drufat/triangle.git" }
 jupyter-app-launcher = { git = "https://github.com/antonjs/jupyter_app_launcher.git" }
 vizarr = { git = "https://github.com/hms-dbmi/vizarr.git", subdirectory = "python/" }
+
