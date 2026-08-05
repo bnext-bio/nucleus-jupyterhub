@@ -24,10 +24,8 @@ cat ${REPO}/config/jupyter_server_config_additional.py > ${HOME}/.jupyter/jupyte
 mkdir -p ${JUPYTER_SETTINGS}
 cp ${REPO}/config/overrides.json ${JUPYTER_SETTINGS}/overrides.json
 
-# Install LSP into node roots using npm
-# mkdir -p /opt/noderoots
-# cd /opt/noderoots
-# npm install --save-dev unified-language-server
+# Update our CDK package environment
+${REPO}/bin/update-packages.sh
 
 cd ${REPO}
 
@@ -63,33 +61,6 @@ USER_STUB="${JUPYTERHUB_USER#*:}"
 #     \"text\": \"${TOPBAR_TAG}\",
 #     \"editable\": false
 # }""" > ${HOME}/.jupyter/lab/user-settings/jupyterlab-topbar-text/plugin.jupyterlab-settings
-
-# Install our key packages
-# echo "Installing environment packages"
-# uv pip install --system -e ${REPO}/nucleus-env --no-progress
-
-# Install BioCRNpyler env
-# echo "Installing modeling environment"
-# cd ${REPO}/envs/modeling
-# uv sync
-# uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
-
-# Bring down the curvenote template
-# echo "Updating curvenote template"
-# if [ -d ${DEVNOTE_PATH} ]; then 
-#     cd ${DEVNOTE_PATH}
-#     if [ -d .git.disable ]; then
-#         mv .git.disable .git
-
-#         # Update origin URL to nucleus-eng template
-#         git remote set-url origin https://github.com/nucleus-eng/devnote-template
-#         git pull --ff-only
-#     fi
-# else
-#     git clone --depth=1 https://github.com/nucleus-eng/devnote-template ${DEVNOTE_PATH}
-# fi
-
-# mv ${DEVNOTE_PATH}/.git ${DEVNOTE_PATH}/.git.disable # Un-repoify it so it can be copied and modified easily.
 
 cd ${HOME}
 echo PWD: `pwd`
