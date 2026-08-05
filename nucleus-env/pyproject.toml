@@ -1,6 +1,6 @@
 [project]
 name = "nucleus-env"
-version = "0.5.0rc1"
+version = "0.6.0rc2"
 description = "Metapackage to set up a default environment for working with the Nucleus CDK and synthetic cells."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -57,7 +57,7 @@ dependencies = [
     "yq>=3.4.3",
     "jupyter-ai>=3.0.0",
     "jupyterlab-chat>=0.21.1",
-    "pyarrow>=24.0.0",
+    "pyarrow>=18.0.0",
 ]
 
 [build-system]
@@ -70,3 +70,4 @@ exclude-newer = "14 days"
 [tool.uv.sources]
 triangle = { git = "https://github.com/drufat/triangle.git" }
 jupyter-app-launcher = { git = "https://github.com/antonjs/jupyter_app_launcher.git" }
+vizarr = { git = "https://github.com/hms-dbmi/vizarr.git", subdirectory = "python/" }
