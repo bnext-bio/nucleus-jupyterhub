@@ -3091,6 +3091,7 @@ dependencies = [
     { name = "numpy" },
     { name = "pandas" },
     { name = "pyarrow" },
+    { name = "pyproject-local-kernel" },
     { name = "python-lsp-server", extra = ["all"] },
     { name = "scikit-image" },
     { name = "seaborn" },
@@ -3122,6 +3123,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=1.26.4,<2.5" },
     { name = "pandas", specifier = ">=2.2.3" },
     { name = "pyarrow", specifier = ">=18.0.0" },
+    { name = "pyproject-local-kernel", specifier = ">=0.12.1" },
     { name = "python-lsp-server", extras = ["all"], specifier = ">=1.12.2" },
     { name = "scikit-image", specifier = ">=0.25.2" },
     { name = "seaborn", specifier = ">=0.13.2" },
@@ -4157,6 +4159,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e8/52/d87eba7cb129b81563019d1679026e7a112ef76855d6159d24754dbd2a51/pyperclip-1.11.0.tar.gz", hash = "sha256:244035963e4428530d9e3a6101a1ef97209c6825edab1567beac148ccc1db1b6", size = 12185, upload-time = "2025-09-26T14:40:37.245Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/df/80/fc9d01d5ed37ba4c42ca2b55b4339ae6e200b456be3a1aaddf4a9fa99b8c/pyperclip-1.11.0-py3-none-any.whl", hash = "sha256:299403e9ff44581cb9ba2ffeed69c7aa96a008622ad0c46cb575ca75b5b84273", size = 11063, upload-time = "2025-09-26T14:40:36.069Z" },
+]
+
+[[package]]
+name = "pyproject-local-kernel"
+version = "0.12.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jupyter-client" },
+    { name = "traitlets" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/40/fb/94358922dd72d940b1a10e6cdcb11b97d9f39f9212717b8cce32f7f00a15/pyproject_local_kernel-0.12.1.tar.gz", hash = "sha256:a983a370a4c8b29acfbcc4ccda22d13215c97f24e2b51d980830fa7d5d37fcc5", size = 331109, upload-time = "2024-10-24T22:24:48.373Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a7/17/f2b6d2c93896d19bfe53bea78a23bf65e5b8f36890dd2dc4d9fc56d49e60/pyproject_local_kernel-0.12.1-py3-none-any.whl", hash = "sha256:ed788fa70864c4635ff65a4414739cc247a7908a9d9b3543e705514d1b98dce2", size = 19236, upload-time = "2024-10-24T22:24:46.911Z" },
 ]
 
 [[package]]
