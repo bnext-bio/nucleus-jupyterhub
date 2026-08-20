@@ -158,13 +158,8 @@ RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
     --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
     umask 002 \
     && mamba install -y -c conda-forge 'nodejs>=24,<25' bun \
-    && npm install --prefer-offline --no-audit --no-fund -g curvenote@latest nodemon unified-language-server \
+    && npm install --prefer-offline --no-audit --no-fund -g curvenote nodemon \
     && rm -rf /tmp/*
-
-RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
-    umask 002 \
-    && cd /opt/noderoots \
-    && npm install --prefer-offline --no-audit --no-fund --save-dev unified-language-server
 
 # Pre-install pip packages so we can have them cached as a docker layer
 # and only add updates based on the latest hub repo
