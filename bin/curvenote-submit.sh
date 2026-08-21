@@ -8,8 +8,8 @@ if [ ! -f ~/.curvenote/settings.json ]; then
 fi
 
 # cd into home directory using relative path passed through from launcher.
-if [[ -v 1 ]]; then
+if [[ -d $1 ]]; then
     cd ~/$1
 fi
 
-curvenote submit bnext-devnotes --yes --collection nucleus-contrib $1
+curvenote submit bnext-devnotes --yes --collection nucleus-contrib $2
