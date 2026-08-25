@@ -1830,6 +1830,15 @@ wheels = [
 ]
 
 [[package]]
+name = "jupyterlab-open-url-parameter"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/da/56066f333b803f795571607fc45836ad8e71c1e33f04473471daa997238c/jupyterlab_open_url_parameter-0.4.0.tar.gz", hash = "sha256:74a27e0e3d487009ec38cd14e77f775ef07d0cb97f8f2972fa09fa485d09b9f8", size = 89005, upload-time = "2026-05-01T10:23:04.74Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/f5/c4ec52cf51ebcde752be45f3057f559aeb59c71dff676f9b2c33f71b0971/jupyterlab_open_url_parameter-0.4.0-py3-none-any.whl", hash = "sha256:24b1bcf62ec2b6924c3d0d52eef6d3ac4e818a472e145f7b780a8876aca4846c", size = 17714, upload-time = "2026-05-01T10:23:03.022Z" },
+]
+
+[[package]]
 name = "jupyterlab-pygments"
 version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2530,6 +2539,7 @@ dependencies = [
     { name = "jupyterlab-git" },
     { name = "jupyterlab-link-share" },
     { name = "jupyterlab-lsp" },
+    { name = "jupyterlab-open-url-parameter" },
     { name = "jupyterlab-templates" },
     { name = "nucleus-cdk" },
     { name = "numpy" },
@@ -2561,6 +2571,7 @@ requires-dist = [
     { name = "jupyterlab-git", specifier = ">=0.51.0" },
     { name = "jupyterlab-link-share", specifier = ">=0.3.0" },
     { name = "jupyterlab-lsp", specifier = ">=5.1.0" },
+    { name = "jupyterlab-open-url-parameter", specifier = ">=0.4.0" },
     { name = "jupyterlab-templates", specifier = ">=0.5.2" },
     { name = "nucleus-cdk", specifier = ">=0.6.0rc2" },
     { name = "numpy", specifier = ">=1.26.4,<2.5" },

@@ -62,6 +62,7 @@ dependencies = [
     "jupyterlab-chat>=0.21.1",
     "pyarrow>=18.0.0",
     "pyproject-local-kernel>=0.12.1",
+    "jupyterlab-open-url-parameter>=0.4.0",
 ]
 
 [build-system]
