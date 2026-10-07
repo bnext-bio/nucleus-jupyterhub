@@ -63,7 +63,7 @@ dependencies = [
     "pyarrow>=18.0.0",
     "pyproject-local-kernel>=0.12.1",
     "jupyterlab-open-url-parameter>=0.4.0",
-    "jupyter-ai>=3.2",
+    "jupyter-ai[rtc]>=3.2",
     # Not used directly: listed so the CPU-only index in [tool.uv.sources]
     # applies (uv sources only affect direct dependencies). Pulled in by
     # nucleus-cdk -> cellpose.
