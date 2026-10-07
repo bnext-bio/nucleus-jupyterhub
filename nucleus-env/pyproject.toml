@@ -63,6 +63,7 @@ dependencies = [
     "pyarrow>=18.0.0",
     "pyproject-local-kernel>=0.12.1",
     "jupyterlab-open-url-parameter>=0.4.0",
+    "jupyter-mcp-server>=2.2.2",
 ]
 
 [build-system]
@@ -86,5 +87,5 @@ environments = [
 [tool.uv.sources]
 triangle = { git = "https://github.com/drufat/triangle.git" }
 jupyter-app-launcher = { git = "https://github.com/antonjs/jupyter_app_launcher.git" }
-vizarr = { git = "https://github.com/hms-dbmi/vizarr.git", subdirectory = "python/" }
+vizarr = { git = "https://github.com/bnext-bio/vizarr.git", subdirectory = "python/" }
 
