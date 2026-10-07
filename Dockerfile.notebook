@@ -1,13 +1,20 @@
-# Builder image
-FROM quay.io/jupyter/minimal-notebook:latest AS builder
+# Pinned base image: a moving `latest` tag invalidates every layer whenever
+# upstream republishes. Bump this deliberately (tags are dated, YYYY-MM-DD).
+ARG BASE_IMAGE=quay.io/jupyter/minimal-notebook:2026-10-05
+
+FROM ${BASE_IMAGE} AS base
 
 USER root
-WORKDIR /tmp
 
 # Disable the docker-clean script that wipes apt caches after install
 RUN rm -f /etc/apt/apt.conf.d/docker-clean \
  && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
     > /etc/apt/apt.conf.d/keep-cache
+
+# Builder image
+FROM base AS builder
+
+WORKDIR /tmp
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \ 
@@ -58,34 +65,19 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 #       | sh -s -- -y --default-toolchain stable --profile minimal --no-modify-path && \
 #     cargo install --locked typst-cli
 
-FROM quay.io/jupyter/minimal-notebook:latest AS manpages
-
-USER root
-
-# Disable the docker-clean script that wipes apt caches after install
-RUN rm -f /etc/apt/apt.conf.d/docker-clean \
- && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
-    > /etc/apt/apt.conf.d/keep-cache
+FROM base AS manpages
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \ 
     yes | unminimize || true
 
 # Main Image
-FROM quay.io/jupyter/minimal-notebook:latest
+FROM base
 
-
-
-USER root
 WORKDIR /tmp
 
 # Reinstall man pages
 COPY --from=manpages /usr/share/man /usr/share/man
-
-# Disable the docker-clean script that wipes apt caches after install
-RUN rm -f /etc/apt/apt.conf.d/docker-clean \
- && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
-    > /etc/apt/apt.conf.d/keep-cache
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
@@ -125,7 +117,7 @@ RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/x86_64/) && curl -o nvim.t
 COPY --from=builder /usr/local/bin/caddy /usr/local/bin/caddy
 
 # UV
-RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" sh
+COPY --from=ghcr.io/astral-sh/uv:0.12.1 /uv /uvx /usr/local/bin/
 
 # FZF
 RUN curl -LsSf https://github.com/junegunn/fzf/releases/download/v0.66.1/fzf-0.66.1-linux_amd64.tar.gz | tar -xzf - -C /usr/local/bin
@@ -139,12 +131,10 @@ RUN curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install
 # Typst
 # COPY --from=builder /root/.cargo/bin/typst /usr/local/bin/typst https://github.com/typst/typst/releases/download/v0.14.2/typst-x86_64-unknown-linux-musl.tar.xz
 
-# Cleanup APT cache and working dirs
-RUN rm -rf /var/cache/apt/archives /var/lib/apt/lists/* /tmp/*
-
 # Add directory and correct permissions for additional node installs and uv cache
 RUN mkdir -p /opt/noderoots && chown $NB_USER:users /opt/noderoots && chmod g+ws /opt/noderoots && \
-  mkdir -p /opt/uv && chown $NB_USER:users /opt/uv && chmod g+ws /opt/uv
+  mkdir -p /opt/uv && chown $NB_USER:users /opt/uv && chmod g+ws /opt/uv && \
+  mkdir -p /opt/repo && chown $NB_USER:users /opt/repo && chmod g+ws /opt/repo
 
 RUN chsh -s /bin/zsh $NB_USER
 
@@ -161,13 +151,6 @@ RUN --mount=type=cache,target=/opt/conda/pkgs,uid=$NB_UID,gid=$NB_GID \
     && npm install --prefer-offline --no-audit --no-fund -g curvenote nodemon \
     && rm -rf /tmp/*
 
-# Pre-install pip packages so we can have them cached as a docker layer
-# and only add updates based on the latest hub repo
-
-COPY bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
-COPY --chown=$NB_USER:users --chmod=g+ws . /opt/repo/
-COPY --chown=$NB_USER:users ./home-overlay /home/$NB_USER
-
 # Jupyter Theme
 COPY --from=builder --chown=$NB_USER:users /src/dist/*.whl /tmp/
 RUN umask 002 \
@@ -180,10 +163,23 @@ ENV UV_EXCLUDE_NEWER="14 days"
 ARG UV_INDEX=https://pypi.org/simple
 ARG EXTRA_PACKAGES
 
+# Copy only the dependency manifests first, so the expensive install layers
+# below are reused unless the locks themselves change. The rest of the repo
+# is copied afterwards.
+COPY --chown=$NB_USER:users nucleus-env/pyproject.toml nucleus-env/uv.lock /opt/repo/nucleus-env/
+COPY --chown=$NB_USER:users envs/modeling/ /opt/repo/envs/modeling/
+
+# Install exactly what uv.lock pins (rather than re-resolving pyproject.toml)
+# into the conda base environment. --inexact keeps the base image's existing
+# packages; the nucleus-env project itself is an empty metapackage, so skip it.
 RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
   umask 002 \
-  && cd /opt/repo/nucleus-env && uv pip install --system -e . \
-  && cd /opt/repo/envs/modeling && uv sync && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling 
+  && cd /opt/repo/nucleus-env \
+  && UV_PROJECT_ENVIRONMENT=/opt/conda uv sync --frozen --inexact --no-install-project
+
+RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
+  umask 002 \
+  && cd /opt/repo/envs/modeling && uv sync --frozen && uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=Modeling
 
 RUN --mount=type=cache,target=/home/$NB_USER/.cache,uid=$NB_UID,gid=$NB_GID \
   umask 002  \
@@ -194,6 +190,12 @@ RUN --mount=type=cache,target=/home/$NB_USER/.npm,uid=$NB_UID,gid=$NB_GID \
     umask 002 \
     && npm install --prefer-offline --no-audit --no-fund -g @agentclientprotocol/claude-agent-acp @zed-industries/codex-acp \
     && curl -fsSL https://claude.ai/install.sh | bash
+
+# Repo contents and home overlay: cheap layers, kept last so editing scripts,
+# config or the overlay does not invalidate the dependency installs above.
+COPY bin/setup-stub.sh /usr/local/bin/before-notebook.d/setup-stub.sh
+COPY --chown=$NB_USER:users --chmod=g+ws . /opt/repo/
+COPY --chown=$NB_USER:users ./home-overlay /home/$NB_USER
 
 # Run through our startup shim so we can emit logging
 # CMD ["/opt/repo/bin/start-jupyter.sh"]

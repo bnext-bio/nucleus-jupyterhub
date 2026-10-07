@@ -1,3 +1,12 @@
-.venv
+# Patterns are anchored to the context root; use **/ to match at any depth.
+# .git is intentionally NOT ignored: setup-stub.sh git-pulls /opt/repo at startup.
 .env
 stack.env
+secrets/
+userlist
+**/.venv
+**/__pycache__
+**/node_modules
+**/.ipynb_checkpoints
+**/.DS_Store
+share/curvenote-logo.ai

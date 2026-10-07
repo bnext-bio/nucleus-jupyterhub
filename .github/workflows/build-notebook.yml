@@ -86,5 +86,12 @@ jobs:
           build-args: |
             EXTRA_PACKAGES=${{ inputs.extra_packages }}
           provenance: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Registry cache instead of type=gha: the GHA cache is capped at 10GB
+          # per repo, which this image's layers (mode=max) blow through, evicting
+          # the cache. BuildKit cache mounts (uv/npm/apt) are not persisted on
+          # hosted runners, so this layer cache is the only thing carried over.
+          # One cache tag per branch so main and internal don't thrash each
+          # other; PRs read their base branch's cache (and skip the GHCR login,
+          # so they never write).
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache-${{ github.base_ref || github.ref_name }}
+          cache-to: ${{ github.event_name != 'pull_request' && format('type=registry,ref={0}/{1}:buildcache-{2},mode=max,image-manifest=true,oci-mediatypes=true', env.REGISTRY, env.IMAGE_NAME, github.ref_name) || '' }}
